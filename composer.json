@@ -1,0 +1,17 @@
+{
+    "name": "moneyzaurus",
+    "description": "expenditure planning",
+    "keywords": [
+        "framework",
+        "zf2"
+    ],
+    "homepage": "http://moneyzaurus.com",
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "2.2.*",
+        "zendframework/zend-developer-tools": "dev-master",
+        "doctrine/doctrine-orm-module": "dev-master",
+        "socalnick/scn-social-auth": "dev-master"
+    }
+}

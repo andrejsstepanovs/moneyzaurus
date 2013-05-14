@@ -1,0 +1,14 @@
+.ui-bar-a h1 a.ui-link {
+	color: white;
+        text-decoration: none;
+}
+
+.ui-bar-a h1 a.ui-link:visited {
+	color: white;
+        text-decoration: none;
+}
+
+.ui-bar-a h1 a.ui-link:hover {
+	color: white;
+        text-decoration: none;
+}

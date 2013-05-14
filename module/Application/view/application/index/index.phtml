@@ -1,0 +1,37 @@
+<?php
+echo $this->message;
+
+//
+//foreach($this->transactions AS $transaction){
+//    DEBUG::log($transaction);
+//}
+
+?>
+
+<form action="">
+    <div data-role="fieldcontain">
+        <label for="item">
+            Item
+        </label>
+        <input name="item" id="item" placeholder="" value="" type="text">
+    </div>
+    <div data-role="fieldcontain">
+        <label for="group">
+            Group
+        </label>
+        <input name="group" id="group" placeholder="" value="" type="text">
+    </div>
+    <div data-role="fieldcontain">
+        <label for="price">
+            Price
+        </label>
+        <input name="price" id="price" placeholder="" value="" type="text">
+    </div>
+    <div data-role="fieldcontain">
+        <label for="date">
+            Date
+        </label>
+        <input name="date" id="date" placeholder="" value="" type="date">
+    </div>
+    <input id="save" type="submit" data-icon="plus" data-iconpos="left" value="Save">
+</form>
