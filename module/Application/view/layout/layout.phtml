@@ -1,45 +1,63 @@
-<?php echo $this->doctype(); ?>
-<?php /*$basePath = $this->serverUrl();*/ ?>
-<?php $basePath = $this->basePath(); ?>
+<?php
+echo $this->doctype();
+$basePath = $this->basePath();
+?>
 
 <html lang="en">
+
     <head>
         <meta charset="utf-8">
-        <?php echo $this->headTitle($this->translate('New'))->setSeparator(' - ')->setAutoEscape(false) ?>
 
-        <?php echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0') ?>
+        <?php
+        echo $this->headTitle($this->translate('Moneyzaurus'))->setSeparator(' - ')->setAutoEscape(false);
 
-        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
-                        ->prependStylesheet($basePath . '/css/site.css')
-                        ->prependStylesheet($basePath . '/css/themes/default/jquery.mobile-1.3.0.css')
-                        //->prependStylesheet($basePath . 'css/themes/default/jquery.mobile.structure-1.3.0.css')
-                        //->prependStylesheet($basePath . 'css/themes/default/jquery.mobile.theme-1.3.0.css')
-                        ?>
+        echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0');
 
-        <?php echo $this->headScript()->prependFile($basePath . '/js/jquery.mobile-1.3.0.js')
-                                      ->prependFile($basePath . '/js/jquery.js') ?>
+        echo $this->headLink(array(
+                    'rel'  => 'shortcut icon',
+                    'type' => 'image/vnd.microsoft.icon',
+                    'href' => $basePath . '/img/favicon.ico'
+                  ))
+                  ->prependStylesheet($basePath . '/css/site.css')
+                  ->prependStylesheet($basePath . '/css/themes/default/jquery.mobile-1.3.0.css');
+
+        echo $this->headScript()->prependFile($basePath . '/js/jquery.mobile-1.3.0.js')
+                                ->prependFile($basePath . '/js/jquery.js');
+        ?>
     </head>
+
     <body>
+
         <div data-role="page" id="page1">
             <div data-theme="a" data-role="header">
                 <h1>
-                    <a class="" href="<?php echo $this->url('moneyzaurus'); ?>"><?php echo $this->translate('moneyzaurus'); ?></a>
+                    <a class="" href="<?php echo $this->url('moneyzaurus'); ?>">
+                        <?php echo $this->translate('moneyzaurus'); ?>
+                    </a>
                 </h1>
             </div>
 
-            <div data-role="content">
-                <?php echo $this->content; ?>
-            </div>
-
             <?php if ($this->zfcUserIdentity()): ?>
+
+                <div data-role="content">
+                    <?php echo $this->content; ?>
+                </div>
+
                 <div data-theme="b" data-role="footer" data-position="fixed">
                     <div data-role="navbar" data-iconpos="top">
                         <?php echo $this->navigation('navigation')->menu() ?>
                     </div>
                 </div>
+
+            <?php else: ?>
+
+                <?php echo $this->zfcUserLoginWidget(array('redirect' => $this->url('moneyzaurus'))); ?>
+
             <?php endif; ?>
 
         </div>
         <?php echo $this->inlineScript() ?>
+
     </body>
+
 </html>
