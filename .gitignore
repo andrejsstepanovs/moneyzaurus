@@ -1,4 +1,4 @@
 vendor/
 nbproject/
 data/
-#config/autoload/*.local.php
+config/autoload/*.local.php
