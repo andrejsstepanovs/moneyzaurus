@@ -4,8 +4,6 @@ return array(
         'Application',
         'jQueryMobileMenu',
         'PhpConfig',
-        'DoctrineModule',
-        'DoctrineORMModule',
         'ScnSocialAuth',
         'ZfcBase',
         'ZfcUser',

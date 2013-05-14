@@ -36,7 +36,6 @@ class Module
             include __DIR__ . '/config/router.config.php',
             include __DIR__ . '/config/navigation.config.php',
             include __DIR__ . '/config/view.config.php',
-            //include __DIR__ . '/config/doctrine.config.php',
             include __DIR__ . '/config/translator.config.php',
             include __DIR__ . '/config/controllers.config.php',
             include __DIR__ . '/config/service_manager.config.php'
