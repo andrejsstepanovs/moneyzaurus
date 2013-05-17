@@ -1,48 +1,22 @@
 <?php
 namespace Application\Entity;
 
-class Connection
+use Varient\Database\Entity\AbstractEntity;
+
+/**
+ * @method Connection setId(integer $id)
+ * @method integer getId()
+ * @method Connection setIdUser(integer $idUser)
+ * @method integer getIdUser()
+ * @method Connection setIdUserParent(integer $idUserParent)
+ * @method integer getIdUserParent()
+ * @method Connection setDateCreated(datetime $dateCreated)
+ * @method datetime getDateCreated()
+ */
+class Connection extends AbstractEntity
 {
-    private $id;
-    private $id_user;
-    private $id_user_parent;
-    private $date_created;
-
-
-    public function setId($id) {
-        $this->id = (int) $id;
-        return $this;
-    }
-
-    public function getId() {
-        return $this->id;
-    }
-
-    public function getIdUser() {
-        return $this->id_user;
-    }
-
-    public function setIdUser($idUser) {
-        $this->id_user = $idUser;
-        return $this;
-    }
-
-    public function getIdUserParent() {
-        return $this->id_user_parent;
-    }
-
-    public function setIdUserParent($idUserParent) {
-        $this->id_user_parent = $idUserParent;
-        return $this;
-    }
-
-    public function getDateCreated() {
-        return $this->date_created;
-    }
-
-    public function setDateCreated($dateCreated) {
-        $this->date_created = $dateCreated;
-        return $this;
-    }
-
+    protected $id;
+    protected $id_user;
+    protected $id_user_parent;
+    protected $date_created;
 }

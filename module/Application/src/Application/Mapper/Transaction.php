@@ -1,9 +1,9 @@
 <?php
 namespace Application\Mapper;
 
-use ZfcBase\Mapper\AbstractDbMapper;
+use Varient\Database\Mapper\AbstractMapper;
 
-class Transaction extends AbstractDbMapper
+class Transaction extends AbstractMapper
 {
     protected $tableName  = 'transaction';
 

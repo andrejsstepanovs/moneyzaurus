@@ -1,11 +1,11 @@
 <?php
 
-namespace Varient\Entity;
+namespace Varient\Database\Entity;
 
 /**
  * 
  */
-class Entity {
+class AbstractEntity {
 
     /**
      * Setter/Getter underscore transformation cache

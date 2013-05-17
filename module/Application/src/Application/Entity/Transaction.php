@@ -1,7 +1,7 @@
 <?php
 namespace Moneyzaurus\Entity;
 
-use Varient\Entity\Entity as VarientEntity;
+use Varient\Database\Entity\AbstractEntity;
 
 /**
  * @method Transaction setId(integer $id)
@@ -21,7 +21,7 @@ use Varient\Entity\Entity as VarientEntity;
  * @method Transaction setDateCreated(datetime $dateCreated)
  * @method datetime getDateCreated()
  */
-class Transaction extends VarientEntity
+class Transaction extends AbstractEntity
 {
     protected $id;
     protected $id_user;

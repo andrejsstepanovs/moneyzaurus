@@ -1,9 +1,9 @@
 <?php
 namespace Application\Mapper;
 
-use ZfcBase\Mapper\AbstractDbMapper;
+use Varient\Database\Mapper\AbstractMapper;
 
-class Connection extends AbstractDbMapper
+class Connection extends AbstractMapper
 {
     protected $tableName  = 'connection';
 
