@@ -1,11 +1,11 @@
 <?php
-namespace Application\Entity;
+namespace Application\Model;
 
-use Varient\Database\Entity\AbstractEntity;
+use Varient\Database\Model\AbstractModel;
 
 /**
- * @method Connection setId(integer $id)
- * @method integer getId()
+ * @method Connection setConnectionId(integer $connectionId)
+ * @method integer getConnectionId()
  * @method Connection setIdUser(integer $idUser)
  * @method integer getIdUser()
  * @method Connection setIdUserParent(integer $idUserParent)
@@ -13,10 +13,7 @@ use Varient\Database\Entity\AbstractEntity;
  * @method Connection setDateCreated(datetime $dateCreated)
  * @method datetime getDateCreated()
  */
-class Connection extends AbstractEntity
+class Connection extends AbstractModel
 {
-    protected $id;
-    protected $id_user;
-    protected $id_user_parent;
-    protected $date_created;
+
 }

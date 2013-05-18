@@ -1,0 +1,192 @@
+<?php
+
+namespace Varient\Database\Table;
+
+use Varient\Database\Exception;
+use Varient\Database\Model\AbstractModel;
+
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\Metadata\Metadata;
+use Zend\Db\Sql\TableIdentifier;
+use Zend\Db\TableGateway\AbstractTableGateway;
+
+/**
+ * Abstract Table class
+ */
+class AbstractTable extends AbstractTableGateway
+{
+    /** @var array */
+    protected $primary;
+
+    /** @var string */
+    protected $tableName;
+
+    /** @var \Zend\Db\Metadata\Metadata */
+    protected $metadata;
+
+    /** @var \Zend\Db\Metadata\Object\TableObject */
+    protected $metadataTableObject;
+
+
+    /**
+     *
+     * @param \Zend\Db\Adapter\Adapter $adapter
+     * @param |Zend\Db\ResultSet\HydratingResultSet|\Varient\Database\Model\AbstractModel $resultSetPrototype
+     * @param \Zend\Db\Sql\TableIdentifier $table
+     */
+    public function __construct(Adapter $adapter, $resultSetPrototype, TableIdentifier $table = null)
+    {
+        if (empty($table) && empty($this->table)) {
+            $classname = get_class($this);
+            $tablename = strtolower(substr($classname, strrpos($classname, '\\') + 1));
+            $table = new TableIdentifier($tablename);
+
+        } elseif (is_string($this->table)) {
+            $table = new TableIdentifier($this->table);
+        }
+
+        $this->table = $table;
+        $this->adapter = $adapter;
+        $this->resultSetPrototype = $resultSetPrototype;
+        $this->initialize();
+    }
+
+    /**
+     * @return string
+     */
+    public function getTableName()
+    {
+        if (null === $this->tableName) {
+            $this->tableName = $this->getTable()->getTable();
+        }
+
+        return $this->tableName;
+    }
+
+    /**
+     * @return Zend\Db\Metadata\Metadata
+     */
+    protected function getMetadata()
+    {
+        if (null == $this->metadata) {
+            $this->metadata = new Metadata($this->adapter);
+        }
+
+        return $this->metadata;
+    }
+
+    /**
+     * @return Zend\Db\Metadata\Object\TableObject
+     */
+    protected function getMetadataTableObject()
+    {
+        if (null == $this->metadataTableObject) {
+            $this->metadataTableObject = $this->getMetadata()
+                                              ->getTable($this->getTableName());
+        }
+
+        return $this->metadataTableObject;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPrimary()
+    {
+        if (null === $this->primary) {
+            /** @var $constraint Zend\Db\Metadata\Object\ConstraintObject */
+            $constraints = $this->getMetadataTableObject()->getConstraints();
+            foreach ($constraints AS $constraint) {
+                if ($constraint->isPrimaryKey()) {
+                    $this->primary = $constraint->getColumns();
+                }
+            }
+        }
+
+        return $this->primary;
+    }
+
+    /**
+     * @return array
+     */
+    public function getColumns()
+    {
+        if (empty($this->columns)) {
+            /** @var $column Zend\Db\Metadata\Object\ColumnObject */
+            $columnObjects = $this->getMetadataTableObject()->getColumns();
+            foreach ($columnObjects AS $column) {
+                $columns[] = $column->getName();
+            }
+            $this->columns = $columns;
+        }
+
+        return $this->columns;
+    }
+
+    /**
+     * @return \Zend\Db\ResultSet\ResultSet
+     * @throws Exception\WrongModuleException
+     */
+    public function fetchAll()
+    {
+        return $this->select();
+    }
+
+    /**
+     * @param \Varient\Database\Model\AbstractModel $model
+     * @return array
+     */
+    protected function getPrimaryValue(AbstractModel $model)
+    {
+        $where = array();
+        foreach ($this->getPrimary() AS $key) {
+            if ($model->hasData($key)) {
+                $where[$key] = $model->getData($key);
+            }
+        }
+
+        return $where;
+    }
+
+    /**
+     * @param \Varient\Database\Model\AbstractModel $model
+     * @return integer
+     */
+    public function deleteEntity(AbstractModel $model)
+    {
+        return $this->delete($model->toArray());
+    }
+
+    /**
+     * @param \Varient\Database\Model\AbstractModel $model
+     * @return integer
+     */
+    public function insertEntity(AbstractModel $model)
+    {
+        return $this->insert($model->toArray());
+    }
+
+    /**
+     * @param \Varient\Database\Model\AbstractModel $model
+     * @return integer
+     */
+    public function updateEntity(AbstractModel $model)
+    {
+        $where = $this->getPrimaryValue($model);
+        return $this->update($model->toArray(), $where);
+    }
+
+    /**
+     * @param \Varient\Database\Model\AbstractModel $model
+     * @return integer
+     */
+    public function saveEntity(AbstractModel $model)
+    {
+        $where = $this->getPrimaryValue($model);
+        if (empty($where)) {
+            return $this->insertEntity($model);
+        }
+        return $this->updateEntity($model);
+    }
+
+}

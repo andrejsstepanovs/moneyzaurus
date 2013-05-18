@@ -2,6 +2,9 @@
 
 namespace Application;
 
+use Varient\Database\Helper\TableLoader;
+use Zend\ServiceManager\ServiceManager;
+
 class Module
 {
     /**
@@ -43,4 +46,44 @@ class Module
 
         return $config;
     }
+
+    public function getServiceConfig()
+    {
+        return array(
+            'factories' => array(
+                'Varient\Database\Helper\TableLoader' => function(ServiceManager $sm) {
+                    return new TableLoader(
+                        $sm->get('Zend\Db\Adapter\Adapter'),
+                        __NAMESPACE__ . '\Table',
+                        __NAMESPACE__ . '\Model'
+                    );
+                },
+                'Application\Table\Item' => function(ServiceManager $sm) {
+                    return $sm->get('Varient\Database\Helper\TableLoader')
+                              ->getTable('Item');
+                },
+                'Application\Table\User' => function(ServiceManager $sm) {
+                    return $sm->get('Varient\Database\Helper\TableLoader')
+                              ->getTable('User');
+                },
+                'Application\Table\Transaction' => function(ServiceManager $sm) {
+                    return $sm->get('Varient\Database\Helper\TableLoader')
+                              ->getTable('Transaction');
+                },
+                'Application\Table\Group' => function(ServiceManager $sm) {
+                    return $sm->get('Varient\Database\Helper\TableLoader')
+                              ->getTable('Group');
+                },
+                'Application\Table\Currency' => function(ServiceManager $sm) {
+                    return $sm->get('Varient\Database\Helper\TableLoader')
+                              ->getTable('Currency');
+                },
+                'Application\Table\Connection' => function(ServiceManager $sm) {
+                    return $sm->get('Varient\Database\Helper\TableLoader')
+                              ->getTable('Connection');
+                },
+            ),
+        );
+    }
+
 }

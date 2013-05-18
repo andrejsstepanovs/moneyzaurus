@@ -4,8 +4,8 @@ namespace Moneyzaurus\Entity;
 use Varient\Database\Entity\AbstractEntity;
 
 /**
- * @method Transaction setId(integer $id)
- * @method integer getId()
+ * @method Transaction setTransactionId(integer $id)
+ * @method integer getTransactionId()
  * @method Transaction setIdUser(integer $idUser)
  * @method integer getIdUser()
  * @method Transaction setIdGroup(integer $idGroup)
@@ -23,12 +23,5 @@ use Varient\Database\Entity\AbstractEntity;
  */
 class Transaction extends AbstractEntity
 {
-    protected $id;
-    protected $id_user;
-    protected $id_group;
-    protected $id_item;
-    protected $price;
-    protected $id_currency;
-    protected $date;
-    protected $date_created;
+
 }
