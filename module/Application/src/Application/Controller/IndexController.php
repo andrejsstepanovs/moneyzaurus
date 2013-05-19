@@ -20,21 +20,21 @@ class IndexController extends AbstractActionController
 //        \DEBUG::dump($table->getTable('Item'));
 
 
-        $itemTable = $this->getServiceLocator()->get('Application\Table\Item');
+//        $itemTable = $this->getServiceLocator()->get('Application\Table\Item');
+//
+//        $result = $itemTable->saveEntity($itemModel);
+//        \DEBUG::dump($result);
 
-        $result = $itemTable->saveEntity($itemModel);
-        \DEBUG::dump($result);
-
-        foreach($itemTable->fetchAll() AS $model){
-
-//            \DEBUG::dump($model);
-
-            $result = $item->deleteEntity($model);
-
-            \DEBUG::dump($result);
-        }
-
-        \DEBUG::dump($item->fetchAll());
+//        foreach($itemTable->fetchAll() AS $model){
+//
+////            \DEBUG::dump($model);
+//
+//            $result = $item->deleteEntity($model);
+//
+//            \DEBUG::dump($result);
+//        }
+//
+//        \DEBUG::dump($item->fetchAll());
 
 
 //        \DEBUG::dump($this->zfcUserIdentity());

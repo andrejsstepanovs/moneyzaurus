@@ -16,5 +16,20 @@ use Varient\Database\Model\AbstractModel;
  */
 class Item extends AbstractModel
 {
+    /**
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->getItemId();
+    }
 
+    /**
+     * @param integer $id
+     * @return \Application\Model\Item
+     */
+    public function setId($id)
+    {
+        return $this->setItemId($id);
+    }
 }

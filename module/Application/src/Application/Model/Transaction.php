@@ -1,7 +1,7 @@
 <?php
-namespace Moneyzaurus\Entity;
+namespace Moneyzaurus\Model;
 
-use Varient\Database\Entity\AbstractEntity;
+use Varient\Database\Model\AbstractModel;
 
 /**
  * @method Transaction setTransactionId(integer $id)
@@ -21,7 +21,22 @@ use Varient\Database\Entity\AbstractEntity;
  * @method Transaction setDateCreated(datetime $dateCreated)
  * @method datetime getDateCreated()
  */
-class Transaction extends AbstractEntity
+class Transaction extends AbstractModel
 {
+    /**
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->getTransactionId();
+    }
 
+    /**
+     * @param integer $id
+     * @return \Application\Model\Transaction
+     */
+    public function setId($id)
+    {
+        return $this->setTransactionId($id);
+    }
 }

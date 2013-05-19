@@ -15,5 +15,20 @@ use Varient\Database\Model\AbstractModel;
  */
 class Connection extends AbstractModel
 {
+    /**
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->getConnectionId();
+    }
 
+    /**
+     * @param integer $id
+     * @return \Application\Model\Connection
+     */
+    public function setId($id)
+    {
+        return $this->setConnectionId($id);
+    }
 }
