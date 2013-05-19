@@ -110,12 +110,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/ZendDeveloperTools.git",
-                "reference": "3994622761f496b666a143156b4d21f19205aa66"
+                "reference": "9e2cf51ffbd3778f07be4a245e6b7a84a6a18a1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/ZendDeveloperTools/zipball/3994622761f496b666a143156b4d21f19205aa66",
-                "reference": "3994622761f496b666a143156b4d21f19205aa66",
+                "url": "https://api.github.com/repos/zendframework/ZendDeveloperTools/zipball/9e2cf51ffbd3778f07be4a245e6b7a84a6a18a1c",
+                "reference": "9e2cf51ffbd3778f07be4a245e6b7a84a6a18a1c",
                 "shasum": ""
             },
             "require": {
@@ -161,7 +161,7 @@
                 "module",
                 "zf2"
             ],
-            "time": "2013-04-14 14:43:51"
+            "time": "2013-05-19 14:33:45"
         },
         {
             "name": "zendframework/zendframework",
@@ -169,12 +169,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zf2.git",
-                "reference": "23bb49413fa9d3088fe8653a618d48511a91ae0e"
+                "reference": "a86a9686cf6b7a6d284c4d6673765b74f41f14c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zf2/zipball/23bb49413fa9d3088fe8653a618d48511a91ae0e",
-                "reference": "23bb49413fa9d3088fe8653a618d48511a91ae0e",
+                "url": "https://api.github.com/repos/zendframework/zf2/zipball/a86a9686cf6b7a6d284c4d6673765b74f41f14c6",
+                "reference": "a86a9686cf6b7a6d284c4d6673765b74f41f14c6",
                 "shasum": ""
             },
             "require": {
@@ -273,7 +273,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2013-05-10 11:08:12"
+            "time": "2013-05-15 10:48:43"
         },
         {
             "name": "zf-commons/zfc-base",

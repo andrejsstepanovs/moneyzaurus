@@ -18,6 +18,9 @@ class AbstractTable extends AbstractTableGateway
     /** @var array */
     protected $primary;
 
+    /** @var array */
+    protected $uniqe;
+
     /** @var string */
     protected $tableName;
 
@@ -98,12 +101,38 @@ class AbstractTable extends AbstractTableGateway
             $constraints = $this->getMetadataTableObject()->getConstraints();
             foreach ($constraints AS $constraint) {
                 if ($constraint->isPrimaryKey()) {
-                    $this->primary = $constraint->getColumns();
+                    $primaries = $constraint->getColumns();
+                    foreach ($primaries AS $primary) {
+                        $this->primary[] = $primary;
+                    }
                 }
             }
+            $this->primary = array_unique($this->primary);
         }
 
         return $this->primary;
+    }
+
+    /**
+     * @return array
+     */
+    public function getUniqe()
+    {
+        if (null === $this->uniqe) {
+            /** @var $constraint Zend\Db\Metadata\Object\ConstraintObject */
+            $constraints = $this->getMetadataTableObject()->getConstraints();
+            foreach ($constraints AS $constraint) {
+                if ($constraint->isPrimaryKey() || $constraint->isUnique()) {
+                    $primaries = $constraint->getColumns();
+                    foreach ($primaries AS $primary) {
+                        $this->uniqe[] = $primary;
+                    }
+                }
+            }
+            $this->uniqe = array_unique($this->uniqe);
+        }
+
+        return $this->uniqe;
     }
 
     /**
@@ -134,12 +163,47 @@ class AbstractTable extends AbstractTableGateway
 
     /**
      * @param \Varient\Database\Model\AbstractModel $model
+     * @return \Zend\Db\ResultSet\HydratingResultSet
+     */
+    public function fetchByModel(AbstractModel $model)
+    {
+        $where = array();
+        foreach ($model->getData() AS $key => $val) {
+            $where[$key] = $val;
+        }
+
+        /** @var $select Zend\Db\Sql\Select */
+        $select = $this->getSql()->select()->where($where);
+
+        /** @var $resultSet Zend\Db\ResultSet\HydratingResultSet */
+        $resultSet = $this->executeSelect($select);
+        return $resultSet;
+    }
+
+    /**
+     * @param \Varient\Database\Model\AbstractModel $model
      * @return array
      */
     protected function getPrimaryValue(AbstractModel $model)
     {
         $where = array();
         foreach ($this->getPrimary() AS $key) {
+            if ($model->hasData($key)) {
+                $where[$key] = $model->getData($key);
+            }
+        }
+
+        return $where;
+    }
+
+    /**
+     * @param \Varient\Database\Model\AbstractModel $model
+     * @return array
+     */
+    protected function getUniqeValue(AbstractModel $model)
+    {
+        $where = array();
+        foreach ($this->getUniqe() AS $key) {
             if ($model->hasData($key)) {
                 $where[$key] = $model->getData($key);
             }

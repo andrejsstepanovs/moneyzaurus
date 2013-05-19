@@ -110,9 +110,20 @@ class AbstractModel implements \ArrayAccess
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray($noObjects = true)
     {
-        return $this->getData();
+        $array = $this->getData();
+        if (!$noObjects) {
+            return $array;
+        }
+
+        array_walk($array, function($val, $key) use (&$array) {
+            if (is_object($val)) {
+                unset($array[$key]);
+            }
+        });
+
+        return $array;
     }
 
     /**

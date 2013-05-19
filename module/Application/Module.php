@@ -4,6 +4,7 @@ namespace Application;
 
 use Varient\Database\Helper\TableLoader;
 use Zend\ServiceManager\ServiceManager;
+use Application\Helper\Purchase as PurchaseHelper;
 
 class Module
 {
@@ -85,6 +86,9 @@ class Module
                 'Application\Table\Purchase' => function(ServiceManager $sm) {
                     return $sm->get('Varient\Database\Helper\TableLoader')
                               ->getTable('Purchase');
+                },
+                'Application\Helper\Purchase' => function(ServiceManager $sm) {
+                    return new PurchaseHelper($sm);
                 },
             ),
         );

@@ -16,9 +16,12 @@ return array(
             'new' => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/new',
+                    'route'    => '/new[/:action]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
                     'defaults' => array(
-                        'controller' => 'Application\Controller\Index',
+                        'controller' => 'Application\Controller\New',
                         'action'     => 'index',
                     ),
                 ),
