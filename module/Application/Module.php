@@ -82,6 +82,10 @@ class Module
                     return $sm->get('Varient\Database\Helper\TableLoader')
                               ->getTable('Connection');
                 },
+                'Application\Table\Purchase' => function(ServiceManager $sm) {
+                    return $sm->get('Varient\Database\Helper\TableLoader')
+                              ->getTable('Purchase');
+                },
             ),
         );
     }

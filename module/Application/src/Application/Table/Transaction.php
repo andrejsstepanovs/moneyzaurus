@@ -1,10 +1,10 @@
 <?php
 
-namespace Application\Mapper;
+namespace Application\Table;
 
-use Varient\Database\Mapper\AbstractMapper;
+use Varient\Database\Table\AbstractTable;
 
-class Transaction extends AbstractMapper
+class Transaction extends AbstractTable
 {
     protected $table = 'transaction';
 }

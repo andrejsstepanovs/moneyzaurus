@@ -1,5 +1,5 @@
 <?php
-namespace Moneyzaurus\Model;
+namespace Application\Model;
 
 use Varient\Database\Model\AbstractModel;
 

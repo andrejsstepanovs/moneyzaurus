@@ -10,42 +10,11 @@ class IndexController extends AbstractActionController
 
     public function indexAction()
     {
-        $itemModel = new \Application\Model\Item();
-        $itemModel->setName('UPDATED');
-        $itemModel->setIdUser(1);
-//        $itemModel->setItemId(4);
+        $purchaseTable = $this->getServiceLocator()->get('Application\Table\Purchase');
+//        $purchaseTable = $this->getServiceLocator()->get('Application\Table\Transaction');
 
 
-//        $table = $this->getServiceLocator()->get('Varient\Database\Helper\TableLoader');
-//        \DEBUG::dump($table->getTable('Item'));
-
-
-//        $itemTable = $this->getServiceLocator()->get('Application\Table\Item');
-//
-//        $result = $itemTable->saveEntity($itemModel);
-//        \DEBUG::dump($result);
-
-//        foreach($itemTable->fetchAll() AS $model){
-//
-////            \DEBUG::dump($model);
-//
-//            $result = $item->deleteEntity($model);
-//
-//            \DEBUG::dump($result);
-//        }
-//
-//        \DEBUG::dump($item->fetchAll());
-
-
-//        \DEBUG::dump($this->zfcUserIdentity());
-
-
-//        $session = new Container('Zend_Auth');
-
-//        \DEBUG::dump($session);
-
-//        $session->name='aaaaa';
-//        \DEBUG::dump($session);
+        \DEBUG::dump($purchaseTable);
 
         return array(
             'message' => 'Hello world',

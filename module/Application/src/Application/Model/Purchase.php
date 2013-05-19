@@ -1,12 +1,12 @@
 <?php
 
-namespace Moneyzaurus\Entity;
+namespace Application\Model;
 
-use Varient\Database\Entity\AbstractEntity;
+use Varient\Database\Model\AbstractModel;
 
 class Purchase extends Transaction
 {
-    public function setCurrency(AbstractEntity $currency)
+    public function setCurrency(AbstractModel $currency)
     {
         $this->setIdCurrency($currency);
     }
