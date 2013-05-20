@@ -5,9 +5,6 @@ return array(
         'jQueryMobileMenu',
         'Varient',
         'PhpConfig',
-        'ScnSocialAuth',
-        'ZfcBase',
-        'ZfcUser',
     ),
 
     'module_listener_options' => array(
