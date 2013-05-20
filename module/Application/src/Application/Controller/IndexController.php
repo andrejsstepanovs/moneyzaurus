@@ -9,6 +9,8 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
 
+//        \DEBUG::dump($this->zfcUserAuthentication()->getIdentity());
+
     }
 
 }

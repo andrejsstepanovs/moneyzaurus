@@ -3,14 +3,17 @@
 namespace Application;
 
 use Zend\Db\TableGateway\Feature;
-
+use Zend\Mvc\MvcEvent;
 
 class Module
 {
+    protected $config;
+
+
     /**
-     * @param Zend\Mvc\MvcEvent $mvcEvent
+     * @param \Zend\Mvc\MvcEvent $mvcEvent
      */
-    public function onBootstrap($mvcEvent)
+    public function onBootstrap(MvcEvent $mvcEvent)
     {
         /** @var $application \Zend\Mvc\Application */
         $application = $mvcEvent->getApplication();
@@ -21,6 +24,18 @@ class Module
         Feature\GlobalAdapterFeature::setStaticAdapter(
             $serviceManager->get('Zend\Db\Adapter\Adapter')
         );
+
+
+        $acl = $serviceManager->get('Application\EventManager\Acl')
+                              ->setMvcEvent($mvcEvent)
+                              ->setAclConfig($this->getConfig('acl'));
+
+        $application->getEventManager()
+                    ->attach(
+                         \Zend\Mvc\MvcEvent::EVENT_ROUTE,
+                         array($acl, 'checkAcl'),
+                         -100
+                    );
     }
 
     public function getAutoloaderConfig()
@@ -37,19 +52,37 @@ class Module
         );
     }
 
-    public function getConfig()
+    /**
+     * @return array
+     */
+    public function getConfig($key = null)
     {
-        $config = array_merge(
-            include __DIR__ . '/config/router.config.php',
-            include __DIR__ . '/config/navigation.config.php',
-            include __DIR__ . '/config/view.config.php',
-            include __DIR__ . '/config/translator.config.php',
-            include __DIR__ . '/config/controllers.config.php',
-            include __DIR__ . '/config/service_manager.config.php',
-            include __DIR__ . '/config/di.config.php'
-        );
+        if (null === $this->config) {
+            $this->config = array_merge(
+                include __DIR__ . '/config/router.config.php',
+                include __DIR__ . '/config/navigation.config.php',
+                include __DIR__ . '/config/view.config.php',
+                include __DIR__ . '/config/translator.config.php',
+                include __DIR__ . '/config/controllers.config.php',
+                include __DIR__ . '/config/service_manager.config.php',
+                include __DIR__ . '/config/di.config.php',
+                include __DIR__ . '/config/acl.config.php'
+            );
+        }
 
-        return $config;
+        if (!empty($key)) {
+            return $this->config[$key];
+        }
+
+        return $this->config;
     }
 
+    public function getServiceConfig()
+    {
+        return array(
+            'invokables' => array(
+                '\Application\EventManager\Acl' => '\Application\EventManager\Acl'
+            ),
+        );
+    }
 }

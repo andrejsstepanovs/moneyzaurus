@@ -1,19 +1,16 @@
 <?php
 return array(
     'acl' => array(
-        'roles' => array(
-            'guest' => \Application\Model\User::ROLE_NONE,
-            'user'  => \Application\Model\User::ROLE_USER,
-            'pro'   => \Application\Model\User::ROLE_PRO,
-            'admin' => \Application\Model\User::ROLE_ADMIN,
+        'guest' => array(
+            'Application\Controller\Index',
+            'zfcuser',
+            'ScnSocialAuth-User',
         ),
-        'resources' => array(
-            'allow' => array(
-                'user' => array(
-                    'login' => 'guest',
-                    'all'   => 'member'
-                )
-            )
-        )
+        'user'  => array(
+            'Application\Controller\New',
+        ),
+        'admin' => array(
+            'admin'
+        ),
     )
 );
