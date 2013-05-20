@@ -2,24 +2,26 @@
 
 namespace Application;
 
-use Varient\Database\Helper\TableLoader;
-use Zend\ServiceManager\ServiceManager;
-use Application\Helper\Purchase as PurchaseHelper;
-use Varient\Database\ActiveRecord\ActiveRecord;
+use Zend\Db\TableGateway\Feature;
+
 
 class Module
 {
     /**
      * @param Zend\Mvc\MvcEvent $mvcEvent
      */
-//    public function onBootstrap($mvcEvent)
-//    {
-//        /** @var $application \Zend\Mvc\Application */
-//        $application = $mvcEvent->getApplication();
-//
-//        /** @var $serviceManager \Zend\ServiceManager\ServiceManager */
-//        $serviceManager = $application->getServiceManager();
-//    }
+    public function onBootstrap($mvcEvent)
+    {
+        /** @var $application \Zend\Mvc\Application */
+        $application = $mvcEvent->getApplication();
+
+        /** @var $serviceManager \Zend\ServiceManager\ServiceManager */
+        $serviceManager = $application->getServiceManager();
+
+        Feature\GlobalAdapterFeature::setStaticAdapter(
+            $serviceManager->get('Zend\Db\Adapter\Adapter')
+        );
+    }
 
     public function getAutoloaderConfig()
     {
@@ -48,18 +50,6 @@ class Module
         );
 
         return $config;
-    }
-
-    public function getServiceConfig()
-    {
-        return array(
-            'factories' => array(
-                'ActiveRecord' => function(ServiceManager $sm) {
-                    $activeRecord = new ActiveRecord();
-                    return $activeRecord->setDbAdapter($sm->get('Zend\Db\Adapter\Adapter'));
-                }
-            ),
-        );
     }
 
 }

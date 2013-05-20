@@ -39,10 +39,6 @@ $basePath = $this->basePath();
 
             <?php if ($this->zfcUserIdentity()): ?>
 
-                <div data-role="content">
-                    <?php echo $this->content; ?>
-                </div>
-
                 <div data-theme="b" data-role="footer" data-position="fixed">
                     <div data-role="navbar" data-iconpos="top">
                         <?php echo $this->navigation('navigation')->menu() ?>

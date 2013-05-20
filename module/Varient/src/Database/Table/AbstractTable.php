@@ -4,10 +4,9 @@ namespace Varient\Database\Table;
 
 use Varient\Database\Exception;
 use Varient\Database\Model\AbstractModel;
-
-use Zend\Db\Adapter\Adapter;
 use Zend\Db\Metadata\Metadata;
 use Zend\Db\Sql\TableIdentifier;
+use Zend\Db\TableGateway\Feature;
 use Zend\Db\TableGateway\AbstractTableGateway;
 
 /**
@@ -33,11 +32,11 @@ class AbstractTable extends AbstractTableGateway
 
     /**
      *
-     * @param \Zend\Db\Adapter\Adapter $adapter
+     * @param \Zend\Db\Adapter\Adapter|null $adapter
      * @param |Zend\Db\ResultSet\HydratingResultSet|\Varient\Database\Model\AbstractModel $resultSetPrototype
      * @param \Zend\Db\Sql\TableIdentifier $table
      */
-    public function __construct(Adapter $adapter, $resultSetPrototype, TableIdentifier $table = null)
+    public function __construct($adapter, $resultSetPrototype, TableIdentifier $table = null)
     {
         if (empty($table) && empty($this->table)) {
             $classname = get_class($this);
@@ -49,7 +48,14 @@ class AbstractTable extends AbstractTableGateway
         }
 
         $this->table = $table;
-        $this->adapter = $adapter;
+
+        if (null === $adapter) {
+            $this->featureSet = new Feature\FeatureSet();
+            $this->featureSet->addFeature(new Feature\GlobalAdapterFeature());
+        } else {
+            $this->adapter = $adapter;
+        }
+
         $this->resultSetPrototype = $resultSetPrototype;
         $this->initialize();
     }
@@ -105,6 +111,18 @@ class AbstractTable extends AbstractTableGateway
                     foreach ($primaries AS $primary) {
                         $this->primary[] = $primary;
                     }
+                }
+            }
+            if (empty($this->primary)) {
+                $uniqe = $this->getUniqe();
+                if (!empty($uniqe)) {
+                    foreach ($uniqe AS $column) {
+                        $this->primary[] = $column;
+                    }
+                } else {
+                    throw new Exception\TablePrimaryNotFoundException(
+                            'Primary not found in table "'.$this->getTableName().'"'
+                    );
                 }
             }
             $this->primary = array_unique($this->primary);

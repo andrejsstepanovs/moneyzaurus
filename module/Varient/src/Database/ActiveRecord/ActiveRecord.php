@@ -33,6 +33,21 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
 
 
     /**
+     * @param strings|null $tableName
+     * @param \Zend\Db\Adapter\Adapter|null $adapter
+     */
+    public function __construct($tableName = null, $adapter = null)
+    {
+        if ($adapter) {
+            $this->setDbAdapter($adapter);
+        }
+
+        if ($tableName) {
+            $this->setTableName($tableName);
+        }
+    }
+
+    /**
      * @param string $tableName
      */
     public function setTableName($tableName)
@@ -118,6 +133,7 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
         foreach ($primaries AS $primary) {
             $this->setData($primary, $id);
         }
+        return $this;
     }
 
     /**
@@ -135,6 +151,7 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     /**
      * @param mixed $id
      * @return \Varient\Database\ActiveRecord\ActiveRecord
+     * @throws \Varient\Database\Exception\ModelNotFoundException
      */
     public function load($id = null)
     {
@@ -146,9 +163,12 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
 
         if ($results->count()) {
             $this->data = $results->current()->getData();
+            return $this;
         }
 
-        return $this;
+        throw new \Varient\Database\Exception\ModelNotFoundException(
+            '"'.$this->getTableName() . '" not found for primary ' . $this->getId()
+        );
     }
 
     /**

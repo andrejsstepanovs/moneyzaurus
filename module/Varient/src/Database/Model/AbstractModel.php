@@ -104,7 +104,7 @@ class AbstractModel implements \ArrayAccess
             return $this->data;
         }
 
-        return $this->data[$key];
+        return isset($this->data[$key]) ? $this->data[$key] : null;
     }
 
     /**
