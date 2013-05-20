@@ -1,11 +1,12 @@
 <?php
-echo $this->message;
-
-//
-//foreach($this->transactions AS $transaction){
-//    DEBUG::log($transaction);
-//}
-
+if ($this->messages){
+    echo '<ul>';
+    foreach($this->messages as $message)
+    {
+        echo '<li>'.$message.'</li>';
+    }
+    echo '</ul>';
+}
 ?>
 
 <form action="">

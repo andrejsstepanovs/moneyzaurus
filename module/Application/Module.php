@@ -85,6 +85,18 @@ class Module
             'invokables' => array(
                 '\Application\EventManager\Acl' => '\Application\EventManager\Acl'
             ),
+            'factories' => array(
+                'AuthService' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $dbTableAuthAdapter = new \Zend\Authentication\Adapter\DbTable(
+                            $dbAdapter, 'user', 'email', 'password', 'MD5(?)'
+                    );
+
+                    $authService = new \Zend\Authentication\AuthenticationService();
+                    $authService->setAdapter($dbTableAuthAdapter);
+                    return $authService;
+                },
+            )
         );
     }
 }

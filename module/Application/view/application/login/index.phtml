@@ -1,15 +1,24 @@
 <?php
-echo $this->message;
-?>
 
-<form action="/login/auth" method="post">
-    <dl>
-        <dt><label for="email"><?php echo $this->translate('Email'); ?></label></dt>
-        <dd><input name="email" type="text" value=""></dd>
+$form = $this->form;
 
-        <dt><label for="password"><?php echo $this->translate('Password'); ?></label></dt>
-        <dd><input name="password" type="password" value=""></dd>
+$form->setAttribute('action', $this->url(
+    'login',
+    array(
+        'action' => 'submit',
+    )
+));
+$form->prepare();
 
-        <dd><button type="submit" name="submit" value=""><?php echo $this->translate('Login'); ?></button></dd>
-    </dl>
-</form>
+echo $this->form()->openTag($form);
+echo $this->formCollection($form);
+echo $this->form()->closeTag();
+
+if ($this->messages){
+    echo '<ul>';
+    foreach($this->messages as $message)
+    {
+        echo '<li>'.$message.'</li>';
+    }
+    echo '</ul>';
+}

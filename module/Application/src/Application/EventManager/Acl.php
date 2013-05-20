@@ -123,6 +123,10 @@ class Acl //implements ServiceManagerAwareInterface//, EventManagerAwareInterfac
         $controller = $routeParams['controller'];
         //$action = $routeParams['action'];
 
+        $auth = $this->getServiceManager()->get('AuthService');
+
+//        \DEBUG::dump($auth->getStorage()->read());
+
         $userId = 1;
 
         $user = new \Varient\Database\ActiveRecord\ActiveRecord('user');

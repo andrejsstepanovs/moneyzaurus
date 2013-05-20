@@ -108,9 +108,11 @@ class NewController extends AbstractActionController
     protected function getUserId()
     {
         if (null === $this->userId) {
-            $this->userId = $this->zfcUserAuthentication()
-                                 ->getIdentity()
-                                 ->getId();
+
+            $this->userId = 1;
+//            $this->userId = $this->zfcUserAuthentication()
+//                                 ->getIdentity()
+//                                 ->getId();
 
             if (empty($this->userId)) {
                 throw new Exception\UserNotFoundException(
