@@ -1,0 +1,15 @@
+<?php
+echo $this->message;
+?>
+
+<form action="/login/auth" method="post">
+    <dl>
+        <dt><label for="email"><?php echo $this->translate('Email'); ?></label></dt>
+        <dd><input name="email" type="text" value=""></dd>
+
+        <dt><label for="password"><?php echo $this->translate('Password'); ?></label></dt>
+        <dd><input name="password" type="password" value=""></dd>
+
+        <dd><button type="submit" name="submit" value=""><?php echo $this->translate('Login'); ?></button></dd>
+    </dl>
+</form>

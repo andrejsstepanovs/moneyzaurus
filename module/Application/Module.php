@@ -26,6 +26,8 @@ class Module
         );
 
 
+//        \DEBUG::dump($this->zfcUserAuthentication()->getIdentity());
+
         $acl = $serviceManager->get('Application\EventManager\Acl')
                               ->setMvcEvent($mvcEvent)
                               ->setAclConfig($this->getConfig('acl'));
