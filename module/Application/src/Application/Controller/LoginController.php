@@ -2,10 +2,6 @@
 namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Application\Authentication\Adapter as AuthAdapter;
-
-use Zend\Form\Annotation\AnnotationBuilder;
-use Zend\View\Model\ViewModel;
 use Varient\Database\ActiveRecord\ActiveRecord;
 use Application\Form\Login as LoginForm;
 use Zend\Authentication\Storage\Session;
@@ -13,11 +9,19 @@ use Zend\Authentication\Storage\Session;
 
 class LoginController extends AbstractActionController
 {
+    /** @var \Application\Form\Login */
     protected $form;
+
+    /** @var \Zend\Authentication\Storage\Session */
     protected $storage;
-    protected $authservice;
+
+    /** @var \Varient\Database\ActiveRecord\ActiveRecord */
     protected $user;
 
+
+    /**
+     * @return \Varient\Database\ActiveRecord\ActiveRecord
+     */
     public function getUser()
     {
         if (null === $this->user) {
@@ -26,16 +30,9 @@ class LoginController extends AbstractActionController
         return $this->user;
     }
 
-    public function getAuthService()
-    {
-        if (null === $this->authservice) {
-            $this->authservice = $this->getServiceLocator()
-                                      ->get('AuthService');
-        }
-
-        return $this->authservice;
-    }
-
+    /**
+     * @return \Zend\Authentication\Storage\Session
+     */
     public function getSessionStorage()
     {
         if (null === $this->storage) {
@@ -45,6 +42,9 @@ class LoginController extends AbstractActionController
         return $this->storage;
     }
 
+    /**
+     * @return \Application\Form\Login
+     */
     public function getForm()
     {
         if (null === $this->form) {
@@ -57,14 +57,14 @@ class LoginController extends AbstractActionController
     public function indexAction()
     {
         if ($this->getAuthService()->hasIdentity()){
+            $this->flashmessenger()->addMessage('Already logged in');
             return $this->redirect()->toRoute('moneyzaurus');
         }
 
         $form = $this->getForm();
 
         return array(
-            'form'     => $form,
-            'messages' => $this->flashmessenger()->getMessages()
+            'form' => $form,
         );
     }
 
@@ -104,9 +104,6 @@ class LoginController extends AbstractActionController
                                      ->setEmail($request->getPost('email'))
                                      ->load()
                                      ->toArray();
-
-
-//                         \DEBUG::dump($user->toArray());
 
                     $authService->setStorage($this->getSessionStorage());
                     $authService->getStorage()->write($userData);

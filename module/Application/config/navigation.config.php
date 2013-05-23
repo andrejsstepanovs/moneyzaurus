@@ -5,7 +5,7 @@ return array(
         'default' => array(
              array(
                  'label' => 'New',
-                 'route' => 'new',
+                 'route' => 'transaction',
                  'a_params' => array(
                     'data-transition' => 'slide',
                     'data-icon'       => 'plus',
