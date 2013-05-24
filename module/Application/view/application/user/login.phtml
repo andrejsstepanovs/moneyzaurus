@@ -3,9 +3,9 @@
 $form = $this->form;
 
 $form->setAttribute('action', $this->url(
-    'login',
+    'user',
     array(
-        'action' => 'submit',
+        'action' => 'authenticate',
     )
 ));
 $form->prepare();

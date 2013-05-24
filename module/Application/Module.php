@@ -5,6 +5,7 @@ namespace Application;
 use Zend\Db\TableGateway\Feature;
 use Zend\Mvc\MvcEvent;
 
+
 class Module
 {
     protected $config;
@@ -26,11 +27,8 @@ class Module
         );
 
 
-//        \DEBUG::dump($this->zfcUserAuthentication()->getIdentity());
-
-        $acl = $serviceManager->get('Application\EventManager\Acl')
-                              ->setMvcEvent($mvcEvent)
-                              ->setAclConfig($this->getConfig('acl'));
+        /** @var $acl \Application\Acl\Acl */
+        $acl = $serviceManager->get('Application\Acl\Acl');
 
         $application->getEventManager()
                     ->attach(
@@ -82,9 +80,6 @@ class Module
     public function getServiceConfig()
     {
         return array(
-            'invokables' => array(
-                '\Application\EventManager\Acl' => '\Application\EventManager\Acl'
-            ),
             'factories' => array(
                 'AuthService' => function($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
@@ -92,11 +87,67 @@ class Module
                             $dbAdapter, 'user', 'email', 'password', 'MD5(?)'
                     );
 
-                    $authService = new \Zend\Authentication\AuthenticationService();
-                    $authService->setAdapter($dbTableAuthAdapter);
-                    return $authService;
+                    return $sm->get('Zend\Authentication\AuthenticationService')
+                              ->setAdapter($dbTableAuthAdapter);
+                },
+                'Application\Acl\Acl' => function($sm) {
+                    return new Acl\Acl($sm);
                 },
             )
         );
     }
+
+
+//    public function _getViewHelperConfig()
+//    {
+//        return array(
+//            'factories' => array(
+//                // This will overwrite the native navigation helper
+//                'navigation' => function(\Zend\View\HelperPluginManager $pm) {
+//
+//
+//                    $acl = $pm->getServiceLocator()->get('Application\Acl\Acl');
+//
+//                    $zendAcl = $acl->getAcl();
+//
+//                    \DEBUG::dump($zendAcl);
+//
+//                    $acl = $pm->getServiceLocator()->get('Application\Acl\Acl');
+//                    \DEBUG::dump($acl);
+//
+//
+//                    // Setup ACL:
+//                    $acl = new \Zend\Permissions\Acl\Acl();
+//                    $acl->addRole(new \Zend\Permissions\Acl\Role\GenericRole('member'));
+//                    $acl->addRole(new \Zend\Permissions\Acl\Role\GenericRole('admin'));
+//                    $acl->addResource(new \Zend\Permissions\Acl\Resource\GenericResource('mvc:admin'));
+//                    $acl->addResource(new \Zend\Permissions\Acl\Resource\GenericResource('mvc:community.account'));
+//                    $acl->allow('member', 'mvc:community.account');
+//                    $acl->allow('admin', null);
+//
+//                    // Get an instance of the proxy helper
+//                    $navigation = $pm->get('Zend\View\Helper\Navigation');
+//
+//                    // Store ACL and role in the proxy helper:
+//                    $navigation->setAcl($acl)
+//                               ->setRole('member');
+//
+//                    // Return the new navigation helper instance
+//                    return $navigation;
+//                }
+//            )
+//        );
+//    }
+//
+//    public function ___getViewHelperConfig()
+//    {
+//        return array(
+//            'factories' => array(
+//                'mynavigation' => function($sm) {
+//                    $helper = new \Application\View\Helper\Navigation();
+//                    return $helper;
+//                }
+//            )
+//        );
+//   }
 }

@@ -1,11 +1,13 @@
 <?php
 
-namespace Application\EventManager;
+namespace Application\Acl;
 
 use Zend\Mvc\MvcEvent;
+use Zend\ServiceManager\ServiceManager;
 use Zend\Permissions\Acl\Acl as ZendAcl;
 use Zend\Permissions\Acl\Role\GenericRole as ZendRole;
 use Zend\Permissions\Acl\Resource\GenericResource as ZendResource;
+use Application\Exception;
 
 
 class Acl //implements ServiceManagerAwareInterface//, EventManagerAwareInterface
@@ -24,6 +26,16 @@ class Acl //implements ServiceManagerAwareInterface//, EventManagerAwareInterfac
 
 
     /**
+     * @param null|\Zend\ServiceManager\ServiceManager $serviceManager
+     */
+    public function __construct($serviceManager = null)
+    {
+        if ($serviceManager) {
+            $this->setServiceManager($serviceManager);
+        }
+    }
+
+    /**
      * @param \Zend\Mvc\MvcEvent $eventManager
      * @return \Application\EventManager\Acl
      */
@@ -38,6 +50,11 @@ class Acl //implements ServiceManagerAwareInterface//, EventManagerAwareInterfac
      */
     public function getMvcEvent()
     {
+        if (null === $this->mvcEvent) {
+            /** @var $mvcEvent \Zend\Mvc\MvcEvent */
+            $mvcEvent = $this->getServiceManager()->get('application')->getMvcEvent();
+            $this->setMvcEvent($mvcEvent);
+        }
         return $this->mvcEvent;
     }
 
@@ -55,6 +72,16 @@ class Acl //implements ServiceManagerAwareInterface//, EventManagerAwareInterfac
     }
 
     /**
+     * @param \Zend\ServiceManager\ServiceManager $serviceManager
+     * @return \Application\EventManager\Acl
+     */
+    public function setServiceManager(ServiceManager $serviceManager)
+    {
+        $this->serviceManager = $serviceManager;
+        return $this;
+    }
+
+    /**
      * @param array $config
      * @return \Application\EventManager\Acl
      */
@@ -69,6 +96,13 @@ class Acl //implements ServiceManagerAwareInterface//, EventManagerAwareInterfac
      */
     public function getAclConfig()
     {
+        if (null === $this->config) {
+            $config = $this->getServiceManager()->get('Config');
+            if (array_key_exists('acl', $config)) {
+                $this->setAclConfig($config['acl']);
+            }
+        }
+
         return $this->config;
     }
 
@@ -114,7 +148,9 @@ class Acl //implements ServiceManagerAwareInterface//, EventManagerAwareInterfac
         return $this->acl;
     }
 
-
+    /**
+     * @throws Exception\AclResourceNotAllowedException
+     */
     public function checkAcl()
     {
         $acl = $this->getAcl();
@@ -125,25 +161,24 @@ class Acl //implements ServiceManagerAwareInterface//, EventManagerAwareInterfac
 
         $auth = $this->getServiceManager()->get('AuthService');
 
-//        \DEBUG::dump($auth->getStorage()->read());
-
-        $userId = 1;
-
-        $user = new \Varient\Database\ActiveRecord\ActiveRecord('user');
-        try {
-            $role = $user->setId($userId)->load()->getRole();
-        } catch (Exception $exc) {
-            $role = 'guest';
+        $userRole = 'guest';
+        if ($auth->hasIdentity()) {
+            $identity = $auth->getIdentity();
+            if (!array_key_exists('role', $identity)) {
+                // something is wrong.
+                $auth->clearIdentity();
+            } else {
+                $userRole = $identity['role'];
+            }
         }
 
-//        \DEBUG::dump($controller);
-
-        $allowed = $acl->isAllowed($role, $controller);
+        $allowed = $acl->isAllowed($userRole, $controller);
         if (!$allowed) {
-
+            throw new Exception\AclResourceNotAllowedException(
+                'Resource "' . $controller . '" is not allowed '
+                . 'for role "'.$userRole.'"'
+            );
         }
-
-//        $this->getMvcEvent()->
     }
 
 }

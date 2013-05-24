@@ -37,6 +37,15 @@ return array(
                     'data-icon'       => 'search',
                  )
              ),
+             array(
+                 'label' => 'Profile',
+                 'route' => 'user',
+                 'data-transition' => 'slide',
+                 'a_params' => array(
+                    'data-transition' => 'slide',
+                    'data-icon'       => 'search',
+                 )
+             ),
         ),
     )
 );

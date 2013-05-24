@@ -27,7 +27,7 @@ class AbstractActionController extends ZendAbstractActionController
 
         $messages = $this->flashmessenger()->getMessages();
         if (!empty($messages)) {
-            $this->showMessages();
+            $this->showMessages($messages);
         }
 
         return $actionResponse;

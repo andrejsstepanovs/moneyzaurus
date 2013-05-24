@@ -26,15 +26,15 @@ return array(
                     ),
                 ),
             ),
-            'login' => array(
+            'user' => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/login[/:action]',
+                    'route'    => '/user[/:action]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                     ),
                     'defaults' => array(
-                        'controller' => 'Application\Controller\Login',
+                        'controller' => 'Application\Controller\User',
                         'action'     => 'index',
                     ),
                 ),

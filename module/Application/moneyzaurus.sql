@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 20, 2013 at 02:46 PM
+-- Generation Time: May 24, 2013 at 09:19 PM
 -- Server version: 5.5.31
--- PHP Version: 5.4.14
+-- PHP Version: 5.4.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `moneyzaurus`
 --
+CREATE DATABASE IF NOT EXISTS `moneyzaurus` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `moneyzaurus`;
 
 -- --------------------------------------------------------
 
@@ -73,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `group` (
   KEY `id_user` (`id_user`),
   KEY `name` (`name`),
   KEY `date_created` (`date_created`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 -- --------------------------------------------------------
 
@@ -89,15 +91,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   PRIMARY KEY (`item_id`),
   UNIQUE KEY `name-id_user` (`name`,`id_user`),
   KEY `id_user` (`id_user`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `purchase`
---
--- in use(#1356 - View 'moneyzaurus.purchase' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them)
--- Error reading data: (#1356 - View 'moneyzaurus.purchase' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -110,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `transaction` (
   `id_user` int(10) unsigned NOT NULL,
   `id_group` int(10) unsigned NOT NULL,
   `id_item` int(10) unsigned NOT NULL,
-  `price` decimal(2,2) NOT NULL,
+  `price` decimal(6,2) NOT NULL,
   `id_currency` varchar(3) NOT NULL,
   `date` date NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -121,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `transaction` (
   KEY `price` (`price`),
   KEY `id_currency` (`id_currency`),
   KEY `date_transaction` (`date`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -131,12 +125,14 @@ CREATE TABLE IF NOT EXISTS `transaction` (
 
 CREATE TABLE IF NOT EXISTS `user` (
   `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `role` enum('user','admin') NOT NULL DEFAULT 'user',
   `username` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `display_name` varchar(50) DEFAULT NULL,
   `password` varchar(128) NOT NULL,
   `state` smallint(5) unsigned DEFAULT NULL,
   PRIMARY KEY (`user_id`),
+  UNIQUE KEY `role` (`role`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
@@ -145,8 +141,8 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `username`, `email`, `display_name`, `password`, `state`) VALUES
-(1, NULL, 'andrejsstepanovs@gmail.com', NULL, '$2y$14$DZs1Td1RNS3k6KhLgmx5A.ulPmErMv7XWyh.tuz536oA3b2724aZW', NULL);
+INSERT INTO `user` (`user_id`, `role`, `username`, `email`, `display_name`, `password`, `state`) VALUES
+(1, 'user', NULL, 'andrejsstepanovs@gmail.com', NULL, 'bf02a62db2ec80b67d87833a52a39d9d', NULL);
 
 -- --------------------------------------------------------
 

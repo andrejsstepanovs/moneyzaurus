@@ -41,11 +41,15 @@ $basePath = $this->basePath();
                 <?php echo $this->content; ?>
             </div>
 
-            <div data-theme="b" data-role="footer" data-position="fixed">
-                <div data-role="navbar" data-iconpos="top">
-                    <?php echo $this->navigation('navigation')->menu() ?>
+            <?php if ($this->identity()): ?>
+
+                <div data-theme="b" data-role="footer" data-position="fixed">
+                    <div data-role="navbar" data-iconpos="top">
+                        <?php echo $this->navigation('navigation')->menu() ?>
+                    </div>
                 </div>
-            </div>
+
+            <?php endif; ?>
 
         </div>
         <?php echo $this->inlineScript() ?>

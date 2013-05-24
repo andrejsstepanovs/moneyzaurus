@@ -1,13 +1,12 @@
 <?php
 namespace Application\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
 use Varient\Database\ActiveRecord\ActiveRecord;
 use Application\Form\Login as LoginForm;
 use Zend\Authentication\Storage\Session;
+use Varient\Controller\AbstractActionController;
 
-
-class LoginController extends AbstractActionController
+class UserController extends AbstractActionController
 {
     /** @var \Application\Form\Login */
     protected $form;
@@ -54,7 +53,24 @@ class LoginController extends AbstractActionController
         return $this->form;
     }
 
+    /**
+     * Shows user profile.
+     *
+     * @return array
+     */
     public function indexAction()
+    {
+        if (!$this->getAuthService()->hasIdentity()) {
+            return $this->redirect()->toRoute('user', array('action' => 'login'));
+        }
+    }
+
+    /**
+     * Shows login form.
+     *
+     * @return array
+     */
+    public function loginAction()
     {
         if ($this->getAuthService()->hasIdentity()){
             $this->flashmessenger()->addMessage('Already logged in');
@@ -68,16 +84,22 @@ class LoginController extends AbstractActionController
         );
     }
 
-    public function submitAction()
+    /**
+     * Make authentification.
+     *
+     * @return \Zend\Http\PhpEnvironment\Response
+     */
+    protected function authenticateAction()
     {
         $form     = $this->getForm();
-        $redirect = 'login';
+        $redirect = 'user';
 
         $request = $this->getRequest();
 
         if ($request->isPost()) {
             $form->setData($request->getPost());
             if ($form->isValid()) {
+
                 /** @var $authService \Zend\Authentication\AuthenticationService */
                 $authService = $this->getAuthService();
                 $authService->getAdapter()
@@ -85,29 +107,21 @@ class LoginController extends AbstractActionController
                             ->setCredential($request->getPost('password'));
 
                 $result = $authService->authenticate();
-                foreach ($result->getMessages() as $message) {
-                    $this->flashmessenger()->addMessage($message);
-                }
-
-                if ($result->isValid()) {
+                if (!$result->isValid()) {
+                    foreach ($result->getMessages() as $message) {
+                        $this->flashmessenger()->addMessage($message);
+                    }
+                } else {
                     $redirect = 'moneyzaurus';
 
-                    //check if it has rememberMe :
-//                    if ($request->getPost('rememberme') == 1 ) {
-//                        $this->getSessionStorage()
-//                             ->setRememberMe(1);
-//                        //set storage again
-//                        $authService->setStorage($this->getSessionStorage());
-//                    }
-
-                    $userData = $this->getUser()
-                                     ->setEmail($request->getPost('email'))
-                                     ->load()
-                                     ->toArray();
+                    $user = $this->getUser()
+                                 ->setEmail($request->getPost('email'))
+                                 ->load()
+                                 ->unsPassword()
+                                 ->toArray();
 
                     $authService->setStorage($this->getSessionStorage());
-                    $authService->getStorage()->write($userData);
-//                    $authService->getStorage()->write($request->getPost('email'));
+                    $authService->getStorage()->write($user);
                 }
             }
         }
@@ -115,16 +129,19 @@ class LoginController extends AbstractActionController
         return $this->redirect()->toRoute($redirect);
     }
 
-
+    /**
+     * Clear user identity.
+     *
+     * @return \Zend\Http\PhpEnvironment\Response
+     */
     public function logoutAction()
     {
         if ($this->getAuthService()->hasIdentity()) {
-            $this->getSessionStorage()->forgetMe();
             $this->getAuthService()->clearIdentity();
-            $this->flashmessenger()->addMessage("You've been logged out");
+            $this->flashmessenger()->addMessage('Logged out');
         }
 
-        return $this->redirect()->toRoute('login');
+        return $this->redirect()->toRoute('moneyzaurus');
     }
 
 }
