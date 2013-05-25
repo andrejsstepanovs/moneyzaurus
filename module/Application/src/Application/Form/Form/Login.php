@@ -1,8 +1,9 @@
 <?php
 
-namespace Application\Form;
+namespace Application\Form\Form;
 
 use Zend\Form\Form;
+
 
 class Login extends Form
 {
@@ -14,8 +15,11 @@ class Login extends Form
 
         $this->add(array(
             'name' => 'email',
+            'type' => 'Zend\Form\Element\Email',
             'attributes' => array(
-                'type'  => 'text',
+                'id'          => 'email',
+                'placeholder' => 'Email',
+                'required'    => 'required',
             ),
             'options' => array(
                 'label' => 'Email',
@@ -25,7 +29,10 @@ class Login extends Form
         $this->add(array(
             'name' => 'password',
             'attributes' => array(
-                'type'  => 'password',
+                'id'          => 'password',
+                'type'        => 'password',
+                'placeholder' => 'Password',
+                'required'    => 'required',
             ),
             'options' => array(
                 'label' => 'Password',
@@ -35,9 +42,9 @@ class Login extends Form
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(
+                'id'    => 'submit',
                 'type'  => 'submit',
                 'value' => 'Login',
-                'id' => 'submitbutton',
             ),
         ));
     }

@@ -1,7 +1,7 @@
 <?php
 namespace Application\Controller;
 
-use Application\Form\Transaction as TransactionForm;
+use Application\Form\Form\Transaction as TransactionForm;
 use Varient\Controller\AbstractActionController;
 use Varient\Database\ActiveRecord\ActiveRecord;
 use Application\Exception;

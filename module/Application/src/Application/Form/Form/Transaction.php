@@ -1,8 +1,9 @@
 <?php
 
-namespace Application\Form;
+namespace Application\Form\Form;
 
 use Zend\Form\Form;
+
 
 class Transaction extends Form
 {
@@ -15,8 +16,10 @@ class Transaction extends Form
         $this->add(array(
             'name' => 'item',
             'attributes' => array(
-                'type' => 'text',
-                'id'   => 'item',
+                'type'        => 'text',
+                'id'          => 'item',
+                'placeholder' => 'Item name',
+                'required'    => 'required',
             ),
             'options' => array(
                 'label' => 'Item',
@@ -26,8 +29,10 @@ class Transaction extends Form
         $this->add(array(
             'name' => 'group',
             'attributes' => array(
-                'id'   => 'group',
-                'type' => 'text',
+                'id'          => 'group',
+                'type'        => 'text',
+                'placeholder' => 'Group name',
+                'required'    => 'required',
             ),
             'options' => array(
                 'label' => 'Group',
@@ -37,8 +42,10 @@ class Transaction extends Form
         $this->add(array(
             'name' => 'price',
             'attributes' => array(
-                'id'   => 'price',
-                'type' => 'text',
+                'id'          => 'price',
+                'type'        => 'text',
+                'placeholder' => '0.00',
+                'required'    => 'required',
             ),
             'options' => array(
                 'label' => 'Price',

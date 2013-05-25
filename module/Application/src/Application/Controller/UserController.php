@@ -2,9 +2,11 @@
 namespace Application\Controller;
 
 use Varient\Database\ActiveRecord\ActiveRecord;
-use Application\Form\Login as LoginForm;
+use Application\Form\Form\Login as LoginForm;
+use Application\Form\Validator\Login as LoginValidator;
 use Zend\Authentication\Storage\Session;
 use Varient\Controller\AbstractActionController;
+
 
 class UserController extends AbstractActionController
 {
@@ -16,6 +18,8 @@ class UserController extends AbstractActionController
 
     /** @var \Varient\Database\ActiveRecord\ActiveRecord */
     protected $user;
+
+    protected $validator;
 
 
     /**
@@ -54,6 +58,18 @@ class UserController extends AbstractActionController
     }
 
     /**
+     * @return \Application\Form\Validator\Login
+     */
+    public function getValidator()
+    {
+        if (null === $this->validator) {
+            $this->validator = new LoginValidator();
+        }
+
+        return $this->validator;
+    }
+
+    /**
      * Shows user profile.
      *
      * @return array
@@ -77,56 +93,60 @@ class UserController extends AbstractActionController
             return $this->redirect()->toRoute('moneyzaurus');
         }
 
-        $form = $this->getForm();
+        $response = $this->authenticate();
+        if ($response) {
+            return $response;
+        }
 
         return array(
-            'form' => $form,
+            'form' => $this->getForm()
         );
     }
 
     /**
-     * Make authentification.
-     *
-     * @return \Zend\Http\PhpEnvironment\Response
+     * @return null|\Zend\Http\PhpEnvironment\Response
      */
-    protected function authenticateAction()
+    protected function authenticate()
     {
-        $form     = $this->getForm();
-        $redirect = 'user';
-
         $request = $this->getRequest();
 
-        if ($request->isPost()) {
-            $form->setData($request->getPost());
-            if ($form->isValid()) {
-
-                /** @var $authService \Zend\Authentication\AuthenticationService */
-                $authService = $this->getAuthService();
-                $authService->getAdapter()
-                            ->setIdentity($request->getPost('email'))
-                            ->setCredential($request->getPost('password'));
-
-                $result = $authService->authenticate();
-                if (!$result->isValid()) {
-                    foreach ($result->getMessages() as $message) {
-                        $this->flashmessenger()->addMessage($message);
-                    }
-                } else {
-                    $redirect = 'moneyzaurus';
-
-                    $user = $this->getUser()
-                                 ->setEmail($request->getPost('email'))
-                                 ->load()
-                                 ->unsPassword()
-                                 ->toArray();
-
-                    $authService->setStorage($this->getSessionStorage());
-                    $authService->getStorage()->write($user);
-                }
-            }
+        if (!$request->isPost()) {
+            return null;
         }
 
-        return $this->redirect()->toRoute($redirect);
+        $form = $this->getForm();
+        $form->setInputFilter($this->getValidator()->getInputFilter());
+        $form->setData($request->getPost());
+
+        if (!$form->isValid()) {
+            return null;
+        }
+
+        /** @var $authService \Zend\Authentication\AuthenticationService */
+        $authService = $this->getAuthService();
+        $authService->getAdapter()
+                    ->setIdentity($request->getPost('email'))
+                    ->setCredential($request->getPost('password'));
+
+        $result = $authService->authenticate();
+        if (!$result->isValid()) {
+            foreach ($result->getMessages() as $message) {
+                $this->flashmessenger()->addMessage($message);
+            }
+
+            return null;
+        }
+
+        $user = $this->getUser()
+                     ->setEmail($request->getPost('email'))
+                     ->load()
+                     ->unsPassword()
+                     ->toArray();
+
+        $authService->setStorage($this->getSessionStorage());
+        $authService->getStorage()->write($user);
+
+        return $this->redirect()->toRoute('moneyzaurus');
     }
 
     /**
