@@ -68,6 +68,7 @@ class Transaction extends Form
             'attributes' => array(
                 'type' => 'text',
                 'id'   => 'date',
+                'placeholder' => date('Y-m-d'),
             ),
             'options' => array(
                 'label' => 'Date',

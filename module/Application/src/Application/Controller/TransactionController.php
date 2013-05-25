@@ -1,6 +1,7 @@
 <?php
 namespace Application\Controller;
 
+use Application\Form\Validator\Transaction as TransactionValidator;
 use Application\Form\Form\Transaction as TransactionForm;
 use Varient\Controller\AbstractActionController;
 use Varient\Database\ActiveRecord\ActiveRecord;
@@ -20,6 +21,9 @@ class TransactionController extends AbstractActionController
 
     /** @var \Varient\Database\ActiveRecord\ActiveRecord */
     protected $currencyActiveRecord;
+
+    /** @var \Application\Form\Validator\Transaction */
+    protected $validator;
 
 
     /**
@@ -57,6 +61,18 @@ class TransactionController extends AbstractActionController
     }
 
     /**
+     * @return \Application\Form\Validator\Transaction
+     */
+    public function getValidator()
+    {
+        if (null === $this->validator) {
+            $this->validator = new TransactionValidator();
+        }
+
+        return $this->validator;
+    }
+
+    /**
      * @return \Varient\Database\ActiveRecord\ActiveRecord
      */
     public function getCurrencyActiveRecord()
@@ -90,7 +106,7 @@ class TransactionController extends AbstractActionController
         $request = $this->getRequest();
 
         if ($request->isPost()) {
-
+            $form->setInputFilter($this->getValidator()->getInputFilter());
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
