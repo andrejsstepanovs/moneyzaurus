@@ -53,13 +53,11 @@ class TransactionController extends AbstractActionController
     {
         $elements = $this->getForm()->getElements();
         foreach ($elements as $name => $element) {
-            if (in_array($name, array('currency', 'date'))) {
+            if (in_array($name, array('currency', 'date', 'submit'))) {
                 continue;
             }
 
-            if ($element instanceof \Zend\Form\Element\Text) {
-                $element->setValue('');
-            }
+            $element->setValue('');
         }
     }
 

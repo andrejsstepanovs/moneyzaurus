@@ -32,21 +32,15 @@ foreach ($form as $element) {
 }
 
 
-
 foreach ($this->datalist as $name => $values) :
-    ?><datalist id="<?php echo $name; ?>s">
+    ?>
+    <datalist id="<?php echo $name; ?>s">
         <?php foreach ($values as $value): ?>
             <option value="<?php echo $value; ?>">
         <?php endforeach; ?>
-    </datalist><?php
+    </datalist>
+    <?php
 endforeach;
-?>
-<datalist id="items">
-    <option value=Albania>
-    <option value=Argentina>
-    <option value=Australia>
-    <option value=Austria>
-</datalist>
-<?php
+
 
 echo $this->form()->closeTag();
