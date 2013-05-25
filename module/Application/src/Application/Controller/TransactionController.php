@@ -31,8 +31,12 @@ class TransactionController extends AbstractActionController
             $this->form = new TransactionForm();
 
             $formElements = $this->form->getElements();
+
             $currencyElement = $formElements['currency'];
+            $dateElement     = $formElements['date'];
+
             $currencyElement->setValueOptions($this->getCurrencyValueOptions());
+            $dateElement->setValue(date('Y-m-d'));
         }
 
         return $this->form;

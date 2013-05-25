@@ -15,7 +15,8 @@ class Transaction extends Form
         $this->add(array(
             'name' => 'item',
             'attributes' => array(
-                'type'  => 'text',
+                'type' => 'text',
+                'id'   => 'item',
             ),
             'options' => array(
                 'label' => 'Item',
@@ -25,7 +26,8 @@ class Transaction extends Form
         $this->add(array(
             'name' => 'group',
             'attributes' => array(
-                'type'  => 'text',
+                'id'   => 'group',
+                'type' => 'text',
             ),
             'options' => array(
                 'label' => 'Group',
@@ -35,21 +37,30 @@ class Transaction extends Form
         $this->add(array(
             'name' => 'price',
             'attributes' => array(
-                'type'  => 'text',
+                'id'   => 'price',
+                'type' => 'text',
             ),
             'options' => array(
                 'label' => 'Price',
             ),
         ));
 
-        $currency = new \Zend\Form\Element\Select('currency');
-        $currency->setLabel('Currency');
-        $this->add($currency);
+        $this->add(array(
+            'name' => 'currency',
+            'type' => 'Zend\Form\Element\Select',
+            'attributes' => array(
+                'id' => 'currency',
+            ),
+            'options' => array(
+                'label' => 'Currency',
+            ),
+        ));
 
         $this->add(array(
             'name' => 'date',
             'attributes' => array(
-                'type'  => 'text',
+                'type' => 'text',
+                'id'   => 'date',
             ),
             'options' => array(
                 'label' => 'Date',
@@ -59,9 +70,11 @@ class Transaction extends Form
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(
-                'type'  => 'submit',
-                'value' => 'Save',
-                'id' => 'submitbutton',
+                'type'         => 'submit',
+                'id'           => 'submit',
+                'value'        => 'Save',
+                'data-icon'    => 'plus',
+                'data-iconpos' => 'left'
             ),
         ));
     }
