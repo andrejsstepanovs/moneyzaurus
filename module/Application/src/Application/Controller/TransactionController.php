@@ -25,6 +25,9 @@ class TransactionController extends AbstractActionController
     /** @var \Application\Form\Validator\Transaction */
     protected $validator;
 
+    /** @var array */
+    protected $datalist;
+
 
     /**
      * @return \Application\Form\Transaction
@@ -58,6 +61,43 @@ class TransactionController extends AbstractActionController
                 $element->setValue('');
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getDatalist()
+    {
+        if (null === $this->datalist) {
+            $this->datalist = array();
+            $datalistElements = array(
+                'item'  => 'name',
+                'group' => 'name'
+            );
+            $elements = $this->getForm()->getElements();
+            foreach ($elements as $name => $element) {
+                if (!array_key_exists($name, $datalistElements)) {
+                    continue;
+                }
+                $column = $datalistElements[$name];
+
+                /** @var $table \Varient\Database\Table\AbstractTable */
+                /** @var $results \Zend\Db\ResultSet\HydratingResultSet */
+                $table = $this->getTable($name)->getTable();
+                $results = $table->fetchUniqeColum($column, array(
+                    'id_user' => $this->getUserId()
+                ));
+
+                $dataValues = array();
+                foreach ($results as $model) {
+                    $dataValues[] = $model->getData($column);
+                }
+
+                $this->datalist[$name] = $dataValues;
+            }
+        }
+
+        return $this->datalist;
     }
 
     /**
@@ -141,7 +181,8 @@ class TransactionController extends AbstractActionController
         }
 
         return array(
-            'form' => $form,
+            'form'     => $form,
+            'datalist' => $this->getDatalist(),
         );
     }
 

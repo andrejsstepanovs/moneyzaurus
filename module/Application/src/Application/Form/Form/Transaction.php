@@ -16,7 +16,8 @@ class Transaction extends Form
         $this->add(array(
             'name' => 'item',
             'attributes' => array(
-                'type'        => 'text',
+                'type'        => 'search',
+                'list'        => 'items',
                 'id'          => 'item',
                 'placeholder' => 'Item name',
                 'required'    => 'required',
@@ -29,8 +30,9 @@ class Transaction extends Form
         $this->add(array(
             'name' => 'group',
             'attributes' => array(
+                'type'        => 'search',
+                'list'        => 'groups',
                 'id'          => 'group',
-                'type'        => 'text',
                 'placeholder' => 'Group name',
                 'required'    => 'required',
             ),
@@ -66,7 +68,7 @@ class Transaction extends Form
         $this->add(array(
             'name' => 'date',
             'attributes' => array(
-                'type' => 'text',
+                'type' => 'Zend\Form\Element\Date',
                 'id'   => 'date',
                 'placeholder' => date('Y-m-d'),
             ),

@@ -8,6 +8,7 @@ use Zend\Db\Metadata\Metadata;
 use Zend\Db\Sql\TableIdentifier;
 use Zend\Db\TableGateway\Feature;
 use Zend\Db\TableGateway\AbstractTableGateway;
+use Zend\Db\Sql\Select;
 
 /**
  * Abstract Table class
@@ -177,6 +178,21 @@ class AbstractTable extends AbstractTableGateway
     public function fetchAll()
     {
         return $this->select();
+    }
+
+    /**
+     * @return \Zend\Db\ResultSet\ResultSet
+     * @throws Exception\WrongModuleException
+     */
+    public function fetchUniqeColum($column, $where = null)
+    {
+        return $this->select(function (Select $select) use ($column, $where) {
+            $select->quantifier(Select::QUANTIFIER_DISTINCT);
+            $select->columns(array($column));
+            if ($where) {
+                $select->where($where);
+            }
+        });
     }
 
     /**
