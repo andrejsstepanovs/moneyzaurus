@@ -1,8 +1,9 @@
 <?php
 $this->headTitle('List');
 
-$order_by = $this->order_by;
-$order    = $this->order;
+$order_by  = $this->order_by;
+$order     = $this->order;
+$paginator = $this->paginator;
 
 
 $url_order = 'ASC';  // the following lines
@@ -24,3 +25,7 @@ if ($order_by == 'title') {
     </tr>
 
 </table>
+<?php
+$this->paginationControl(
+    $paginator, 'Sliding', 'paginator-slide', array('order_by' => $order_by, 'order' => $order)
+);

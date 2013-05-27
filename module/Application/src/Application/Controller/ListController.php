@@ -2,6 +2,8 @@
 namespace Application\Controller;
 
 use Varient\Controller\AbstractActionController;
+use Zend\Paginator\Paginator;
+use Zend\Paginator\Adapter\Iterator as PaginatorIterator;
 
 
 class ListController extends AbstractActionController
@@ -26,15 +28,29 @@ class ListController extends AbstractActionController
     {
         /** @var $params \Zend\Mvc\Controller\Plugin\Params */
         $params   = $this->params();
-        $order_by = $params->fromRoute('order_by') ? $params->fromRoute('order_by') : 'transaction_id';
-        $order    = $params->fromRoute('order')    ? $params->fromRoute('order')    : \Zend\Db\Sql\Select::ORDER_ASCENDING;
+        $order_by = $params->fromRoute('order_by')     ? $params->fromRoute('order_by') : 'transaction_id';
+        $order    = $params->fromRoute('order')        ? $params->fromRoute('order')    : \Zend\Db\Sql\Select::ORDER_ASCENDING;
+        $page     = $this->params()->fromRoute('page') ? (int) $this->params()->fromRoute('page') : 1;
 
         $transactionsResuls = $this->getTransactions($order_by, $order);
+
+        $itemsPerPage = 2;
+
+        $transactionsResuls->current();
+        $paginator = new Paginator(new PaginatorIterator($transactionsResuls));
+        $paginator->setCurrentPageNumber($page)
+                  ->setItemCountPerPage($itemsPerPage)
+                  ->setPageRange(7);
+
+          \DEBUG::dump($paginator);
+          \DEBUG::dump($paginator->__toString());
 
         return array(
             'transactions' => $transactionsResuls,
             'order_by'     => $order_by,
             'order'        => $order,
+            'page'         => $page,
+            'paginator'    => $paginator,
         );
     }
 
