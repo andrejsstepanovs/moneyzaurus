@@ -3,6 +3,7 @@
 namespace Varient\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController AS ZendAbstractActionController;
+use Varient\Database\ActiveRecord\ActiveRecord;
 
 
 class AbstractActionController extends ZendAbstractActionController
@@ -12,6 +13,9 @@ class AbstractActionController extends ZendAbstractActionController
 
     /** @var integer */
     protected $userId;
+
+    /** @var array */
+    protected $activeRecords;
 
 
     /**
@@ -99,5 +103,20 @@ class AbstractActionController extends ZendAbstractActionController
         }
 
         return $this->authservice;
+    }
+
+
+    /**
+     * @param string $table
+     * @return \Varient\Database\ActiveRecord\ActiveRecord
+     */
+    protected function getTable($table = null)
+    {
+        $key = !$table ? 'null' : $table;
+        if (!isset($this->activeRecords[$table])) {
+            $this->activeRecords[$key] = new ActiveRecord($table);
+        }
+
+        return $this->activeRecords[$key];
     }
 }

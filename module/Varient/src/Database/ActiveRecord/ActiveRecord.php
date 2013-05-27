@@ -110,17 +110,44 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     }
 
     /**
+     * @param \Varient\Database\Model\AbstractModel $model
+     */
+    public function setModel(AbstractModel $model)
+    {
+        $this->model = $model;
+    }
+
+    /**
+     * @return \Varient\Database\Model\AbstractModel
+     */
+    public function getModel()
+    {
+        if (null === $this->model) {
+            return $this;
+        }
+
+        return $this->model;
+    }
+
+    /**
      * @return \Varient\Database\Table\AbstractTable
      */
     public function getTable()
     {
         if (null === $this->table) {
+            if ( $this->getTableName()) {
+                $tableIdentifier = new TableIdentifier($this->getTableName());
+            } else {
+                $tableIdentifier = null;
+            }
+
             $this->setTable(new AbstractTable(
                 $this->getAdapter(),
-                new HydratingResultSet($this->getHydrator(), $this),
-                new TableIdentifier($this->getTableName())
+                new HydratingResultSet($this->getHydrator(), $this->getModel()),
+                $tableIdentifier
             ));
         }
+
         return $this->table;
     }
 
@@ -133,6 +160,7 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
         foreach ($primaries AS $primary) {
             $this->setData($primary, $id);
         }
+
         return $this;
     }
 
@@ -145,6 +173,7 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
         foreach ($primaries AS $primary) {
             return $this->getData($primary);
         }
+
         return null;
     }
 

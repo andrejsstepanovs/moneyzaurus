@@ -4,7 +4,6 @@ namespace Application\Controller;
 use Application\Form\Validator\Transaction as TransactionValidator;
 use Application\Form\Form\Transaction as TransactionForm;
 use Varient\Controller\AbstractActionController;
-use Varient\Database\ActiveRecord\ActiveRecord;
 use Application\Exception;
 
 
@@ -18,9 +17,6 @@ class TransactionController extends AbstractActionController
 
     /** @var \Application\Form\Transaction */
     protected $form;
-
-    /** @var \Varient\Database\ActiveRecord\ActiveRecord */
-    protected $currencyActiveRecord;
 
     /** @var \Application\Form\Validator\Transaction */
     protected $validator;
@@ -111,22 +107,11 @@ class TransactionController extends AbstractActionController
     }
 
     /**
-     * @return \Varient\Database\ActiveRecord\ActiveRecord
-     */
-    public function getCurrencyActiveRecord()
-    {
-        if (null === $this->currencyActiveRecord) {
-            $this->currencyActiveRecord = new ActiveRecord('currency');
-        }
-        return $this->currencyActiveRecord;
-    }
-
-    /**
      * @return array
      */
     public function getCurrencyValueOptions()
     {
-        $currency = $this->getCurrencyActiveRecord();
+        $currency = $this->getTable('currency');
         $currencies = $currency->getTable()->fetchAll();
 
         $valueOptions = array();
@@ -229,19 +214,6 @@ class TransactionController extends AbstractActionController
                     ->setIdGroup($group->getId())
                     ->setIdCurrency($currency->getId())
                     ->save();
-    }
-
-    /**
-     * @param string $table
-     * @return \Varient\Database\ActiveRecord\ActiveRecord
-     */
-    protected function getTable($table)
-    {
-        if (!isset($this->activeRecords[$table])) {
-            $this->activeRecords[$table] = new ActiveRecord($table);
-        }
-
-        return $this->activeRecords[$table];
     }
 
 }

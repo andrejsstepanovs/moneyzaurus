@@ -41,14 +41,17 @@ class AbstractTable extends AbstractTableGateway
     {
         if (empty($table) && empty($this->table)) {
             $classname = get_class($this);
-            $tablename = strtolower(substr($classname, strrpos($classname, '\\') + 1));
-            $table = new TableIdentifier($tablename);
+            if ($classname != get_class()) {
+                $tablename = strtolower(substr($classname, strrpos($classname, '\\') + 1));
+                $table = new TableIdentifier($tablename);
+            } else {
+                $table = null;
+            }
 
         } elseif (is_string($this->table)) {
             $table = new TableIdentifier($this->table);
         }
 
-        $this->table = $table;
 
         if (null === $adapter) {
             $this->featureSet = new Feature\FeatureSet();
@@ -57,8 +60,19 @@ class AbstractTable extends AbstractTableGateway
             $this->adapter = $adapter;
         }
 
-        $this->resultSetPrototype = $resultSetPrototype;
-        $this->initialize();
+        if ($table) {
+            $this->setTable($table);
+            $this->resultSetPrototype = $resultSetPrototype;
+            $this->initialize();
+        }
+    }
+
+    /**
+     * @param string|array|Zend\Db\Sql\TableIdentifier $table
+     */
+    public function setTable($table)
+    {
+        $this->table = $table;
     }
 
     /**
@@ -192,6 +206,15 @@ class AbstractTable extends AbstractTableGateway
             if ($where) {
                 $select->where($where);
             }
+        });
+    }
+
+    public function fetch(Select $select)
+    {
+        $resultSet = $this->executeSelect($select);
+        return $resultSet;
+        return $this->select(function () use ($select) {
+            $this->select = $select;
         });
     }
 

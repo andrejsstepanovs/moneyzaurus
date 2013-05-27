@@ -4,10 +4,10 @@ return array(
         'guest' => array(
             'Application\Controller\Index',
             'Application\Controller\User',
-            'Application\Controller\Transaction',
         ),
         'user'  => array(
-            'Application\Controller\New',
+            'Application\Controller\Transaction',
+            'Application\Controller\List',
         ),
         'admin' => array(
             'admin'
