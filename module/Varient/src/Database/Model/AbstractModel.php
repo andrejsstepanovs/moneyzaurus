@@ -73,6 +73,19 @@ class AbstractModel implements \ArrayAccess
                 $key = $this->underscore(substr($method,3));
                 return $this->hasData($key);
         }
+
+        throw new \Varient\Database\Exception\UnknownCallableException(
+                'Method "'.$method.'" dose not exist'
+        );
+    }
+
+    /**
+     * @return \Varient\Database\Model\AbstractModel
+     */
+    public function clear()
+    {
+        $this->data = array();
+        return $this;
     }
 
     /**
@@ -85,12 +98,16 @@ class AbstractModel implements \ArrayAccess
     }
 
     /**
-     * @param string $key
+     * @param string|array $key
      * @param mixed $value
      */
-    public function setData($key, $value)
+    public function setData($key, $value = null)
     {
-        $this->data[$key] = $value;
+        if (is_array($key)) {
+            $this->data = $key;
+        } else {
+            $this->data[$key] = $value;
+        }
         return $this;
     }
 
