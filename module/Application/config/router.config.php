@@ -44,7 +44,7 @@ return array(
                 'options' => array(
                     'route'    => '/pie',
                     'defaults' => array(
-                        'controller' => 'Application\Controller\Index',
+                        'controller' => 'Application\Controller\Pie',
                         'action'     => 'index',
                     ),
                 ),

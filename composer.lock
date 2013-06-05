@@ -3,8 +3,56 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "c2f7774c3ea5ca9db92f001d25bdb492",
+    "hash": "ec605f43eca96839ade752f5c834b85a",
     "packages": [
+        {
+            "name": "jfloff/highroller-zf2",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jfloff/highroller-zf2.git",
+                "reference": "f96b2fc73a7e3167d91c293d4257a50dba0b140f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jfloff/highroller-zf2/zipball/f96b2fc73a7e3167d91c293d4257a50dba0b140f",
+                "reference": "f96b2fc73a7e3167d91c293d4257a50dba0b140f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3",
+                "zendframework/zendframework": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "HighRoller": "src/"
+                },
+                "classmap": [
+                    "./Module.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Joao Loff",
+                    "email": "jfloff@gmail.com",
+                    "homepage": "http://jfloff.github.com/"
+                }
+            ],
+            "description": "Highcharts module for Zend Framework 2 based on HighRoller.",
+            "homepage": "https://github.com/jfloff/highroller-zf2",
+            "keywords": [
+                "highcharts",
+                "highroller",
+                "zend framework 2",
+                "zf2"
+            ],
+            "time": "2013-04-05 22:34:56"
+        },
         {
             "name": "zendframework/zend-developer-tools",
             "version": "dev-master",
@@ -588,7 +636,8 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "zendframework/zend-developer-tools": 20
+        "zendframework/zend-developer-tools": 20,
+        "jfloff/highroller-zf2": 20
     },
     "platform": {
         "php": ">=5.3.3"

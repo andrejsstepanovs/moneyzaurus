@@ -17,6 +17,12 @@ class AbstractActionController extends ZendAbstractActionController
     /** @var array */
     protected $activeRecords;
 
+    /** @var \Zend\View\HelperPluginManager */
+    protected $viewHelper;
+
+    /** @var array */
+    protected $viewHelperPlugin = array();
+
 
     /**
      * Execute the request
@@ -54,8 +60,7 @@ class AbstractActionController extends ZendAbstractActionController
     {
         if (!empty($messages)) {
             foreach ($messages AS $message) {
-                $inlineScript = $this->getServiceLocator()->get('viewhelpermanager')->get('inlineScript');
-                $inlineScript->appendScript('
+                $this->getViewHelperPlugin('inlineScript')->appendScript('
                     $(document).ready(function() {
                         var message = "'.str_replace('"', "'", $message).'";
                         $.mobile.showPageLoadingMsg("b", message, true);
@@ -119,4 +124,31 @@ class AbstractActionController extends ZendAbstractActionController
 
         return $this->activeRecords[$key];
     }
+
+    /**
+     * @return \Zend\View\HelperPluginManager
+     */
+    protected function getViewHelper()
+    {
+        if (null === $this->viewHelper) {
+            $this->viewHelper = $this->getServiceLocator()->get('viewhelpermanager');
+        }
+
+        return $this->viewHelper;
+    }
+
+    /**
+     * @param string $pluginName
+     */
+    protected function getViewHelperPlugin($plugin)
+    {
+        $plugin = strtolower($plugin);
+        if (!array_key_exists($plugin, $this->viewHelperPlugin)) {
+            $this->viewHelperPlugin[$plugin] = $this->getViewHelper()
+                                                    ->get($plugin);
+        }
+
+        return $this->viewHelperPlugin[$plugin];
+    }
+
 }

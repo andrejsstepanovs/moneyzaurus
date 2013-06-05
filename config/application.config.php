@@ -5,6 +5,7 @@ return array(
         'jQueryMobileMenu',
         'Varient',
         'PhpConfig',
+        'HighRoller',
     ),
 
     'module_listener_options' => array(
