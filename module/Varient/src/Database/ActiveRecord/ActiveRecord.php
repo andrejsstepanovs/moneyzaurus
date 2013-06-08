@@ -19,6 +19,9 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     /** @var string */
     protected $tableName;
 
+    /** @var string */
+    protected $schema;
+
     /** @var \Varient\Database\Table\AbstractTable */
     protected $table;
 
@@ -35,8 +38,9 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     /**
      * @param strings|null $tableName
      * @param \Zend\Db\Adapter\Adapter|null $adapter
+     * @param strings|null $shema
      */
-    public function __construct($tableName = null, $adapter = null)
+    public function __construct($tableName = null, $adapter = null, $schema = null)
     {
         if ($adapter) {
             $this->setDbAdapter($adapter);
@@ -44,6 +48,10 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
 
         if ($tableName) {
             $this->setTableName($tableName);
+        }
+
+        if ($schema) {
+            $this->setShema($schema);
         }
     }
 
@@ -53,6 +61,15 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     public function setTableName($tableName)
     {
         $this->tableName = $tableName;
+        return $this;
+    }
+
+    /**
+     * @param string $tableName
+     */
+    public function setShema($schema)
+    {
+        $this->schema = $schema;
         return $this;
     }
 
@@ -72,6 +89,14 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     public function getTableName()
     {
         return $this->tableName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSchema()
+    {
+        return $this->schema;
     }
 
     /**
@@ -136,7 +161,10 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     {
         if (null === $this->table) {
             if ( $this->getTableName()) {
-                $tableIdentifier = new TableIdentifier($this->getTableName());
+                $tableIdentifier = new TableIdentifier(
+                    $this->getTableName(),
+                    $this->getSchema()
+                );
             } else {
                 $tableIdentifier = null;
             }
@@ -196,7 +224,7 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
         }
 
         throw new \Varient\Database\Exception\ModelNotFoundException(
-            '"'.$this->getTableName() . '" not found for primary ' . $this->getId()
+            '"'.$this->getTableName() . '" not found for primary "' . $this->getId() . '"'
         );
     }
 
@@ -206,6 +234,14 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     public function save()
     {
         $this->getTable()->saveEntity($this);
+
+        if (!$this->getId()) {
+            $id = $this->getTable()->getLastInsertValue();
+            if ($id) {
+                $this->clear()->setId($id);
+            }
+        }
+
         return $this->load();
     }
 

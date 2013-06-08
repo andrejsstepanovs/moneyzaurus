@@ -5,7 +5,8 @@ return array(
         'jQueryMobileMenu',
         'Varient',
         'PHPConfig',
-        'HighchartsPHP'
+        'HighchartsPHP',
+        'InstallScripts'
     ),
 
     'module_listener_options' => array(
