@@ -4,8 +4,8 @@ return array(
         'Application',
         'jQueryMobileMenu',
         'Varient',
-        'PhpConfig',
-        'HighRoller',
+        'PHPConfig',
+        'HighchartsPHP'
     ),
 
     'module_listener_options' => array(

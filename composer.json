@@ -11,9 +11,21 @@
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.2.*",
         "zendframework/zend-developer-tools": "dev-master",
-        "jfloff/highroller-zf2": "dev-master"
+        "wormhit/HighchartsPHP": "*",
+        "wormhit/PHPConfig": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"
-    }
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url":  "https://github.com/wormhit/HighchartsPHP.git"
+        },
+        {
+            "type": "git",
+            "url":  "https://github.com/wormhit/PHPConfig.git"
+        }
+    ]
+
 }

@@ -3,21 +3,15 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "ec605f43eca96839ade752f5c834b85a",
+    "hash": "491b6f617bb58bf7d81c68cfeb314aad",
     "packages": [
         {
-            "name": "jfloff/highroller-zf2",
+            "name": "wormhit/HighchartsPHP",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jfloff/highroller-zf2.git",
-                "reference": "f96b2fc73a7e3167d91c293d4257a50dba0b140f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jfloff/highroller-zf2/zipball/f96b2fc73a7e3167d91c293d4257a50dba0b140f",
-                "reference": "f96b2fc73a7e3167d91c293d4257a50dba0b140f",
-                "shasum": ""
+                "url": "https://github.com/wormhit/HighchartsPHP.git",
+                "reference": "e93397356ec1bb9470da37f95dfe9e24b3dea39d"
             },
             "require": {
                 "php": ">=5.3",
@@ -26,32 +20,67 @@
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "HighRoller": "src/"
+                    "Highcharts": "src/"
                 },
                 "classmap": [
                     "./Module.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
             "authors": [
                 {
-                    "name": "Joao Loff",
-                    "email": "jfloff@gmail.com",
-                    "homepage": "http://jfloff.github.com/"
+                    "name": "Andrejs Stepanovs",
+                    "email": "andrejsstepanovs@gmail.com"
                 }
             ],
-            "description": "Highcharts module for Zend Framework 2 based on HighRoller.",
-            "homepage": "https://github.com/jfloff/highroller-zf2",
+            "description": "Highcharts module for Zend Framework 2 based on HighchartsPHP",
+            "homepage": "https://github.com/wormhit/HighchartsPHP",
             "keywords": [
                 "highcharts",
-                "highroller",
                 "zend framework 2",
                 "zf2"
             ],
-            "time": "2013-04-05 22:34:56"
+            "time": "2013-06-08 19:21:02"
+        },
+        {
+            "name": "wormhit/PHPConfig",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wormhit/PHPConfig.git",
+                "reference": "75c8068dea606e1f52d11a4fdddcdc31ce819452"
+            },
+            "require": {
+                "php": ">=5.3",
+                "zendframework/zendframework": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "./Module.php"
+                ]
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Andrejs Stepanovs",
+                    "email": "andrejsstepanovs@gmail.com"
+                }
+            ],
+            "description": "PHPConfig is zf2 module to set php.ini values on the fly",
+            "homepage": "https://github.com/wormhit/PHPConfig",
+            "keywords": [
+                "configuration",
+                "ini",
+                "php",
+                "zend framework 2",
+                "zf2"
+            ],
+            "time": "2013-06-08 19:59:37"
         },
         {
             "name": "zendframework/zend-developer-tools",
@@ -59,12 +88,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/ZendDeveloperTools.git",
-                "reference": "1380eec964ebd2f0e28801190ffeb0e1d6444154"
+                "reference": "d5ec47c8e916a083fe2ef8a5711b859e8864b042"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/ZendDeveloperTools/zipball/1380eec964ebd2f0e28801190ffeb0e1d6444154",
-                "reference": "1380eec964ebd2f0e28801190ffeb0e1d6444154",
+                "url": "https://api.github.com/repos/zendframework/ZendDeveloperTools/zipball/d5ec47c8e916a083fe2ef8a5711b859e8864b042",
+                "reference": "d5ec47c8e916a083fe2ef8a5711b859e8864b042",
                 "shasum": ""
             },
             "require": {
@@ -110,7 +139,7 @@
                 "module",
                 "zf2"
             ],
-            "time": "2013-06-04 10:49:25"
+            "time": "2013-06-07 08:49:48"
         },
         {
             "name": "zendframework/zendframework",
@@ -118,12 +147,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zf2.git",
-                "reference": "9d34a33cbaed9854d48c07378f378254aaa1d951"
+                "reference": "7986e7e9e0c20457fa83383d61663d533fe48e3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zf2/zipball/9d34a33cbaed9854d48c07378f378254aaa1d951",
-                "reference": "9d34a33cbaed9854d48c07378f378254aaa1d951",
+                "url": "https://api.github.com/repos/zendframework/zf2/zipball/7986e7e9e0c20457fa83383d61663d533fe48e3e",
+                "reference": "7986e7e9e0c20457fa83383d61663d533fe48e3e",
                 "shasum": ""
             },
             "require": {
@@ -222,7 +251,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2013-06-01 07:19:37"
+            "time": "2013-06-07 17:20:04"
         }
     ],
     "packages-dev": [
@@ -636,8 +665,7 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "zendframework/zend-developer-tools": 20,
-        "jfloff/highroller-zf2": 20
+        "zendframework/zend-developer-tools": 20
     },
     "platform": {
         "php": ">=5.3.3"
