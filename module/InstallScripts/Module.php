@@ -71,4 +71,5 @@ class Module implements
             array( '--verbose|-v', '(optional) turn on verbose mode'      ),
         );
     }
+
 }

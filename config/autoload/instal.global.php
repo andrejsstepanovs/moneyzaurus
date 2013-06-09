@@ -8,7 +8,10 @@ return array(
                 'file' => __DIR__ . '/../../data/install.json',
             )
         ),
-        'namespace' => 'Application',
-        'path'      => 'Application\install'
+        'modules' => array(
+            'Application' => array(
+                'Install\Transactions',
+            )
+        ),
     )
 );

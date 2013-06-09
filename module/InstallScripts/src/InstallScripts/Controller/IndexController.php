@@ -4,6 +4,8 @@ namespace InstallScripts\Controller;
 
 use InstallScripts\Model\AbstractActionController;
 use InstallScripts\Model\Storage as InstallScriptStorage;
+use InstallScripts\Model\Locator as InstallScriptLocator;
+
 
 class IndexController extends AbstractActionController
 {
@@ -16,20 +18,12 @@ class IndexController extends AbstractActionController
     public function listAction()
     {
         $config = $this->getConfig();
+        $locator = new InstallScriptLocator($config);
 
-        $storage = new InstallScriptStorage($config);
-
-        $data = array(
-            'aaa' => 'bbb'
-        );
-
-//        $a = $storage->setData($data)->save();
-        $a = $storage->setData($data)->load();
-
-        \DEBUG::dump($a);
-
-
-        echo __METHOD__;
+        $bundles = $locator->getBundles();
+        foreach ($bundles as $bundle) {
+            echo $bundle->getName();
+        }
     }
 
     public function installAction()

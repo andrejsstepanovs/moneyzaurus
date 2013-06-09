@@ -4,11 +4,11 @@ namespace InstallScripts\Model;
 
 use Zend\Db\Adapter\AdapterAwareInterface;
 use Zend\Db\Adapter\Adapter;
-
 use Varient\Database\ActiveRecord\ActiveRecord;
+use InstallScripts\Exception;
 
 
-class Installer implements AdapterAwareInterface
+class Bundle implements AdapterAwareInterface
 {
     /** @var \Zend\Db\Adapter\Adapter */
     private $adapter;
@@ -28,6 +28,25 @@ class Installer implements AdapterAwareInterface
         if ($adapter) {
             $this->setDbAdapter($adapter);
         }
+    }
+
+    /**
+     * @return array
+     * @throws Exception\BundleException
+     */
+    public function getVersions()
+    {
+        throw new Exception\BundleException(
+            'Bundle version not set for "' . $this->getName() . '"'
+        );
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return get_class($this);
     }
 
     /**

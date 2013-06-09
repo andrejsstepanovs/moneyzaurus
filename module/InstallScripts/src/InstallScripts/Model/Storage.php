@@ -2,13 +2,18 @@
 
 namespace InstallScripts\Model;
 
-use \InstallScripts\Exception;
+use InstallScripts\Exception;
 
 
 class Storage
 {
+    /** @var array */
     protected $config;
+
+    /** @var array */
     protected $data;
+
+    /** @var |InstallScripts\Storage\StorageInterface */
     protected $storage;
 
 
