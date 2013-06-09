@@ -16,7 +16,6 @@ class Installer implements AdapterAwareInterface
     /** @var \Exception */
     private $exceptions = array();
 
-
     /** @var array */
     protected $activeRecords;
 

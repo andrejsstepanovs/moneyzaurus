@@ -2,27 +2,11 @@
 
 namespace InstallScripts\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\MvcEvent;
-use Zend\Console\Request as ConsoleRequest;
-
+use InstallScripts\Model\AbstractActionController;
+use InstallScripts\Model\Storage as InstallScriptStorage;
 
 class IndexController extends AbstractActionController
 {
-    /**
-     * @param  MvcEvent $e
-     * @return mixed
-     * @throws Exception\DomainException
-     */
-    public function onDispatch(MvcEvent $e)
-    {
-        $request = $this->getRequest();
-        if (!$request instanceof ConsoleRequest){
-            throw new \RuntimeException('You can only use this action from a console!');
-        }
-
-        return parent::onDispatch($e);
-    }
 
     public function updateAction()
     {
@@ -31,6 +15,20 @@ class IndexController extends AbstractActionController
 
     public function listAction()
     {
+        $config = $this->getConfig();
+
+        $storage = new InstallScriptStorage($config);
+
+        $data = array(
+            'aaa' => 'bbb'
+        );
+
+//        $a = $storage->setData($data)->save();
+        $a = $storage->setData($data)->load();
+
+        \DEBUG::dump($a);
+
+
         echo __METHOD__;
     }
 
