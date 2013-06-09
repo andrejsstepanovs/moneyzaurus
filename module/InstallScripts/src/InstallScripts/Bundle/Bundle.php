@@ -19,6 +19,9 @@ class Bundle implements AdapterAwareInterface
     /** @var array */
     protected $activeRecords;
 
+    /** @var array */
+    protected $versions;
+
 
     /**
      * @param null|\Zend\Db\Adapter\Adapter $adapter
@@ -30,12 +33,21 @@ class Bundle implements AdapterAwareInterface
         }
     }
 
+    public function setVersions($versions)
+    {
+        $this->versions = $versions;
+    }
+
     /**
      * @return array
      * @throws Exception\BundleException
      */
     public function getVersions()
     {
+        if ($this->versions) {
+            return $this->versions;
+        }
+
         throw new Exception\BundleException(
             'Bundle version not set for "' . $this->getName() . '"'
         );

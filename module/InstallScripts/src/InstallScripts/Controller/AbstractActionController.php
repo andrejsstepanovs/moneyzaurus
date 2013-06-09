@@ -1,6 +1,6 @@
 <?php
 
-namespace InstallScripts\Model;
+namespace InstallScripts\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController as Controller;
 use Zend\Mvc\MvcEvent;

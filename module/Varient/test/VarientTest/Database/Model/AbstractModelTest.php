@@ -2,10 +2,10 @@
 
 namespace VarientTest\Controller;
 
-use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
+use PHPUnit_Framework_TestCase;
 use Varient\Database\Model\AbstractModel;
 
-class AbstractModelTest extends AbstractHttpControllerTestCase
+class AbstractModelTest extends PHPUnit_Framework_TestCase
 {
     protected $model;
 

@@ -3,7 +3,7 @@
 namespace InstallScripts\Locator;
 
 use InstallScripts\Exception;
-use InstallScripts\Model\Bundle;
+use InstallScripts\Bundle\Bundle;
 
 
 class Locator
@@ -39,7 +39,7 @@ class Locator
      * @param null|string $key
      * @return mixed
      */
-    protected function getConfig($key = null)
+    public function getConfig($key = null)
     {
         if ($key) {
             return $this->config[$key];

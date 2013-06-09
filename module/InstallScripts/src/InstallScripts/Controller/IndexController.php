@@ -2,7 +2,7 @@
 
 namespace InstallScripts\Controller;
 
-use InstallScripts\Model\AbstractActionController;
+use InstallScripts\Controller\AbstractActionController;
 use InstallScripts\Exception;
 use Zend\Debug\Debug as ZendDebug;
 
