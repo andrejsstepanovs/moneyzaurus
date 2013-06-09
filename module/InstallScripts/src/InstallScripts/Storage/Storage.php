@@ -1,6 +1,6 @@
 <?php
 
-namespace InstallScripts\Model;
+namespace InstallScripts\Storage;
 
 use InstallScripts\Exception;
 
@@ -10,25 +10,17 @@ class Storage
     /** @var array */
     protected $config;
 
-    /** @var array */
-    protected $data;
-
     /** @var |InstallScripts\Storage\StorageInterface */
     protected $storage;
 
 
     /**
      * @param null|array $config
-     * @param null|array $data
      */
-    public function __construct($config = null, $data = null)
+    public function __construct($config = null)
     {
         if ($config) {
             $this->setConfig($config);
-        }
-
-        if ($data) {
-            $this->setData($data);
         }
     }
 
@@ -56,28 +48,10 @@ class Storage
     }
 
     /**
-     * @param array $data
-     * @return \InstallScripts\Model\Storage
-     */
-    public function setData(array $data)
-    {
-        $this->data = $data;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
      * @return |InstallScripts\Storage\StorageInterface
      * @throws \InstallScripts\Exception\UnknownStorageException
      */
-    protected function getStorage()
+    public function getAdapter()
     {
         if (null === $this->storage) {
             $storage = $this->getConfig('storage');
@@ -98,24 +72,6 @@ class Storage
         }
 
         return $this->storage;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function save()
-    {
-        $data = $this->getData();
-        return $this->getStorage()->save($data);
-    }
-
-    /**
-     * @return array
-     */
-    public function load()
-    {
-        $data = $this->getStorage()->load();
-        return $this->setData($data)->getData();
     }
 
 }

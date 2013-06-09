@@ -7,7 +7,7 @@ use Zend\Json\Json;
 use InstallScripts\Exception;
 
 
-class File implements StorageInterface
+class FileAdapter implements StorageInterface
 {
     /** @var array */
     protected $data;
@@ -68,14 +68,13 @@ class File implements StorageInterface
      * @return boolean
      * @throws Exception\StorageSaveException
      */
-    public function save(array $data)
+    public function save()
     {
-        $stringData = $this->setData($data)
-                           ->getDataAsString();
+        $stringData = $this->getDataAsString();
 
         $filePath = $this->getOptions('file');
 
-        $stream = fopen($filePath, 'w+');
+        $stream = fopen($filePath, 'w');
 
         if ($stream === false) {
             throw new Exception\StorageSaveException(
@@ -133,5 +132,41 @@ class File implements StorageInterface
     protected function getDataAsArray($stringData)
     {
         return Json::decode($stringData, Json::TYPE_ARRAY);
+    }
+
+    /**
+     * @param string $bundleName
+     * @return string version
+     */
+    public function getBundleVersion($bundleName)
+    {
+        $version = 0;
+        try {
+            $storageData = $this->load();
+        } catch (Exception\StorageLoadException $exc) {
+            $storageData = null;
+        }
+
+        if (!$storageData
+            || !array_key_exists('bundles', $storageData)
+            || !array_key_exists($bundleName, $storageData['bundles'])
+            || !array_key_exists('version', $storageData['bundles'][$bundleName])
+        ) {
+            return $version;
+        }
+
+        return $storageData['bundles'][$bundleName]['version'];
+    }
+
+    /**
+     * @param string $bundleName
+     * @param string version
+     * @return \InstallScripts\Storage\File
+     */
+    public function setBundleVersion($bundleName, $version)
+    {
+        $storageData = $this->getData();
+        $storageData['bundles'][$bundleName]['version'] = $version;
+        return $this->setData($storageData);
     }
 }

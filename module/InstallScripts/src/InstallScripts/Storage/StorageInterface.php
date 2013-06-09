@@ -7,10 +7,9 @@ interface StorageInterface
     /**
      * Save data to storage
      *
-     * @param array $data
      * @return boolean
      */
-    public function save(array $data);
+    public function save();
 
     /**
      * Load data to storage
@@ -25,4 +24,12 @@ interface StorageInterface
      * @return array
      */
     public function setOptions(array $options);
+
+    /**
+     * Get current bundle version
+     *
+     * @param string $bundleName
+     * @return array
+     */
+    public function getBundleVersion($bundleName);
 }

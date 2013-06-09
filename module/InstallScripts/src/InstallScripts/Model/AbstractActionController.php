@@ -5,12 +5,21 @@ namespace InstallScripts\Model;
 use Zend\Mvc\Controller\AbstractActionController as Controller;
 use Zend\Mvc\MvcEvent;
 use Zend\Console\Request as ConsoleRequest;
+use InstallScripts\Storage\Storage as InstallScriptStorage;
+use InstallScripts\Model\Locator as InstallScriptLocator;
 
 
 class AbstractActionController extends Controller
 {
     /** @var array */
     protected $config;
+
+    /** @var \InstallScripts\Model\Storage */
+    protected $installScriptStorage;
+
+    /** @var \InstallScripts\Model\Locator */
+    protected $installScriptLocator;
+
 
     /**
      * @param  MvcEvent $e
@@ -52,4 +61,29 @@ class AbstractActionController extends Controller
         return $this->config;
     }
 
+    /**
+     * @return \InstallScripts\Model\Storage
+     */
+    protected function getInstallScriptStorage()
+    {
+        if (null === $this->installScriptStorage) {
+            $this->installScriptStorage = new InstallScriptStorage();
+            $this->installScriptStorage->setConfig($this->getConfig());
+        }
+
+        return $this->installScriptStorage;
+    }
+
+    /**
+     * @return \InstallScripts\Model\Locator
+     */
+    protected function getInstallScriptLocator()
+    {
+        if (null === $this->installScriptLocator) {
+            $this->installScriptLocator = new InstallScriptLocator();
+            $this->installScriptLocator->setConfig($this->getConfig());
+        }
+
+        return $this->installScriptLocator;
+    }
 }

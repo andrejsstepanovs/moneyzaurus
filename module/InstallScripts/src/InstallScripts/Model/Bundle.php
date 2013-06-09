@@ -42,6 +42,26 @@ class Bundle implements AdapterAwareInterface
     }
 
     /**
+     * @return array
+     */
+    public function getVersionsSorted()
+    {
+        $versions = $this->getVersions();
+        uksort($versions, 'version_compare');
+        return $versions;
+    }
+
+    /**
+     * @return string version number
+     */
+    public function getMaxVersion()
+    {
+        $versions = $this->getVersionsSorted();
+        $data = array_slice($versions, -1, 1);
+        return key($data);
+    }
+
+    /**
      * @return string
      */
     public function getName()
