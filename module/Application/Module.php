@@ -8,6 +8,7 @@ use Zend\Mvc\MvcEvent;
 
 class Module
 {
+    /** @var array */
     protected $config;
 
 

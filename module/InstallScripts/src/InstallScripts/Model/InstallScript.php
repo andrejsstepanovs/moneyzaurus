@@ -1,13 +1,14 @@
 <?php
 
-namespace InstallScripts;
+namespace InstallScripts\Model;
 
 use Zend\Db\Adapter\AdapterAwareInterface;
 use Zend\Db\Adapter\Adapter;
 
 use Varient\Database\ActiveRecord\ActiveRecord;
 
-class InstallScript implements AdapterAwareInterface
+
+class Installer implements AdapterAwareInterface
 {
     /** @var \Zend\Db\Adapter\Adapter */
     private $adapter;

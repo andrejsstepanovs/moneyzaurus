@@ -8,6 +8,7 @@ use Zend\Permissions\Acl\Acl as ZendAcl;
 use Zend\Permissions\Acl\Role\GenericRole as ZendRole;
 use Zend\Permissions\Acl\Resource\GenericResource as ZendResource;
 use Application\Exception;
+use Zend\Console\Request as ConsoleRequest;
 
 
 class Acl //implements ServiceManagerAwareInterface//, EventManagerAwareInterface
@@ -153,9 +154,16 @@ class Acl //implements ServiceManagerAwareInterface//, EventManagerAwareInterfac
      */
     public function checkAcl()
     {
-        $acl = $this->getAcl();
+        $mvcEvent = $this->getMvcEvent();
 
-        $routeParams = $this->getMvcEvent()->getRouteMatch()->getParams();
+        $request = $mvcEvent->getRequest();
+        if ($request instanceof ConsoleRequest) {
+            return true;
+        }
+
+        $routeParams = $mvcEvent->getRouteMatch()->getParams();
+
+
         $controller = $routeParams['controller'];
         //$action = $routeParams['action'];
 
@@ -172,7 +180,7 @@ class Acl //implements ServiceManagerAwareInterface//, EventManagerAwareInterfac
             }
         }
 
-        $allowed = $acl->isAllowed($userRole, $controller);
+        $allowed = $this->getAcl()->isAllowed($userRole, $controller);
         if (!$allowed) {
             throw new Exception\AclResourceNotAllowedException(
                 'Resource "' . $controller . '" is not allowed '
