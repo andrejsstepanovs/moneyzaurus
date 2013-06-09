@@ -2,7 +2,8 @@
 
 namespace Application\Install;
 
-use InstallScripts\Model\Bundle;
+use InstallScripts\Bundle\Bundle;
+
 
 class Transactions extends Bundle
 {

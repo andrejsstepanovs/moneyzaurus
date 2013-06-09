@@ -1,6 +1,6 @@
 <?php
 
-namespace InstallScripts\Model;
+namespace InstallScripts\Bundle;
 
 
 interface BundleInterface

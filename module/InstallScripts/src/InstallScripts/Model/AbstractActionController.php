@@ -6,7 +6,7 @@ use Zend\Mvc\Controller\AbstractActionController as Controller;
 use Zend\Mvc\MvcEvent;
 use Zend\Console\Request as ConsoleRequest;
 use InstallScripts\Storage\Storage as InstallScriptStorage;
-use InstallScripts\Model\Locator as InstallScriptLocator;
+use InstallScripts\Locator\Locator as InstallScriptLocator;
 
 
 class AbstractActionController extends Controller
@@ -17,7 +17,7 @@ class AbstractActionController extends Controller
     /** @var \InstallScripts\Model\Storage */
     protected $installScriptStorage;
 
-    /** @var \InstallScripts\Model\Locator */
+    /** @var \InstallScripts\Locator\Locator */
     protected $installScriptLocator;
 
 
@@ -75,7 +75,7 @@ class AbstractActionController extends Controller
     }
 
     /**
-     * @return \InstallScripts\Model\Locator
+     * @return \InstallScripts\Locator\Locator
      */
     protected function getInstallScriptLocator()
     {

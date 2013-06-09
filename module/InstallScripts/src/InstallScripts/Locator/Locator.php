@@ -1,6 +1,6 @@
 <?php
 
-namespace InstallScripts\Model;
+namespace InstallScripts\Locator;
 
 use InstallScripts\Exception;
 use InstallScripts\Model\Bundle;

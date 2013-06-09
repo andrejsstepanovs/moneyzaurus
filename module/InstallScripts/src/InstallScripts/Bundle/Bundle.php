@@ -1,6 +1,6 @@
 <?php
 
-namespace InstallScripts\Model;
+namespace InstallScripts\Bundle;
 
 use Zend\Db\Adapter\AdapterAwareInterface;
 use Zend\Db\Adapter\Adapter;
