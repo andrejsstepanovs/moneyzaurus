@@ -38,7 +38,7 @@ class Storage
      * @param null|string $key
      * @return mixed
      */
-    protected function getConfig($key = null)
+    public function getConfig($key = null)
     {
         if ($key) {
             return $this->config[$key];

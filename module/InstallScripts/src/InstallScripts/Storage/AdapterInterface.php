@@ -2,7 +2,7 @@
 
 namespace InstallScripts\Storage;
 
-interface StorageInterface
+interface AdapterInterface
 {
     /**
      * Save data to storage

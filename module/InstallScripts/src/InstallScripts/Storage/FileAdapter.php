@@ -2,12 +2,12 @@
 
 namespace InstallScripts\Storage;
 
-use InstallScripts\Storage\StorageInterface;
+use InstallScripts\Storage\AdapterInterface;
 use Zend\Json\Json;
 use InstallScripts\Exception;
 
 
-class FileAdapter implements StorageInterface
+class FileAdapter implements AdapterInterface
 {
     /** @var array */
     protected $data;
@@ -48,7 +48,7 @@ class FileAdapter implements StorageInterface
      * @param null|string $key
      * @return array
      */
-    protected function getOptions($key = null)
+    public function getOptions($key = null)
     {
         if ($key) {
             if (!array_key_exists($key, $this->options)) {
