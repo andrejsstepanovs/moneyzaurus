@@ -63,7 +63,7 @@ class Module implements
             'install-scripts set-latest'              => 'set all bundles to latest version',
             'install-scripts set bundle version'      => 'set version without executing scripts',
             'install-scripts install bundle version'  => 'install specific version',
-            'install-scripts update bundle'           => 'run all scripts to latest version',
+            'install-scripts update'                  => 'install all scripts incrementally to latest version',
 
             // parameters
             array( 'bundle',       'Install script bundle name'           ),

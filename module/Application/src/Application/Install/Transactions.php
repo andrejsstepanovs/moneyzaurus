@@ -13,16 +13,16 @@ class Transactions extends Bundle
     public function getVersions()
     {
         return array(
-            '0.0.3' => __NAMESPACE__.'\Install',
-            '0.0.1' => __NAMESPACE__.'\Install',
-            '0.1.0' => __NAMESPACE__.'\Install',
-            '0.0.2' => __NAMESPACE__.'\Install',
+            '0.0.3' => 'Install',
+            '0.0.1' => 'Install',
+            '0.1.0' => 'Install',
+            '0.0.2' => 'Install',
         );
     }
 
     public function Install()
     {
-
+        return true;
     }
 
 }
