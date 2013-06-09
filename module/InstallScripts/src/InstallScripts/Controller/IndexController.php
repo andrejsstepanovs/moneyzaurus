@@ -5,15 +5,11 @@ namespace InstallScripts\Controller;
 use InstallScripts\Model\AbstractActionController;
 use InstallScripts\Model\Storage as InstallScriptStorage;
 use InstallScripts\Model\Locator as InstallScriptLocator;
+use Zend\Debug\Debug as ZendDebug;
 
 
 class IndexController extends AbstractActionController
 {
-
-    public function updateAction()
-    {
-        echo __METHOD__;
-    }
 
     public function listAction()
     {
@@ -26,12 +22,22 @@ class IndexController extends AbstractActionController
         }
     }
 
-    public function installAction()
+    public function configAction()
+    {
+        $config = $this->getConfig();
+        $storage = new InstallScriptStorage($config);
+
+        $dump = new ZendDebug();
+        $dump->dump($config, 'Config Data');
+        $dump->dump($storage->load(), 'Storage Data');
+    }
+
+    public function updateAction()
     {
         echo __METHOD__;
     }
 
-    public function configAction()
+    public function installAction()
     {
         echo __METHOD__;
     }
