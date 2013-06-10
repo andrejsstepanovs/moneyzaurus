@@ -1,7 +1,8 @@
 <?php
 namespace Application\Controller;
 
-use \Varient\Controller\AbstractActionController;
+use Application\Controller\AbstractActionController;
+
 
 class IndexController extends AbstractActionController
 {

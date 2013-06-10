@@ -5,7 +5,7 @@ use Varient\Database\ActiveRecord\ActiveRecord;
 use Application\Form\Form\Login as LoginForm;
 use Application\Form\Validator\Login as LoginValidator;
 use Zend\Authentication\Storage\Session;
-use Varient\Controller\AbstractActionController;
+use Application\Controller\AbstractActionController;
 
 
 class UserController extends AbstractActionController

@@ -8,6 +8,8 @@ use Varient\Database\ActiveRecord\ActiveRecord;
 
 class Transactions extends Bundle
 {
+    protected $activeRecords = array();
+
 
     /**
      * @return array
@@ -15,22 +17,13 @@ class Transactions extends Bundle
     public function getVersions()
     {
         return array(
-            '0.0.3' => 'Install',
-            '0.0.1' => 'Install',
-            '0.1.0' => 'Install',
-            '0.0.2' => 'Install',
+            '0.0.1' => 'MoveDatabase',
         );
     }
 
-    public function Install()
+    public function MoveDatabase()
     {
-        return true;
-    }
-
-
-    public function special()
-    {
-        $transactions = new ActiveRecord('transactions', null, 'budget');
+        $transactions = $this->getTable('transactions', 'budget');
 
         $data = $transactions->getTable()->fetchAll();
 
@@ -111,11 +104,11 @@ class Transactions extends Bundle
      * @param string $table
      * @return \Varient\Database\ActiveRecord\ActiveRecord
      */
-    protected function getTable($table = null)
+    protected function getTable($table = null, $schema = 'moneyzaurus')
     {
-            return new ActiveRecord($table, null, 'moneyzaurus');
-        $key = !$table ? 'null' : $table;
-        if (!isset($this->activeRecords[$table])) {
+        $key = !$table ? 'null'.$schema : $table.$schema;
+        if (!isset($this->activeRecords[$key])) {
+            $this->activeRecords[$key] = new ActiveRecord($table, null, $schema);
         }
 
         return $this->activeRecords[$key];

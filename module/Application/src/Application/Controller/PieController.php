@@ -1,7 +1,7 @@
 <?php
 namespace Application\Controller;
 
-use Varient\Controller\AbstractActionController;
+use Application\Controller\AbstractActionController;
 
 use HighchartsPHP\Highcharts as Highchart;
 use HighchartsPHP\HighchartsJsExpr as HighchartJsExpr;

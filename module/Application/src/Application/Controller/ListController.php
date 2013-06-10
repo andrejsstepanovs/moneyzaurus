@@ -1,7 +1,7 @@
 <?php
 namespace Application\Controller;
 
-use Varient\Controller\AbstractActionController;
+use Application\Controller\AbstractActionController;
 use Zend\Paginator\Paginator;
 use Zend\Paginator\Adapter\Iterator as PaginatorIterator;
 

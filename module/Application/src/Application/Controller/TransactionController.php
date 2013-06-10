@@ -3,7 +3,7 @@ namespace Application\Controller;
 
 use Application\Form\Validator\Transaction as TransactionValidator;
 use Application\Form\Form\Transaction as TransactionForm;
-use Varient\Controller\AbstractActionController;
+use Application\Controller\AbstractActionController;
 use Application\Exception;
 
 

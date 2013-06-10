@@ -1,6 +1,6 @@
 <?php
 
-namespace Varient\Controller;
+namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController AS ZendAbstractActionController;
 use Varient\Database\ActiveRecord\ActiveRecord;
