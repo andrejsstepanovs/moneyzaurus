@@ -8,8 +8,8 @@ return array(
                     'options' => array(
                         'route'    => 'install-scripts update',
                         'defaults' => array(
-                            'controller' => 'InstallScripts\Controller\Index',
-                            'action'     => 'update'
+                            'controller' => 'InstallScripts\Controller\Update',
+                            'action'     => 'index'
                         )
                     )
                 ),
@@ -17,8 +17,17 @@ return array(
                     'options' => array(
                         'route'    => 'install-scripts list',
                         'defaults' => array(
-                            'controller' => 'InstallScripts\Controller\Index',
-                            'action'     => 'list'
+                            'controller' => 'InstallScripts\Controller\List',
+                            'action'     => 'index'
+                        )
+                    )
+                ),
+                'install-scripts-versions' => array(
+                    'options' => array(
+                        'route'    => 'install-scripts versions [<bundle>]',
+                        'defaults' => array(
+                            'controller' => 'InstallScripts\Controller\Versions',
+                            'action'     => 'index'
                         )
                     )
                 ),
@@ -26,8 +35,8 @@ return array(
                     'options' => array(
                         'route'    => 'install-scripts install <bundle> <version>',
                         'defaults' => array(
-                            'controller' => 'InstallScripts\Controller\Index',
-                            'action'     => 'install'
+                            'controller' => 'InstallScripts\Controller\Install',
+                            'action'     => 'index'
                         ),
                         'constraints' => array(
                             'version' => '[\d.]'
@@ -38,8 +47,8 @@ return array(
                     'options' => array(
                         'route'    => 'install-scripts config',
                         'defaults' => array(
-                            'controller' => 'InstallScripts\Controller\Index',
-                            'action'     => 'config'
+                            'controller' => 'InstallScripts\Controller\Config',
+                            'action'     => 'index'
                         )
                     )
                 ),
@@ -47,8 +56,8 @@ return array(
                     'options' => array(
                         'route'    => 'install-scripts set <bundle> <version>',
                         'defaults' => array(
-                            'controller' => 'InstallScripts\Controller\Index',
-                            'action'     => 'set',
+                            'controller' => 'InstallScripts\Controller\Set',
+                            'action'     => 'index',
                         ),
                         'constraints' => array(
                             'version' => '[\d.]'
@@ -59,8 +68,8 @@ return array(
                     'options' => array(
                         'route'    => 'install-scripts set-latest',
                         'defaults' => array(
-                            'controller' => 'InstallScripts\Controller\Index',
-                            'action'     => 'setLatest'
+                            'controller' => 'InstallScripts\Controller\SetLatest',
+                            'action'     => 'index'
                         )
                     )
                 ),

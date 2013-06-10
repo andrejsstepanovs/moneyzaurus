@@ -7,6 +7,7 @@ use Zend\Mvc\MvcEvent;
 use Zend\Console\Request as ConsoleRequest;
 use InstallScripts\Storage\Storage as InstallScriptStorage;
 use InstallScripts\Locator\Locator as InstallScriptLocator;
+use Zend\Console\ColorInterface;
 
 
 class AbstractActionController extends Controller
@@ -19,6 +20,9 @@ class AbstractActionController extends Controller
 
     /** @var \InstallScripts\Locator\Locator */
     protected $installScriptLocator;
+
+    /** @var \Zend\Console\Adapter\Posix */
+    protected $console;
 
 
     /**
@@ -34,6 +38,45 @@ class AbstractActionController extends Controller
         }
 
         return parent::onDispatch($e);
+    }
+
+    /**
+     * @return \Zend\Console\Adapter\Posix
+     */
+    protected function getConsole()
+    {
+        if (null === $this->console) {
+            $this->console = $this->getServiceLocator()->get('console');
+        }
+        return $this->console;
+    }
+
+    /**
+     * @param string $message
+     * @param integer $color
+     * @return string
+     */
+    protected function colorize($message, $color = ColorInterface::RESET)
+    {
+        return $this->getConsole()->colorize($message, $color);
+    }
+
+    /**
+     * @param string $title
+     * @param integer $color
+     * @return string
+     */
+    protected function getTitle($title, $color = ColorInterface::RED)
+    {
+        $console = $this->getConsole();
+
+        $output = sprintf("%s\n%s\n%s\n",
+            str_repeat('-', $console->getWidth()),
+            $title,
+            str_repeat('-', $console->getWidth())
+        );
+
+        return $console->colorize($output, $color);
     }
 
     /**

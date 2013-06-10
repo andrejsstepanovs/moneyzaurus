@@ -58,17 +58,19 @@ class Module implements
     public function getConsoleUsage(Console $console)
     {
         return array(
-            'install-scripts list'                    => 'show install scripts list',
-            'install-scripts config'                  => 'shows configuration',
-            'install-scripts set-latest'              => 'set all bundles to latest version',
-            'install-scripts set bundle version'      => 'set version without executing scripts',
-            'install-scripts install bundle version'  => 'install specific version',
-            'install-scripts update'                  => 'install all scripts incrementally to latest version',
+            'install-scripts list'                       => 'show install scripts list',
+            'install-scripts versions [<bundle>]'        => 'show available bundle versions',
+            'install-scripts config'                     => 'shows configuration',
+            'install-scripts set-latest'                 => 'set all bundles to latest version',
+            'install-scripts set <bundle> <version>'     => 'set version without executing scripts',
+            'install-scripts install <bundle> <version>' => 'install specific version',
+            'install-scripts update'                     => 'install all scripts incrementally to latest version',
 
             // parameters
-            array( 'bundle',       'Install script bundle name'           ),
-            array( 'version',      'Install script bundle version number' ),
-            array( '--verbose|-v', '(optional) turn on verbose mode'      ),
+            array('bundle',        'Install script bundle name'          ),
+            array('version',       'Install script bundle version number'),
+            array('<parameter>',   'Mandatory'),
+            array('[<parameter>]', 'Optional'),
         );
     }
 

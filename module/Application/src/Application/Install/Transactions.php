@@ -23,14 +23,15 @@ class Transactions extends Bundle
 
     public function MoveDatabase()
     {
+        return true;
         $transactions = $this->getTable('transactions', 'budget');
 
         $data = $transactions->getTable()->fetchAll();
 
+
         foreach ($data AS $row) {
 
             if($row->getData('user_id') == 1 || $row->getData('user_id') == 86) {
-
 
                 $this->saveTransaction(
                         $row['item'],
