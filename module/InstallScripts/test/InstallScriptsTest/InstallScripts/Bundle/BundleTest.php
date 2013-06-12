@@ -4,6 +4,7 @@ namespace InstallScriptsTest\Locator;
 
 use PHPUnit_Framework_TestCase;
 use \InstallScriptsTest\InstallScripts\Bundle\BundleMock;
+use Zend\Mvc\MvcEvent;
 
 
 class BundleTest extends PHPUnit_Framework_TestCase
@@ -13,13 +14,13 @@ class BundleTest extends PHPUnit_Framework_TestCase
 
 
     /**
-     * @param null|\Zend\Db\Adapter\Adapter $adapter
+     * @param null|\Zend\Mvc\MvcEvent $mvcEvent
      * @return \InstallScriptsTest\InstallScripts\Bundle\BundleMock
      */
-    public function getBundle($adapter = null)
+    public function getBundle($mvcEvent = null)
     {
         if (null === $this->bundle) {
-            $this->bundle = new BundleMock($adapter);
+            $this->bundle = new BundleMock($mvcEvent);
         }
         return $this->bundle;
     }
@@ -144,13 +145,19 @@ class BundleTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    public function testSetException()
+    public function testSetMvcEvent()
     {
-        $this->getBundle()->setException('EXCEPTION1');
-        $exceptions = $this->getBundle()->getExceptions();
+        $mvcEventIn = new MvcEvent();
+        $mvcEventOut = $this->getBundle()->setMvcEvent($mvcEventIn)->getMvcEvent();
 
-        $this->assertTrue(is_array($exceptions));
-        $this->assertGreaterThan(0, count($exceptions));
-        $this->assertEquals('EXCEPTION1', $exceptions[0]);
+        $this->assertEquals(get_class($mvcEventIn), get_class($mvcEventOut));
+    }
+
+    public function testSetMvcInConstructor()
+    {
+        $mvcEventIn = new MvcEvent();
+        $mvcEventOut = $this->getBundle($mvcEventIn)->getMvcEvent();
+
+        $this->assertEquals(get_class($mvcEventIn), get_class($mvcEventOut));
     }
 }
