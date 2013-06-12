@@ -71,6 +71,14 @@ class Storage
 
             $storageAdapterClassName = $this->getAdapterName($storageConfig);
 
+            if (!class_exists($storageAdapterClassName)) {
+                throw new StorageAdapterException(
+                    'StorageAdapter "' . $storageAdapterClassName . '" '
+                    . 'not found'
+                );
+            }
+
+
             $storageAdapter = new $storageAdapterClassName();
 
             if (!$storageAdapter instanceof StorageAdapterInterface) {

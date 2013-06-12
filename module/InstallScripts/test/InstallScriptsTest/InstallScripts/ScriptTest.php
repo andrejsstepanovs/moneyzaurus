@@ -3,41 +3,44 @@
 namespace InstallScriptsTest\Locator;
 
 use PHPUnit_Framework_TestCase;
-use \InstallScriptsTest\InstallScripts\Bundle\BundleMock;
+use \InstallScriptsTest\InstallScripts\Script\ScriptMock;
 use Zend\Mvc\MvcEvent;
 
 
-class BundleTest extends PHPUnit_Framework_TestCase
+/**
+ * @group Script
+ */
+class ScriptTest extends PHPUnit_Framework_TestCase
 {
-    /** @var \InstallScripts\Locator\Locator */
-    protected $bundle;
+    /** @var \InstallScriptsTest\InstallScripts\Script\ScriptMock */
+    protected $script;
 
 
     /**
      * @param null|\Zend\Mvc\MvcEvent $mvcEvent
-     * @return \InstallScriptsTest\InstallScripts\Bundle\BundleMock
+     * @return \InstallScriptsTest\InstallScripts\Script\ScriptMock
      */
-    public function getBundle($mvcEvent = null)
+    public function getScript($mvcEvent = null)
     {
-        if (null === $this->bundle) {
-            $this->bundle = new BundleMock($mvcEvent);
+        if (null === $this->script) {
+            $this->script = new ScriptMock($mvcEvent);
         }
-        return $this->bundle;
+        return $this->script;
     }
 
-    public function testGetBundleName()
+    public function testGetScriptName()
     {
-        $name = $this->getBundle()->getName();
-        $this->assertEquals('InstallScriptsTest\InstallScripts\Bundle\BundleMock', $name);
+        $name = $this->getScript()->getName();
+        $this->assertEquals('InstallScriptsTest\InstallScripts\Script\ScriptMock', $name);
     }
 
     /**
-     * @expectedException        InstallScripts\Exception\BundleException
-     * @expectedExceptionMessage Bundle version not set for "InstallScriptsTest\InstallScripts\Bundle\BundleMock"
+     * @expectedException        InstallScripts\Exception\ScriptException
+     * @expectedExceptionMessage Script versions not set for "InstallScriptsTest\InstallScripts\Script\ScriptMock"
      */
     public function testGetVersionsDontExist()
     {
-        $this->getBundle()->getVersions();
+        $this->getScript()->getVersions();
     }
 
     public function testSetGetVersion()
@@ -47,10 +50,10 @@ class BundleTest extends PHPUnit_Framework_TestCase
             '0.0.2' => 'Test2'
         );
 
-        $bundle = $this->getBundle();
-        $bundle->setVersions($versions);
-        $this->assertTrue(is_array($bundle->getVersions()));
-        $this->assertEquals($versions, $bundle->getVersions());
+        $script = $this->getScript();
+        $script->setVersions($versions);
+        $this->assertTrue(is_array($script->getVersions()));
+        $this->assertEquals($versions, $script->getVersions());
     }
 
     protected function shuffle_assoc($array)
@@ -82,9 +85,9 @@ class BundleTest extends PHPUnit_Framework_TestCase
         for ($k=0; $k < 10; $k++) {
             $shuffled = $this->shuffle_assoc($versions);
 
-            $bundle = $this->getBundle();
-            $bundle->setVersions($shuffled);
-            $sorted = $bundle->getVersionsSorted();
+            $script = $this->getScript();
+            $script->setVersions($shuffled);
+            $sorted = $script->getVersionsSorted();
 
             $i = 0;
             foreach ($sorted AS $version => $j) {
@@ -127,20 +130,20 @@ class BundleTest extends PHPUnit_Framework_TestCase
     public function testSetGetMaxVersion($versions, $expected)
     {
         $shuffled = $this->shuffle_assoc($versions);
-        $max = $this->getBundle()->setVersions($shuffled)->getMaxVersion();
+        $max = $this->getScript()->setVersions($shuffled)->getMaxVersion();
         $this->assertEquals($expected, $max);
     }
 
     public function testSetGetMaxVersionNotFound()
     {
         $versions = array();
-        $bundle = $this->getBundle();
-        $bundle->setVersions($versions);
+        $script = $this->getScript();
+        $script->setVersions($versions);
 
         try {
-            $bundle->getMaxVersion();
+            $script->getMaxVersion();
             $this->assertTrue(false);
-        } catch (\InstallScripts\Exception\BundleException $exc) {
+        } catch (\InstallScripts\Exception\ScriptException $exc) {
             $this->assertTrue(true);
         }
     }
@@ -148,16 +151,9 @@ class BundleTest extends PHPUnit_Framework_TestCase
     public function testSetMvcEvent()
     {
         $mvcEventIn = new MvcEvent();
-        $mvcEventOut = $this->getBundle()->setMvcEvent($mvcEventIn)->getMvcEvent();
+        $mvcEventOut = $this->getScript()->setMvcEvent($mvcEventIn)->getMvcEvent();
 
         $this->assertEquals(get_class($mvcEventIn), get_class($mvcEventOut));
     }
 
-    public function testSetMvcInConstructor()
-    {
-        $mvcEventIn = new MvcEvent();
-        $mvcEventOut = $this->getBundle($mvcEventIn)->getMvcEvent();
-
-        $this->assertEquals(get_class($mvcEventIn), get_class($mvcEventOut));
-    }
 }

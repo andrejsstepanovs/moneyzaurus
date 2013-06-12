@@ -3,9 +3,11 @@
 namespace InstallScriptsTest\Storage;
 
 use PHPUnit_Framework_TestCase;
-use InstallScripts\Storage\Storage as InstallScriptsStorage;
+use InstallScripts\Storage as InstallScriptsStorage;
 
-
+/**
+ * @group Storage
+ */
 class StorageTest extends PHPUnit_Framework_TestCase
 {
     /** @var \InstallScripts\Locator\Locator */
@@ -36,16 +38,6 @@ class StorageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($data['banana'], $dataOut['banana']);
     }
 
-    public function testSetConfigConstructor()
-    {
-        $data = array('banana' => 'apple');
-        $storage = $this->getStorage($data);
-
-        $dataOut = $storage->getConfig();
-        $this->assertArrayHasKey('banana', $dataOut);
-        $this->assertEquals($data['banana'], $dataOut['banana']);
-    }
-
     public function testGetConfig()
     {
         $storage = $this->getStorage();
@@ -62,14 +54,14 @@ class StorageTest extends PHPUnit_Framework_TestCase
         $storage = $this->getStorage();
 
         $data = array(
-            'storage'   => array(
-                'adapter' => 'InstallScripts\Storage\FileAdapter',
+            'StorageAdapter'   => array(
+                'Adapter' => 'InstallScripts\StorageAdapter\FileStorageAdapter',
             )
         );
         $storage->setConfig($data);
 
         $adapter = $storage->getAdapter();
-        $this->assertInstanceOf('InstallScripts\Storage\FileAdapter', $adapter);
+        $this->assertInstanceOf('InstallScripts\StorageAdapter\FileStorageAdapter', $adapter);
     }
 
     public function testGetAdapterWithOptions()
@@ -77,9 +69,9 @@ class StorageTest extends PHPUnit_Framework_TestCase
         $storage = $this->getStorage();
 
         $data = array(
-            'storage'   => array(
-                'adapter' => 'InstallScripts\Storage\FileAdapter',
-                'options' => array(
+            'StorageAdapter'   => array(
+                'Adapter' => 'InstallScripts\StorageAdapter\FileStorageAdapter',
+                'Options' => array(
                     'file' => 'filename',
                 )
             )
@@ -87,31 +79,31 @@ class StorageTest extends PHPUnit_Framework_TestCase
         $storage->setConfig($data);
 
         $adapter = $storage->getAdapter();
-        $this->assertInstanceOf('InstallScripts\Storage\FileAdapter', $adapter);
+        $this->assertInstanceOf('InstallScripts\StorageAdapter\FileStorageAdapter', $adapter);
 
         $adapterOptions = $adapter->getOptions();
 
         $this->assertTrue(is_array($adapterOptions));
-        $this->assertEquals($data['storage']['options']['file'], $adapterOptions['file']);
+        $this->assertEquals($data['StorageAdapter']['Options']['file'], $adapterOptions['file']);
     }
 
     /**
-     * @expectedException        InstallScripts\Exception\UnknownStorageException
-     * @expectedExceptionMessage Storage "InstallScripts\Storage\UnknownAdapter" was not found. Check "storage" parameter
+     * @expectedException        InstallScripts\Exception\StorageAdapterException
+     * @expectedExceptionMessage StorageAdapter "InstallScripts\Storage\UnknownAdapter" not found
      */
     public function testGetAdapterDontExist()
     {
         $storage = $this->getStorage();
 
         $data = array(
-            'storage'   => array(
-                'adapter' => 'InstallScripts\Storage\UnknownAdapter',
+            'StorageAdapter'   => array(
+                'Adapter' => 'InstallScripts\Storage\UnknownAdapter',
             )
         );
         $storage->setConfig($data);
 
         $adapter = $storage->getAdapter();
-        $this->assertInstanceOf('InstallScripts\Storage\FileAdapter', $adapter);
+        $this->assertInstanceOf('InstallScripts\StorageAdapter\FileStorageAdapter', $adapter);
     }
 
 }
