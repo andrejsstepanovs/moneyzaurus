@@ -41,7 +41,13 @@ class Locator
      */
     public function getConfig($key = null)
     {
-        if ($key) {
+        if (!empty($key)) {
+            if (!array_key_exists($key, $this->config)) {
+                throw new Exception\ConfigException(
+                    'InstallScript config key "' . $key . '" is missing'
+                );
+            }
+
             return $this->config[$key];
         }
 
