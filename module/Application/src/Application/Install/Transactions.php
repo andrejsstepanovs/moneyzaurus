@@ -2,11 +2,11 @@
 
 namespace Application\Install;
 
-use InstallScripts\Bundle\Bundle;
+use InstallScripts\Script;
 use Varient\Database\ActiveRecord\ActiveRecord;
 
 
-class Transactions extends Bundle
+class Transactions extends Script
 {
     protected $activeRecords = array();
 
@@ -18,6 +18,10 @@ class Transactions extends Bundle
     {
         return array(
             '0.0.1' => 'MoveDatabase',
+            '0.0.2' => 'MoveDatabase',
+            '0.0.3' => 'MoveDatabase',
+            '0.0.4' => 'MoveDatabase',
+            '0.0.5' => 'MoveDatabase',
         );
     }
 

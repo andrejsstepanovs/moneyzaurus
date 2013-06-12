@@ -2,42 +2,46 @@
 
 namespace InstallScripts\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController as Controller;
 use Zend\Mvc\MvcEvent;
-use Zend\Console\Request as ConsoleRequest;
-use InstallScripts\Storage\Storage as InstallScriptStorage;
-use InstallScripts\Locator\Locator as InstallScriptLocator;
-use Zend\Console\ColorInterface;
+use Zend\Console\ColorInterface as Color;
+use Zend\Console\Request as ZendConsoleRequest;
+use Zend\Mvc\Controller\AbstractActionController as ZendActionController;
+use InstallScripts\Storage as InstallScriptsStorage;
+use InstallScripts\Locator as InstallScriptsLocator;
+use InstallScripts\Exception\ActionControllerException;
 
 
-class AbstractActionController extends Controller
+class AbstractActionController extends ZendActionController
 {
     /** @var array */
     protected $config;
 
     /** @var \InstallScripts\Model\Storage */
-    protected $installScriptStorage;
+    protected $storage;
 
     /** @var \InstallScripts\Locator\Locator */
-    protected $installScriptLocator;
+    protected $locator;
 
     /** @var \Zend\Console\Adapter\Posix */
     protected $console;
 
 
     /**
-     * @param  MvcEvent $e
+     * @param  \Zend\Mvc\MvcEvent $mvcEvent
      * @return mixed
-     * @throws Exception\DomainException
+     * @throws \Zend\Mvc\Exception\DomainException
      */
-    public function onDispatch(MvcEvent $e)
+    public function onDispatch(MvcEvent $mvcEvent)
     {
         $request = $this->getRequest();
-        if (!$request instanceof ConsoleRequest){
-            throw new \RuntimeException('You can only use this action from a console!');
+
+        if (!$request instanceof ZendConsoleRequest){
+            throw new ActionControllerException(
+                'You can only use this action from a console!'
+            );
         }
 
-        return parent::onDispatch($e);
+        return parent::onDispatch($mvcEvent);
     }
 
     /**
@@ -48,6 +52,7 @@ class AbstractActionController extends Controller
         if (null === $this->console) {
             $this->console = $this->getServiceLocator()->get('console');
         }
+
         return $this->console;
     }
 
@@ -56,7 +61,7 @@ class AbstractActionController extends Controller
      * @param integer $color
      * @return string
      */
-    protected function colorize($message, $color = ColorInterface::RESET)
+    protected function colorize($message, $color = Color::RESET)
     {
         return $this->getConsole()->colorize($message, $color);
     }
@@ -66,7 +71,7 @@ class AbstractActionController extends Controller
      * @param integer $color
      * @return string
      */
-    protected function getTitle($title, $color = ColorInterface::RED)
+    protected function getTitle($title, $color = Color::RED)
     {
         $console = $this->getConsole();
 
@@ -80,24 +85,42 @@ class AbstractActionController extends Controller
     }
 
     /**
+     * @return array
+     * @throws ActionControllerException
+     */
+    protected function getInstallScriptsConfig()
+    {
+        $config = $this->getEvent()->getApplication()->getConfig();
+
+        if (!array_key_exists('InstallScripts', $config)
+            || !is_array($config['InstallScripts'])
+        ) {
+            throw new ActionControllerException(
+                'InstallScripts config not found'
+            );
+        }
+
+        return $config['InstallScripts'];
+    }
+
+    /**
      * @param string $key
      * @return mixed
      */
     protected function getConfig($key = null)
     {
-        /** @var $event \Zend\Mvc\MvcEvent */
-        $event = $this->getEvent();
-
         if (null === $this->config) {
-            $config = $event->getApplication()->getConfig();
-            if (array_key_exists('InstallScripts', $config)
-                && is_array($config['InstallScripts'])
-            ) {
-                $this->config = $config['InstallScripts'];
-            }
+            $this->config = $this->getInstallScriptsConfig();
         }
 
-        if (!empty($key)) {
+        if (null !== $key) {
+            if (!array_key_exists($key, $this->config)) {
+                throw new ActionControllerException(
+                    'InstallScripts config key '
+                    . '"' . $key . '" not found'
+                );
+            }
+
             return $this->config[$key];
         }
 
@@ -105,29 +128,30 @@ class AbstractActionController extends Controller
     }
 
     /**
-     * @return \InstallScripts\Model\Storage
+     * @return \InstallScripts\StorageAdapter\StorageAdapterInterface
      */
-    protected function getInstallScriptStorage()
+    protected function getStorage()
     {
-        if (null === $this->installScriptStorage) {
-            $this->installScriptStorage = new InstallScriptStorage();
-            $this->installScriptStorage->setConfig($this->getConfig());
+        if (null === $this->storage) {
+            $this->storage = new InstallScriptsStorage();
+            $this->storage->setConfig($this->getConfig());
         }
 
-        return $this->installScriptStorage;
+        return $this->storage;
     }
 
     /**
-     * @return \InstallScripts\Locator\Locator
+     * @return \InstallScripts\Locator
      */
-    protected function getInstallScriptLocator()
+    protected function getLocator()
     {
         $this->getServiceLocator();
-        if (null === $this->installScriptLocator) {
-            $this->installScriptLocator = new InstallScriptLocator();
-            $this->installScriptLocator->setConfig($this->getConfig());
+        if (null === $this->locator) {
+            $this->locator = new InstallScriptsLocator();
+            $this->locator->setConfig($this->getConfig());
         }
 
-        return $this->installScriptLocator;
+        return $this->locator;
     }
+
 }

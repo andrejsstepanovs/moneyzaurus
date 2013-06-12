@@ -3,7 +3,7 @@
 namespace InstallScripts\Controller;
 
 use InstallScripts\Controller\AbstractActionController;
-use Zend\Console\ColorInterface;
+use Zend\Console\ColorInterface as Color;
 
 
 class ListController extends AbstractActionController
@@ -13,12 +13,14 @@ class ListController extends AbstractActionController
     {
         echo $this->getTitle('list');
 
-        $storage = $this->getInstallScriptStorage()->getAdapter();
-        $bundles = $this->getInstallScriptLocator()->getBundles();
-        foreach ($bundles as $bundle) {
-            $bundleName = $bundle->getName();
-            echo str_pad($storage->getBundleVersion($bundleName), 7);
-            echo $this->colorize($bundleName, ColorInterface::CYAN) . PHP_EOL;
+        $storageAdapter = $this->getStorage()->getAdapter();
+        $scripts = $this->getLocator()->getScripts();
+
+        foreach ($scripts as $script) {
+            $scriptName = $script->getName();
+
+            echo str_pad($storageAdapter->getScriptVersion($scriptName), 7);
+            echo $this->colorize($scriptName, Color::CYAN) . PHP_EOL;
         }
     }
 

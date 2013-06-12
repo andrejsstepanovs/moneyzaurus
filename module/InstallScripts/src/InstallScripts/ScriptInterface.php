@@ -1,28 +1,28 @@
 <?php
 
-namespace InstallScripts\Bundle;
+namespace InstallScripts;
 
 use Zend\Mvc\MvcEvent;
 
 
-interface BundleInterface
+interface ScriptInterface
 {
     /**
-     * Get available bundle versions
+     * Get available script versions
      *
      * @return array
      */
     public function getVersions();
 
     /**
-     * Get available bundle versions sorted
+     * Get available script versions sorted
      *
      * @return array
      */
     public function getVersionsSorted();
 
     /**
-     * Get max bundle version
+     * Get max script version
      *
      * @return string
      */
@@ -32,7 +32,7 @@ interface BundleInterface
      * Set MvcEvent
      *
      * @param \Zend\Mvc\MvcEvent $mvcEvent
-     * @return BundleInterface
+     * @return \InstallScripts\ScriptInterface
      */
     public function setMvcEvent(MvcEvent $mvcEvent);
 
@@ -42,4 +42,5 @@ interface BundleInterface
      * @return \Zend\Mvc\MvcEvent
      */
     public function getMvcEvent();
+
 }

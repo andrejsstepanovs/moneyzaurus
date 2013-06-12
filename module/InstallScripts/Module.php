@@ -59,16 +59,16 @@ class Module implements
     {
         return array(
             'install-scripts list'                       => 'show install scripts list',
-            'install-scripts versions [<bundle>]'        => 'show available bundle versions',
+            'install-scripts versions [<script>]'        => 'show script versions',
             'install-scripts config'                     => 'shows configuration',
-            'install-scripts set-latest'                 => 'set all bundles to latest version',
-            'install-scripts set <bundle> <version>'     => 'set version without executing scripts',
-            'install-scripts install <bundle> <version>' => 'install specific version',
-            'install-scripts update'                     => 'install all scripts incrementally to latest version',
+            'install-scripts set-latest'                 => 'set all scripts to latest version',
+            'install-scripts set <script> <version>'     => 'set version without executing scripts',
+            'install-scripts install <script> <version>' => 'install specific version',
+            'install-scripts update [<script>]'          => 'install scripts incrementally to latest version',
 
             // parameters
-            array('bundle',        'Install script bundle name'          ),
-            array('version',       'Install script bundle version number'),
+            array('script',        'Install script name'          ),
+            array('version',       'Install script version number'),
             array('<parameter>',   'Mandatory'),
             array('[<parameter>]', 'Optional'),
         );

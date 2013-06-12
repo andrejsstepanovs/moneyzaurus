@@ -2,13 +2,13 @@
 
 return array(
     'InstallScripts' => array(
-        'storage'   => array(
-            'adapter' => 'InstallScripts\Storage\FileAdapter',
-            'options' => array(
+        'StorageAdapter' => array(
+            'Adapter' => 'InstallScripts\StorageAdapter\FileStorageAdapter',
+            'Options' => array(
                 'file' => __DIR__ . '/../../data/install.json',
             )
         ),
-        'modules' => array(
+        'Scripts' => array(
             'Application' => array(
                 'Install\Transactions',
             )

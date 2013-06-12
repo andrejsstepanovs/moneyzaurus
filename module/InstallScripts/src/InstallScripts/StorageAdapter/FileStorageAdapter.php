@@ -1,13 +1,13 @@
 <?php
 
-namespace InstallScripts\Storage;
+namespace InstallScripts\StorageAdapter;
 
-use InstallScripts\Storage\AdapterInterface;
+use InstallScripts\Exception\StorageAdapterException;
 use Zend\Json\Json;
-use InstallScripts\Exception;
+use InstallScripts\StorageAdapter\StorageAdapterInterface;
 
 
-class FileAdapter implements AdapterInterface
+class FileStorageAdapter implements StorageAdapterInterface
 {
     /** @var array */
     protected $data;
@@ -18,7 +18,7 @@ class FileAdapter implements AdapterInterface
 
     /**
      * @param array $data
-     * @return \InstallScripts\Storage\File
+     * @return \InstallScripts\StorageAdapter\FileStorageAdapter
      */
     public function setData(array $data)
     {
@@ -36,7 +36,7 @@ class FileAdapter implements AdapterInterface
 
     /**
      * @param array $options
-     * @return \InstallScripts\Storage\File
+     * @return \InstallScripts\StorageAdapter\FileStorageAdapter
      */
     public function setOptions(array $options)
     {
@@ -52,8 +52,8 @@ class FileAdapter implements AdapterInterface
     {
         if ($key) {
             if (!array_key_exists($key, $this->options)) {
-                throw new Exception\MissingStorageOptionsException(
-                    'Storage adapter option "' . $key . '" is missing'
+                throw new StorageAdapterException(
+                    'FileStorageAdapter option "' . $key . '" is missing'
                 );
             }
 
@@ -77,8 +77,8 @@ class FileAdapter implements AdapterInterface
         $stream = fopen($filePath, 'w');
 
         if ($stream === false) {
-            throw new Exception\StorageSaveException(
-                'Failed save to "' . $filePath . '"'
+            throw new StorageAdapterException(
+                'Failed to open "' . $filePath . '" for saving'
             );
         }
 
@@ -93,18 +93,19 @@ class FileAdapter implements AdapterInterface
     public function load()
     {
         $file = $this->getOptions('file');
-        $filePath = realpath($file);
 
         if (!file_exists($file)) {
-            throw new Exception\StorageLoadException(
-                'File dont exist "' . $filePath . '"'
+            throw new StorageAdapterException(
+                'File dont exist "' . $file . '"'
             );
         }
 
+        $filePath = realpath($file);
+
         $stream = fopen($filePath, 'r');
         if ($stream === false) {
-            throw new Exception\StorageLoadException(
-                'Failed read file "' . $filePath . '"'
+            throw new StorageAdapterException(
+                'Failed to open file "' . $filePath . '" for loading'
             );
         }
 
@@ -135,38 +136,36 @@ class FileAdapter implements AdapterInterface
     }
 
     /**
-     * @param string $bundleName
+     * @param string $scriptName
      * @return string version
      */
-    public function getBundleVersion($bundleName)
+    public function getScriptVersion($scriptName)
     {
         $version = 0;
+
         try {
             $storageData = $this->load();
-        } catch (Exception\StorageLoadException $exc) {
+        } catch (StorageAdapterException $exc) {
             $storageData = null;
         }
 
-        if (!$storageData
-            || !array_key_exists('bundles', $storageData)
-            || !array_key_exists($bundleName, $storageData['bundles'])
-            || !array_key_exists('version', $storageData['bundles'][$bundleName])
-        ) {
+        if (!isset($storageData['scripts'][$scriptName]['version'])) {
             return $version;
         }
 
-        return $storageData['bundles'][$bundleName]['version'];
+        return $storageData['scripts'][$scriptName]['version'];
     }
 
     /**
-     * @param string $bundleName
+     * @param string $scriptName
      * @param string version
-     * @return \InstallScripts\Storage\File
+     * @return \InstallScripts\StorageAdapter\FileStorageAdapter
      */
-    public function setBundleVersion($bundleName, $version)
+    public function setScriptVersion($scriptName, $version)
     {
         $storageData = $this->getData();
-        $storageData['bundles'][$bundleName]['version'] = $version;
+        $storageData['scripts'][$scriptName]['version'] = $version;
         return $this->setData($storageData);
     }
+
 }

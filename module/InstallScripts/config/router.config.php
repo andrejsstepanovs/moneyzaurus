@@ -6,7 +6,7 @@ return array(
             'routes' => array(
                 'install-scripts-update' => array(
                     'options' => array(
-                        'route'    => 'install-scripts update',
+                        'route'    => 'install-scripts update [<script>]',
                         'defaults' => array(
                             'controller' => 'InstallScripts\Controller\Update',
                             'action'     => 'index'
@@ -24,7 +24,7 @@ return array(
                 ),
                 'install-scripts-versions' => array(
                     'options' => array(
-                        'route'    => 'install-scripts versions [<bundle>]',
+                        'route'    => 'install-scripts versions [<script>]',
                         'defaults' => array(
                             'controller' => 'InstallScripts\Controller\Versions',
                             'action'     => 'index'
@@ -33,7 +33,7 @@ return array(
                 ),
                 'install-scripts-install' => array(
                     'options' => array(
-                        'route'    => 'install-scripts install <bundle> <version>',
+                        'route'    => 'install-scripts install <script> <version>',
                         'defaults' => array(
                             'controller' => 'InstallScripts\Controller\Install',
                             'action'     => 'index'
@@ -54,7 +54,7 @@ return array(
                 ),
                 'install-scripts-set' => array(
                     'options' => array(
-                        'route'    => 'install-scripts set <bundle> <version>',
+                        'route'    => 'install-scripts set <script> <version>',
                         'defaults' => array(
                             'controller' => 'InstallScripts\Controller\Set',
                             'action'     => 'index',

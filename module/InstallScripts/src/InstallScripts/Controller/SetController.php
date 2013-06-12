@@ -3,7 +3,7 @@
 namespace InstallScripts\Controller;
 
 use InstallScripts\Controller\AbstractActionController;
-use Zend\Console\ColorInterface;
+use Zend\Console\ColorInterface as Color;
 
 
 class SetController extends AbstractActionController
@@ -15,50 +15,73 @@ class SetController extends AbstractActionController
 
         $request = $this->getRequest();
 
-        $bundleName = $request->getParam('bundle');
+        $scriptName = $request->getParam('script');
         $version    = $request->getParam('version');
 
-        $storageAdapter = $this->getInstallScriptStorage()->getAdapter();
+        $storageAdapter = $this->getStorage()->getAdapter();
 
         $changed = false;
 
-        $bundles = $this->getInstallScriptLocator()->getBundles();
-        foreach ($bundles as $bundle) {
-            $currentBundleName = str_replace('\\', '', $bundle->getName());
-            $searchBundleName  = str_replace('\\', '', $bundleName);
+        $scripts = $this->getLocator()->getScripts();
+        foreach ($scripts as $script) {
+            $currentScriptName = str_replace('\\', '', $script->getName());
+            $searchScriptName  = str_replace('\\', '', $scriptName);
 
-            if ($currentBundleName != $searchBundleName) {
+            if ($currentScriptName != $searchScriptName) {
                 continue;
             }
 
-            $currentVersion = $storageAdapter->getBundleVersion($bundle->getName());
+
+            $currentVersion =
+                    $storageAdapter->getScriptVersion($script->getName());
 
             if ($version != $currentVersion) {
-                $storageAdapter->setBundleVersion($bundle->getName(), $version);
 
-                echo  $this->colorize(str_pad($currentVersion, 7), ColorInterface::LIGHT_MAGENTA);
+                $versions = $script->getVersions();
+                if (!array_key_exists($version, $versions)) {
+                    echo  $this->colorize(
+                        'Version "' . $version . '" dose not exist. '
+                        . 'Available versions: '
+                        . implode(', ', array_keys($versions)),
+                        Color::RED
+                    );
+                    echo PHP_EOL;
+                    break;
+                }
+
+                $storageAdapter->setScriptVersion(
+                    $script->getName(),
+                    $version
+                );
+
+                echo  $this->colorize(
+                        str_pad($currentVersion, 7), Color::LIGHT_MAGENTA);
                 echo ' => ';
-                echo  $this->colorize(str_pad($version, 7), ColorInterface::LIGHT_CYAN);
-                echo  $this->colorize($bundleName, ColorInterface::BLUE);
+                echo  $this->colorize(
+                        str_pad($version, 7), Color::LIGHT_CYAN);
+                echo  $this->colorize($scriptName, Color::BLUE);
                 echo PHP_EOL;
 
                 $changed = true;
             } else {
                 echo str_pad($currentVersion, 7);
-                echo  $this->colorize('no changes  ', ColorInterface::MAGENTA);
-                echo  $this->colorize($bundleName, ColorInterface::BLUE);
+                echo  $this->colorize('no changes  ', Color::MAGENTA);
+                echo  $this->colorize($scriptName, Color::BLUE);
                 echo PHP_EOL;
             }
         }
 
         if ($changed) {
             if ($storageAdapter->save()) {
-                echo $this->colorize('Saved', ColorInterface::LIGHT_GREEN) .  PHP_EOL;
+                echo $this->colorize('Saved', Color::LIGHT_GREEN);
+                echo PHP_EOL;
             } else {
-                echo $this->colorize('Failed to save data', ColorInterface::RED) .  PHP_EOL;
+                echo $this->colorize('Failed to save data', Color::RED);
+                echo PHP_EOL;
             }
         } else {
-            echo $this->colorize('Nothing to save', ColorInterface::GREEN) .  PHP_EOL;
+            echo $this->colorize('Nothing to save', Color::GREEN);
+            echo PHP_EOL;
         }
     }
 

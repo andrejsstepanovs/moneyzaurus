@@ -1,12 +1,12 @@
 <?php
 
-namespace InstallScripts\Bundle;
+namespace InstallScripts;
 
 use Zend\Mvc\MvcEvent;
-use InstallScripts\Exception;
+use InstallScripts\Exception\ScriptException;
 
 
-class Bundle implements BundleInterface
+class Script implements ScriptInterface
 {
     /** @var array */
     protected $versions;
@@ -16,15 +16,9 @@ class Bundle implements BundleInterface
 
 
     /**
-     * @param null|\Zend\Mvc\MvcEvent $mvcEvent
+     * @param string $versions
+     * @return \InstallScripts\Script
      */
-    public function __construct($mvcEvent = null)
-    {
-        if ($mvcEvent) {
-            $this->setMvcEvent($mvcEvent);
-        }
-    }
-
     public function setVersions($versions)
     {
         $this->versions = $versions;
@@ -33,7 +27,7 @@ class Bundle implements BundleInterface
 
     /**
      * @return array
-     * @throws Exception\BundleException
+     * @throws Exception\ScriptException
      */
     public function getVersions()
     {
@@ -41,8 +35,8 @@ class Bundle implements BundleInterface
             return $this->versions;
         }
 
-        throw new Exception\BundleException(
-            'Bundle version not set for "' . $this->getName() . '"'
+        throw new ScriptException(
+            'Script versions not set for "' . $this->getName() . '"'
         );
     }
 
@@ -52,7 +46,13 @@ class Bundle implements BundleInterface
     public function getVersionsSorted()
     {
         $versions = $this->getVersions();
+
+        if (!is_array($versions)) {
+            throw new ScriptException('Script versions not set');
+        }
+
         uksort($versions, 'version_compare');
+
         return $versions;
     }
 
@@ -65,16 +65,14 @@ class Bundle implements BundleInterface
 
         $i = 0;
         $count = count($versions);
-        foreach ($versions AS $version => $val) {
+        foreach (array_keys($versions) AS $version) {
             $i++;
             if ($count == $i) {
                 return $version;
             }
         }
 
-        throw new Exception\BundleException(
-            'Max version not found'
-        );
+        throw new ScriptException('Max version not found');
     }
 
     /**
@@ -87,7 +85,7 @@ class Bundle implements BundleInterface
 
     /**
      * @param \Zend\Mvc\MvcEvent $mvcEvent
-     * @return \InstallScripts\Model\Locator
+     * @return \InstallScripts\Script
      */
     public function setMvcEvent(MvcEvent $mvcEvent)
     {

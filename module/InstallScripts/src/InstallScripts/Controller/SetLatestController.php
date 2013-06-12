@@ -3,7 +3,7 @@
 namespace InstallScripts\Controller;
 
 use InstallScripts\Controller\AbstractActionController;
-use Zend\Console\ColorInterface;
+use Zend\Console\ColorInterface as Color;
 
 
 class SetLatestController extends AbstractActionController
@@ -13,42 +13,43 @@ class SetLatestController extends AbstractActionController
     {
         echo $this->getTitle('set-latest');
 
-        $storageAdapter = $this->getInstallScriptStorage()->getAdapter();
+        $storageAdapter = $this->getStorage()->getAdapter();
 
         $changed = false;
 
-        $bundles = $this->getInstallScriptLocator()->getBundles();
-        foreach ($bundles as $bundle) {
-            $currentVersion = $storageAdapter->getBundleVersion($bundle->getName());
-            $maxVersion     = $bundle->getMaxVersion();
-            $bundleName     = $bundle->getName();
+        $scripts = $this->getLocator()->getScripts();
+        foreach ($scripts as $script) {
+            $scriptName     = $script->getName();
+
+            $currentVersion = $storageAdapter->getScriptVersion($scriptName);
+            $maxVersion     = $script->getMaxVersion();
 
             if (version_compare($currentVersion, $maxVersion) < 0) {
-                $storageAdapter->setBundleVersion($bundleName, $maxVersion);
+                $storageAdapter->setScriptVersion($scriptName, $maxVersion);
 
                 echo str_pad($currentVersion, 7);
                 echo ' => ';
                 echo str_pad($maxVersion, 7);
-                echo  $this->colorize($bundleName, ColorInterface::BLUE);
+                echo  $this->colorize($scriptName, Color::BLUE);
                 echo PHP_EOL;
 
                 $changed = true;
             } else {
                 echo str_pad($currentVersion, 7);
-                echo  $this->colorize('no changes  ', ColorInterface::MAGENTA);
-                echo  $this->colorize($bundleName, ColorInterface::BLUE);
+                echo  $this->colorize('no changes  ', Color::MAGENTA);
+                echo  $this->colorize($scriptName, Color::BLUE);
                 echo PHP_EOL;
             }
         }
 
         if ($changed) {
             if ($storageAdapter->save()) {
-                echo $this->colorize('Saved', ColorInterface::LIGHT_GREEN) .  PHP_EOL;
+                echo $this->colorize('Saved', Color::LIGHT_GREEN) .  PHP_EOL;
             } else {
-                echo $this->colorize('Failed to save data', ColorInterface::RED) .  PHP_EOL;
+                echo $this->colorize('Failed to save data', Color::RED) .  PHP_EOL;
             }
         } else {
-            echo $this->colorize('Nothing to save', ColorInterface::GREEN) .  PHP_EOL;
+            echo $this->colorize('Nothing to save', Color::GREEN) .  PHP_EOL;
         }
     }
 

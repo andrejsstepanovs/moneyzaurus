@@ -3,8 +3,8 @@
 namespace InstallScripts\Controller;
 
 use InstallScripts\Controller\AbstractActionController;
-use InstallScripts\Exception;
-use Zend\Console\ColorInterface;
+use InstallScripts\Exception\ActionControllerException;
+use Zend\Console\ColorInterface as Color;
 
 
 class UpdateController extends AbstractActionController
@@ -14,17 +14,28 @@ class UpdateController extends AbstractActionController
     {
         echo $this->getTitle('update');
 
-        $storageAdapter = $this->getInstallScriptStorage()->getAdapter();
+        $scriptName = $this->getRequest()->getParam('script');
+
+        $storageAdapter = $this->getStorage()->getAdapter();
 
         $changed = false;
 
-        $bundles = $this->getInstallScriptLocator()->getBundles();
-        foreach ($bundles as $bundle) {
-            $bundleName = $bundle->getName();
+        $scripts = $this->getLocator()->getScripts();
+        foreach ($scripts as $script) {
 
-            $currentVersion = $storageAdapter->getBundleVersion($bundleName);
+            if (!empty($scriptName)) {
+                $currentScriptName = str_replace('\\', '', $script->getName());
+                $searchScriptName  = str_replace('\\', '', $scriptName);
 
-            $versions = $bundle->getVersionsSorted();
+                if ($currentScriptName != $searchScriptName) {
+                    continue;
+                }
+            }
+
+            $currentVersion =
+                    $storageAdapter->getScriptVersion($script->getName());
+
+            $versions = $script->getVersionsSorted();
 
             foreach ($versions AS $installVersion => $method) {
 
@@ -32,37 +43,42 @@ class UpdateController extends AbstractActionController
                     continue;
                 }
 
-                if (!method_exists($bundle, $method)) {
-                    throw new Exception\BundleException(
-                        'Bundle "' . $bundle->getName() . '" '
+                if (!method_exists($script, $method)) {
+                    throw new ActionControllerException(
+                        'Script "' . $script->getName() . '" '
                         . 'have no method "' . $method . '"'
                     );
                 }
 
-                if (!is_callable(array($bundle, $method))) {
-                    throw new Exception\BundleException(
-                        'Bundle method "' . $bundle->getName() . '::' . $method . '()" '
-                        . 'is not callable'
+                if (!is_callable(array($script, $method))) {
+                    throw new ActionControllerException(
+                        'Script method "' . $script->getName()
+                        . '::' . $method . '()" is not callable'
                     );
                 }
 
-                $bundle->setMvcEvent($this->getEvent());
-                $result = call_user_method($versions[$installVersion], $bundle);
+                $script->setMvcEvent($this->getEvent());
+
+                $result = call_user_method($versions[$installVersion], $script);
+
                 if ($result) {
-                    $storageAdapter->setBundleVersion($bundle->getName(), $installVersion);
+                    $storageAdapter->setScriptVersion(
+                        $script->getName(),
+                        $installVersion
+                    );
 
                     echo str_pad($currentVersion, 7);
                     echo ' => ';
                     echo str_pad($installVersion, 7);
-                    echo  $this->colorize($bundleName, ColorInterface::BLUE);
+                    echo  $this->colorize($script->getName(), Color::BLUE);
                     echo PHP_EOL;
 
                     $currentVersion = $installVersion;
                     $changed = true;
                 } else {
                     echo str_pad($currentVersion, 7);
-                    echo  $this->colorize('install failed ', ColorInterface::MAGENTA);
-                    echo  $this->colorize($bundleName, ColorInterface::BLUE);
+                    echo  $this->colorize('install failed ', Color::MAGENTA);
+                    echo  $this->colorize($script->getName(), Color::BLUE);
                     echo PHP_EOL;
                 }
             }
@@ -70,12 +86,12 @@ class UpdateController extends AbstractActionController
 
         if ($changed) {
             if ($storageAdapter->save()) {
-                echo $this->colorize('Saved', ColorInterface::LIGHT_GREEN) .  PHP_EOL;
+                echo $this->colorize('Saved', Color::LIGHT_GREEN) .  PHP_EOL;
             } else {
-                echo $this->colorize('Failed to save data', ColorInterface::RED) .  PHP_EOL;
+                echo $this->colorize('Failed to save data', Color::RED) .  PHP_EOL;
             }
         } else {
-            echo $this->colorize('Nothing to save', ColorInterface::GREEN) .  PHP_EOL;
+            echo $this->colorize('Nothing to save', Color::GREEN) .  PHP_EOL;
         }
     }
 
