@@ -2,33 +2,26 @@
 
 namespace InstallScripts\Bundle;
 
-use Zend\Db\Adapter\AdapterAwareInterface;
-use Zend\Db\Adapter\Adapter;
+use Zend\Mvc\MvcEvent;
 use InstallScripts\Exception;
 
 
-class Bundle implements AdapterAwareInterface
+class Bundle
 {
-    /** @var \Zend\Db\Adapter\Adapter */
-    private $adapter;
-
-    /** @var \Exception */
-    private $exceptions = array();
-
-    /** @var array */
-    protected $activeRecords;
-
     /** @var array */
     protected $versions;
 
+    /** @var \Zend\Mvc\MvcEvent */
+    protected $mvcEvent;
+
 
     /**
-     * @param null|\Zend\Db\Adapter\Adapter $adapter
+     * @param null|\Zend\Mvc\MvcEvent $mvcEvent
      */
-    public function __construct($adapter = null)
+    public function __construct($mvcEvent = null)
     {
-        if ($adapter) {
-            $this->setDbAdapter($adapter);
+        if ($mvcEvent) {
+            $this->setMvcEvent($mvcEvent);
         }
     }
 
@@ -93,60 +86,21 @@ class Bundle implements AdapterAwareInterface
     }
 
     /**
-     * Set db adapter
-     *
-     * @param \Zend\Db\Adapter\Adapter $adapter
-     * @return AdapterAwareInterface
+     * @param \Zend\Mvc\MvcEvent $mvcEvent
+     * @return \InstallScripts\Model\Locator
      */
-    public function setDbAdapter(Adapter $adapter)
+    public function setMvcEvent(MvcEvent $mvcEvent)
     {
-        $this->adapter = $adapter;
+        $this->mvcEvent = $mvcEvent;
         return $this;
     }
 
     /**
-     * @return \Zend\Db\Adapter\Adapter
+     * @return \Zend\Mvc\MvcEvent
      */
-    protected function getDbAdapter()
+    public function getMvcEvent()
     {
-        return $this->adapter;
-    }
-
-    /**
-     * @param string $sqlQuery
-     * @return boolean
-     */
-    public function executeQuery($sqlQuery)
-    {
-        try {
-            $this->adapter->query($sqlQuery)->execute();
-            return true;
-
-        } catch (\Zend\Db\Adapter\Exception\InvalidQueryException $exc) {
-            $this->setException($exc);
-        } catch (Exception $exc) {
-            $this->setException($exc);
-        }
-
-        return false;
-    }
-
-    /**
-     * @param mixed $exc
-     * @return \InstallScripts\Bundle\Bundle
-     */
-    public function setException($exc)
-    {
-        $this->exceptions[] = $exc;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getExceptions()
-    {
-        return $this->exceptions;
+        return $this->mvcEvent;
     }
 
 }

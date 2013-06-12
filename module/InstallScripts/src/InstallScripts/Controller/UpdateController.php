@@ -46,6 +46,7 @@ class UpdateController extends AbstractActionController
                     );
                 }
 
+                $bundle->setMvcEvent($this->getEvent());
                 $result = call_user_method($versions[$installVersion], $bundle);
                 if ($result) {
                     $storageAdapter->setBundleVersion($bundle->getName(), $installVersion);

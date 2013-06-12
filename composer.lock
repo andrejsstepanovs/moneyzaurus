@@ -147,12 +147,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zf2.git",
-                "reference": "7986e7e9e0c20457fa83383d61663d533fe48e3e"
+                "reference": "916dd0d26676f9591a7ea81141192ff7aeb782c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zf2/zipball/7986e7e9e0c20457fa83383d61663d533fe48e3e",
-                "reference": "7986e7e9e0c20457fa83383d61663d533fe48e3e",
+                "url": "https://api.github.com/repos/zendframework/zf2/zipball/916dd0d26676f9591a7ea81141192ff7aeb782c7",
+                "reference": "916dd0d26676f9591a7ea81141192ff7aeb782c7",
                 "shasum": ""
             },
             "require": {
@@ -251,7 +251,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2013-06-07 17:20:04"
+            "time": "2013-06-11 21:13:31"
         }
     ],
     "packages-dev": [
@@ -261,12 +261,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "1.2.11"
+                "reference": "8d0a47217af4a0ed74ac0e155ec2007205d1408f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/1.2.11",
-                "reference": "1.2.11",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/8d0a47217af4a0ed74ac0e155ec2007205d1408f",
+                "reference": "8d0a47217af4a0ed74ac0e155ec2007205d1408f",
                 "shasum": ""
             },
             "require": {
@@ -309,7 +309,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-05-23 18:23:24"
+            "time": "2013-06-12 07:14:37"
         },
         {
             "name": "phpunit/php-file-iterator",

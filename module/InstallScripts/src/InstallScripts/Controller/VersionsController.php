@@ -4,7 +4,6 @@ namespace InstallScripts\Controller;
 
 use InstallScripts\Controller\AbstractActionController;
 use InstallScripts\Exception;
-use Zend\Debug\Debug as ZendDebug;
 use Zend\Console\ColorInterface;
 
 

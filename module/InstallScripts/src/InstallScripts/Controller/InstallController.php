@@ -23,7 +23,9 @@ class InstallController extends AbstractActionController
 
         $changed = false;
 
+
         $bundles = $this->getInstallScriptLocator()->getBundles();
+        /** @var $bundle InstallScripts\Bundle\Bundle */
         foreach ($bundles as $bundle) {
             $currentBundleName = str_replace('\\', '', $bundle->getName());
             $searchBundleName  = str_replace('\\', '', $bundleName);
@@ -60,6 +62,7 @@ class InstallController extends AbstractActionController
             }
 
 
+            $bundle->setMvcEvent($this->getEvent());
             $result = call_user_method($versions[$installVersion], $bundle);
             if ($result) {
                 $storageAdapter->setBundleVersion($bundle->getName(), $installVersion);

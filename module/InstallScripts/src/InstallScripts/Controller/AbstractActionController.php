@@ -122,6 +122,7 @@ class AbstractActionController extends Controller
      */
     protected function getInstallScriptLocator()
     {
+        $this->getServiceLocator();
         if (null === $this->installScriptLocator) {
             $this->installScriptLocator = new InstallScriptLocator();
             $this->installScriptLocator->setConfig($this->getConfig());

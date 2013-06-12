@@ -75,6 +75,8 @@ class Locator
                         );
                     }
 
+                    $bundle->setDbAdapter();
+
                     $this->bundles[] = $bundle;
                 }
             }
