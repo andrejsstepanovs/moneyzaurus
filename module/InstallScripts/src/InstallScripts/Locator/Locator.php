@@ -3,7 +3,7 @@
 namespace InstallScripts\Locator;
 
 use InstallScripts\Exception;
-use InstallScripts\Bundle\Bundle;
+use InstallScripts\Bundle\BundleInterface;
 
 
 class Locator
@@ -69,7 +69,7 @@ class Locator
 
                     $bundle = new $className();
 
-                    if (!$bundle instanceof Bundle) {
+                    if (!$bundle instanceof BundleInterface) {
                         throw new Exception\BundleException(
                             'Bundle "' . $className . '" not instance of Bundle'
                         );

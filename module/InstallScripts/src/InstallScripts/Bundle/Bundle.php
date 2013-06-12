@@ -6,7 +6,7 @@ use Zend\Mvc\MvcEvent;
 use InstallScripts\Exception;
 
 
-class Bundle
+class Bundle implements BundleInterface
 {
     /** @var array */
     protected $versions;
