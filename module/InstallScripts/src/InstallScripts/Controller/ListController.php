@@ -21,7 +21,8 @@ class ListController extends AbstractActionController
             $scriptVersion = $storageAdapter->getScriptVersion($scriptName);
 
             echo $this->colorize($scriptVersion, Color::NORMAL, 7);
-            echo $this->colorize($scriptName, Color::CYAN) . PHP_EOL;
+            echo $this->colorize($scriptName, Color::CYAN);
+            echo PHP_EOL;
         }
     }
 

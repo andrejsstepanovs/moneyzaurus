@@ -3,7 +3,6 @@
 namespace InstallScripts\Controller;
 
 use InstallScripts\Controller\AbstractActionController;
-use InstallScripts\Exception\ActionControllerException;
 use Zend\Console\ColorInterface as Color;
 
 

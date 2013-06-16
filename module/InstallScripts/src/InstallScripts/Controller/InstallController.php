@@ -58,7 +58,7 @@ class InstallController extends AbstractActionController
                 );
 
                 echo $this->colorize($currentVersion, Color::LIGHT_MAGENTA, 7);
-                echo ' => ';
+                echo $this->colorize(' => ', Color::NORMAL);
                 echo $this->colorize($installVersion, Color::LIGHT_CYAN, 7);
                 echo $this->colorize($scriptName, Color::BLUE);
                 echo PHP_EOL;
