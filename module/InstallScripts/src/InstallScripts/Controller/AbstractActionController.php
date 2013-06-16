@@ -185,18 +185,20 @@ class AbstractActionController extends ZendActionController
         $script->setMvcEvent($this->getEvent());
 
         $start = time();
+        $startLabel = date('Y-m-d H:i:s', $start);
 
         echo $this->colorize('Start: ', Color::NORMAL, 12);
-        echo $this->colorize(date('Y-m-d H:i:s', $start), Color::LIGHT_YELLOW, 20);
+        echo $this->colorize($startLabel, Color::LIGHT_YELLOW, 20);
         echo PHP_EOL;
 
 
         $result = call_user_method($method, $script);
 
 
+        $spentTime = gmdate('H:i:s', time() - $start);
         echo $this->colorize('Stop: ', Color::NORMAL, 12);
         echo $this->colorize(date('Y-m-d H:i:s'), Color::LIGHT_YELLOW, 20);
-        echo $this->colorize(gmdate('H:i:s', time() - $start), Color::LIGHT_GREEN);
+        echo $this->colorize($spentTime, Color::LIGHT_GREEN);
         echo PHP_EOL;
 
 
