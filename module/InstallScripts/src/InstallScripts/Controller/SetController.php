@@ -54,17 +54,15 @@ class SetController extends AbstractActionController
                     $version
                 );
 
-                echo  $this->colorize(
-                        str_pad($currentVersion, 7), Color::LIGHT_MAGENTA);
+                echo  $this->colorize($currentVersion, Color::LIGHT_MAGENTA, 7);
                 echo ' => ';
-                echo  $this->colorize(
-                        str_pad($version, 7), Color::LIGHT_CYAN);
+                echo  $this->colorize($version, Color::LIGHT_CYAN, 7);
                 echo  $this->colorize($scriptName, Color::BLUE);
                 echo PHP_EOL;
 
                 $changed = true;
             } else {
-                echo str_pad($currentVersion, 7);
+                echo  $this->colorize($currentVersion, Color::NORMAL, 7);
                 echo  $this->colorize('no changes  ', Color::MAGENTA);
                 echo  $this->colorize($scriptName, Color::BLUE);
                 echo PHP_EOL;

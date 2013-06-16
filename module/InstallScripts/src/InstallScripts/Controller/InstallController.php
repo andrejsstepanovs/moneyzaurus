@@ -49,24 +49,7 @@ class InstallController extends AbstractActionController
 
             $method = $versions[$installVersion];
 
-            if (!method_exists($script, $method)) {
-                throw new ActionControllerException(
-                    'Script "' . $script->getName() . '" '
-                    . 'have no method "' . $method . '"'
-                );
-            }
-
-            if (!is_callable(array($script, $method))) {
-                throw new ActionControllerException(
-                    'Script method "' . $script->getName()
-                    . '::' . $method . '()" ' . 'is not callable'
-                );
-            }
-
-
-            $script->setMvcEvent($this->getEvent());
-
-            $result = call_user_method($method, $script);
+            $result = $this->execute($script, $method);
 
             if ($result) {
                 $storageAdapter->setScriptVersion(
@@ -74,21 +57,15 @@ class InstallController extends AbstractActionController
                     $installVersion
                 );
 
-                echo $this->colorize(
-                    str_pad($currentVersion, 7),
-                    Color::LIGHT_MAGENTA
-                );
+                echo $this->colorize($currentVersion, Color::LIGHT_MAGENTA, 7);
                 echo ' => ';
-                echo $this->colorize(
-                    str_pad($installVersion, 7),
-                    Color::LIGHT_CYAN
-                );
+                echo $this->colorize($installVersion, Color::LIGHT_CYAN, 7);
                 echo $this->colorize($scriptName, Color::BLUE);
                 echo PHP_EOL;
 
                 $changed = true;
             } else {
-                echo str_pad($currentVersion, 7);
+                echo $this->colorize($currentVersion, Color::NORMAL, 7);
                 echo $this->colorize('install failed ', Color::RED);
                 echo $this->colorize($scriptName, Color::BLUE);
                 echo PHP_EOL;

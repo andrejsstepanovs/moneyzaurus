@@ -39,21 +39,22 @@ class VersionsController extends AbstractActionController
                 $compare = version_compare($currentVersion, $version);
 
                 if ($compare < 0) {
-                    $versionLabel = $this->colorize(
-                        'not installed', Color::RED);
+                    $versionLabel = 'not installed';
+                    $color = Color::RED;
 
                 } elseif ($compare == 0) {
-                    $versionLabel = $this->colorize(
-                        'currently installed', Color::LIGHT_GREEN);
+                    $versionLabel = 'currently installed';
+                    $color = Color::LIGHT_GREEN;
 
                 } else {
-                    $versionLabel = $this->colorize(
-                        'installed', Color::GREEN);
+                    $versionLabel = 'installed';
+                    $color = Color::GREEN;
                 }
 
-                echo str_pad($version, 7) . ' ';
-                echo str_pad($versionLabel, 50) . ' ';
-                echo $method . '()' . PHP_EOL;
+                echo $this->colorize($version, Color::NORMAL, 7);
+                echo $this->colorize($versionLabel, $color, 25);
+                echo $this->colorize($method . '()', Color::NORMAL);
+                echo PHP_EOL;
             }
         }
     }

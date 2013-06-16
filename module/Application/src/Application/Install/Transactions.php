@@ -11,6 +11,11 @@ class Transactions extends Script
     protected $activeRecords = array();
 
 
+    public function __construct()
+    {
+        set_time_limit(0);
+    }
+
     /**
      * @return array
      */
@@ -18,16 +23,14 @@ class Transactions extends Script
     {
         return array(
             '0.0.1' => 'MoveDatabase',
-            '0.0.2' => 'MoveDatabase',
-            '0.0.3' => 'MoveDatabase',
-            '0.0.4' => 'MoveDatabase',
-            '0.0.5' => 'MoveDatabase',
         );
     }
 
+    /**
+     * Move old db values to new db structure
+     */
     public function MoveDatabase()
     {
-        return true;
         $transactions = $this->getTable('transactions', 'budget');
 
         $data = $transactions->getTable()->fetchAll();

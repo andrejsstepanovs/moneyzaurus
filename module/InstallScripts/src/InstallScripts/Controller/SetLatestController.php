@@ -27,15 +27,15 @@ class SetLatestController extends AbstractActionController
             if (version_compare($currentVersion, $maxVersion) < 0) {
                 $storageAdapter->setScriptVersion($scriptName, $maxVersion);
 
-                echo str_pad($currentVersion, 7);
-                echo ' => ';
-                echo str_pad($maxVersion, 7);
+                echo  $this->colorize($currentVersion, Color::NORMAL, 7);
+                echo  $this->colorize(' => ', Color::NORMAL);
+                echo  $this->colorize($maxVersion, Color::NORMAL, 7);
                 echo  $this->colorize($scriptName, Color::BLUE);
                 echo PHP_EOL;
 
                 $changed = true;
             } else {
-                echo str_pad($currentVersion, 7);
+                echo  $this->colorize($currentVersion, Color::NORMAL, 7);
                 echo  $this->colorize('no changes  ', Color::MAGENTA);
                 echo  $this->colorize($scriptName, Color::BLUE);
                 echo PHP_EOL;

@@ -9,6 +9,7 @@ use Zend\Mvc\Controller\AbstractActionController as ZendActionController;
 use InstallScripts\Storage as InstallScriptsStorage;
 use InstallScripts\Locator as InstallScriptsLocator;
 use InstallScripts\Exception\ActionControllerException;
+use InstallScripts\Script;
 
 
 class AbstractActionController extends ZendActionController
@@ -59,10 +60,15 @@ class AbstractActionController extends ZendActionController
     /**
      * @param string $message
      * @param integer $color
+     * @param integer $strPad
      * @return string
      */
-    protected function colorize($message, $color = Color::RESET)
+    protected function colorize($message, $color = Color::RESET, $strPad = null)
     {
+        if ($strPad) {
+            $message = str_pad($message, $strPad);
+        }
+
         return $this->getConsole()->colorize($message, $color);
     }
 
@@ -154,4 +160,46 @@ class AbstractActionController extends ZendActionController
         return $this->locator;
     }
 
+    /**
+     * @param \InstallScripts\Script $script
+     * @param string $method
+     * @return boolean
+     * @throws ActionControllerException
+     */
+    protected function execute(Script $script, $method)
+    {
+        if (!method_exists($script, $method)) {
+            throw new ActionControllerException(
+                'Script "' . $script->getName() . '" '
+                . 'have no method "' . $method . '"'
+            );
+        }
+
+        if (!is_callable(array($script, $method))) {
+            throw new ActionControllerException(
+                'Script method "' . $script->getName()
+                . '::' . $method . '()" ' . 'is not callable'
+            );
+        }
+
+        $script->setMvcEvent($this->getEvent());
+
+        $start = time();
+
+        echo $this->colorize('Start: ', Color::NORMAL, 12);
+        echo $this->colorize(date('Y-m-d H:i:s', $start), Color::LIGHT_YELLOW, 20);
+        echo PHP_EOL;
+
+
+        $result = call_user_method($method, $script);
+
+
+        echo $this->colorize('Stop: ', Color::NORMAL, 12);
+        echo $this->colorize(date('Y-m-d H:i:s'), Color::LIGHT_YELLOW, 20);
+        echo $this->colorize(gmdate('H:i:s', time() - $start), Color::LIGHT_GREEN);
+        echo PHP_EOL;
+
+
+        return $result;
+    }
 }

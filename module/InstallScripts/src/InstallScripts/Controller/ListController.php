@@ -17,9 +17,10 @@ class ListController extends AbstractActionController
         $scripts = $this->getLocator()->getScripts();
 
         foreach ($scripts as $script) {
-            $scriptName = $script->getName();
+            $scriptName    = $script->getName();
+            $scriptVersion = $storageAdapter->getScriptVersion($scriptName);
 
-            echo str_pad($storageAdapter->getScriptVersion($scriptName), 7);
+            echo $this->colorize($scriptVersion, Color::NORMAL, 7);
             echo $this->colorize($scriptName, Color::CYAN) . PHP_EOL;
         }
     }

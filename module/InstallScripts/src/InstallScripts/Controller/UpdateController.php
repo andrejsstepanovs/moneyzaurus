@@ -43,23 +43,7 @@ class UpdateController extends AbstractActionController
                     continue;
                 }
 
-                if (!method_exists($script, $method)) {
-                    throw new ActionControllerException(
-                        'Script "' . $script->getName() . '" '
-                        . 'have no method "' . $method . '"'
-                    );
-                }
-
-                if (!is_callable(array($script, $method))) {
-                    throw new ActionControllerException(
-                        'Script method "' . $script->getName()
-                        . '::' . $method . '()" is not callable'
-                    );
-                }
-
-                $script->setMvcEvent($this->getEvent());
-
-                $result = call_user_method($versions[$installVersion], $script);
+                $result = $this->execute($script, $method);
 
                 if ($result) {
                     $storageAdapter->setScriptVersion(
@@ -67,17 +51,17 @@ class UpdateController extends AbstractActionController
                         $installVersion
                     );
 
-                    echo str_pad($currentVersion, 7);
-                    echo ' => ';
-                    echo str_pad($installVersion, 7);
+                    echo  $this->colorize($currentVersion, Color::NORMAL, 7);
+                    echo  $this->colorize(' => ', Color::NORMAL);
+                    echo  $this->colorize($installVersion, Color::NORMAL, 7);
                     echo  $this->colorize($script->getName(), Color::BLUE);
                     echo PHP_EOL;
 
                     $currentVersion = $installVersion;
                     $changed = true;
                 } else {
-                    echo str_pad($currentVersion, 7);
-                    echo  $this->colorize('install failed ', Color::MAGENTA);
+                    echo  $this->colorize($installVersion, Color::NORMAL, 7);
+                    echo  $this->colorize('install failed ', Color::RED);
                     echo  $this->colorize($script->getName(), Color::BLUE);
                     echo PHP_EOL;
                 }
