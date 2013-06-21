@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "491b6f617bb58bf7d81c68cfeb314aad",
+    "hash": "95a104a62b7c99e5982dfb3ae2c52112",
     "packages": [
         {
             "name": "wormhit/HighchartsPHP",
@@ -43,6 +43,46 @@
                 "zf2"
             ],
             "time": "2013-06-08 19:21:02"
+        },
+        {
+            "name": "wormhit/InstallScripts",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wormhit/InstallScripts.git",
+                "reference": "55910c6bdd4c42da0edbb10a245d80ce3748abf4"
+            },
+            "require": {
+                "php": ">=5.3",
+                "zendframework/zendframework": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "InstallScripts": "src/"
+                },
+                "classmap": [
+                    "./Module.php"
+                ]
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Andrejs Stepanovs",
+                    "email": "andrejsstepanovs@gmail.com"
+                }
+            ],
+            "description": "Module for Zend Framework 2 to perform script execution",
+            "homepage": "https://github.com/wormhit/InstallScripts",
+            "keywords": [
+                "install",
+                "scripts",
+                "zend framework 2",
+                "zf2"
+            ],
+            "time": "2013-06-21 07:33:23"
         },
         {
             "name": "wormhit/PHPConfig",
@@ -88,12 +128,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/ZendDeveloperTools.git",
-                "reference": "d5ec47c8e916a083fe2ef8a5711b859e8864b042"
+                "reference": "8e04c24099ac4b843d101522fda17457765332ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/ZendDeveloperTools/zipball/d5ec47c8e916a083fe2ef8a5711b859e8864b042",
-                "reference": "d5ec47c8e916a083fe2ef8a5711b859e8864b042",
+                "url": "https://api.github.com/repos/zendframework/ZendDeveloperTools/zipball/8e04c24099ac4b843d101522fda17457765332ce",
+                "reference": "8e04c24099ac4b843d101522fda17457765332ce",
                 "shasum": ""
             },
             "require": {
@@ -139,7 +179,7 @@
                 "module",
                 "zf2"
             ],
-            "time": "2013-06-07 08:49:48"
+            "time": "2013-06-15 07:41:17"
         },
         {
             "name": "zendframework/zendframework",
@@ -147,12 +187,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zf2.git",
-                "reference": "916dd0d26676f9591a7ea81141192ff7aeb782c7"
+                "reference": "c3bf013cceab4acdb650bae8640b785ef2dd5dda"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zf2/zipball/916dd0d26676f9591a7ea81141192ff7aeb782c7",
-                "reference": "916dd0d26676f9591a7ea81141192ff7aeb782c7",
+                "url": "https://api.github.com/repos/zendframework/zf2/zipball/c3bf013cceab4acdb650bae8640b785ef2dd5dda",
+                "reference": "c3bf013cceab4acdb650bae8640b785ef2dd5dda",
                 "shasum": ""
             },
             "require": {
@@ -251,7 +291,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2013-06-11 21:13:31"
+            "time": "2013-06-20 17:34:05"
         }
     ],
     "packages-dev": [
@@ -495,12 +535,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "268d9f12f6b7e982ad7bb40ea492085a3d1414d6"
+                "reference": "1d9d8a84fd20011411f685a19ba60a37a88dbf38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/268d9f12f6b7e982ad7bb40ea492085a3d1414d6",
-                "reference": "268d9f12f6b7e982ad7bb40ea492085a3d1414d6",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1d9d8a84fd20011411f685a19ba60a37a88dbf38",
+                "reference": "1d9d8a84fd20011411f685a19ba60a37a88dbf38",
                 "shasum": ""
             },
             "require": {
@@ -561,7 +601,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-06-01 10:06:56"
+            "time": "2013-06-18 15:37:33"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
