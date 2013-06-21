@@ -13,7 +13,8 @@
         "zendframework/zend-developer-tools": "dev-master",
         "wormhit/HighchartsPHP": "*",
         "wormhit/PHPConfig": "*",
-        "wormhit/InstallScripts": "*"
+        "wormhit/InstallScripts": "*",
+        "wormhit/jQueryMobileMenu": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"
@@ -30,6 +31,10 @@
         {
             "type": "git",
             "url":  "https://github.com/wormhit/InstallScripts.git"
+        },
+        {
+            "type": "git",
+            "url":  "https://github.com/wormhit/jQueryMobileMenu.git"
         }
     ]
 

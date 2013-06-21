@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "95a104a62b7c99e5982dfb3ae2c52112",
+    "hash": "97c98415dea8afead77c2369f14ae9b1",
     "packages": [
         {
             "name": "wormhit/HighchartsPHP",
@@ -50,7 +50,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wormhit/InstallScripts.git",
-                "reference": "55910c6bdd4c42da0edbb10a245d80ce3748abf4"
+                "reference": "0f8047bffd591003e1114c6fff5fb20a49cf8e58"
             },
             "require": {
                 "php": ">=5.3",
@@ -82,7 +82,7 @@
                 "zend framework 2",
                 "zf2"
             ],
-            "time": "2013-06-21 07:33:23"
+            "time": "2013-06-21 08:17:22"
         },
         {
             "name": "wormhit/PHPConfig",
@@ -121,6 +121,47 @@
                 "zf2"
             ],
             "time": "2013-06-08 19:59:37"
+        },
+        {
+            "name": "wormhit/jQueryMobileMenu",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wormhit/jQueryMobileMenu.git",
+                "reference": "1193d900937e67886d406d394feb23a6d03a0304"
+            },
+            "require": {
+                "php": ">=5.3",
+                "zendframework/zendframework": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "jQueryMobileMenu": "src/"
+                },
+                "classmap": [
+                    "./Module.php"
+                ]
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Andrejs Stepanovs",
+                    "email": "andrejsstepanovs@gmail.com"
+                }
+            ],
+            "description": "zf2 module overrides Zend\\View\\Helper\\Navigation\\Menu to match jQuery mobile navigation",
+            "homepage": "https://github.com/wormhit/jQueryMobileMenu",
+            "keywords": [
+                "jQuery",
+                "jQueryMobile",
+                "mobile",
+                "zend framework 2",
+                "zf2"
+            ],
+            "time": "2013-06-21 09:24:47"
         },
         {
             "name": "zendframework/zend-developer-tools",

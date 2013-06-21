@@ -3,27 +3,27 @@
 
 <script type="text/javascript">
 
-    var colors = Highcharts.getOptions().colors,
+    var colors     = Highcharts.getOptions().colors,
         categories = <?php echo json_encode($this->groupNames); ?>,
-        data = <?php echo $this->chartData->renderOptions(); ?>;
+        data       = <?php echo $this->chartData->renderOptions(); ?>;
 
-    var primaryData = [];
+    var primaryData   = [];
     var secondaryData = [];
 
     for (var i = 0; i < data.length; i++) {
 
         primaryData.push({
-            name: categories[i],
-            y: data[i].y,
-            color: data[i].color
+            name  : categories[i],
+            y     : data[i].y,
+            color : data[i].color
         });
 
         for (var j = 0; j < data[i].drilldown.data.length; j++) {
-            var brightness = 0.2 - (j / data[i].drilldown.data.length) / 5 ;
+            var brightness = 0.2 - (j / data[i].drilldown.data.length) / 5;
             secondaryData.push({
-                name: data[i].drilldown.categories[j],
-                y: data[i].drilldown.data[j],
-                color: Highcharts.Color(data[i].color).brighten(brightness).get()
+                name  : data[i].drilldown.categories[j],
+                y     : data[i].drilldown.data[j],
+                color : Highcharts.Color(data[i].color).brighten(brightness).get()
             });
         }
     }

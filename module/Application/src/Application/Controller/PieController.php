@@ -5,6 +5,8 @@ use Application\Controller\AbstractActionController;
 
 use HighchartsPHP\Highcharts as Highchart;
 use HighchartsPHP\HighchartsJsExpr as HighchartJsExpr;
+use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Where;
 
 
 class PieController extends AbstractActionController
@@ -39,8 +41,10 @@ class PieController extends AbstractActionController
                 $categories[] = $row->getData('item_name');
             }
 
-            $chartData[$i]->y = 55.11;
-            $chartData[$i]->z = 'USD';
+
+
+            $chartData[$i]->y = array_sum($data);
+            $chartData[$i]->z = 'EUR';
             $chartData[$i]->color = new HighchartJsExpr('colors['.$i.']');
             $chartData[$i]->drilldown->name = $groupName;
             $chartData[$i]->drilldown->categories = $categories;
@@ -49,32 +53,6 @@ class PieController extends AbstractActionController
 
             $i++;
         }
-//            \DEBUG::dump($data, $categories);
-//            \DEBUG::dump();
-
-//
-//
-//        //We can also use Highchart library to produce any kind of javascript structures
-//        $chartData = new Highchart();
-//        $chartData[0]->y = 55.11;
-//        $chartData[0]->z = 'USD';
-//        $chartData[0]->color = new HighchartJsExpr("colors[0]");
-//        $chartData[0]->drilldown->name = "MSIE versions";
-//        $chartData[0]->drilldown->categories = array('MSIE 6.0', 'MSIE 7.0', 'MSIE 8.0', 'MSIE 9.0');
-//        $chartData[0]->drilldown->data = array(10.85, 7.35, 33.06, 2.81);
-//        $chartData[0]->drilldown->color = new HighchartJsExpr("colors[0]");
-//
-//        $chartData[1]->y = 21.63;
-//        $chartData[1]->z = 'USD';
-//        $chartData[1]->color = new HighchartJsExpr("colors[1]");
-//        $chartData[1]->drilldown->name = "Firefox versions";
-//
-//        $chartData[1]->drilldown->categories = array('Firefox 2.0', 'Firefox 3.0', 'Firefox 3.5',
-//                                                     'Firefox 3.6', 'Firefox 4.0');
-//
-//        $chartData[1]->drilldown->data = array(0.20, 0.83, 1.58, 13.12, 5.43);
-//        $chartData[1]->drilldown->color = new HighchartJsExpr("colors[1]");
-
 
         $this->getViewHelperPlugin('inlineScript')->appendScript(
             $this->getChart()->render()
@@ -94,8 +72,8 @@ class PieController extends AbstractActionController
         $chart = new Highchart();
 
         $chart->chart->renderTo = 'container';
-        $chart->chart->type = 'pie';
-        $chart->title->text = 'Pie Chart';
+        $chart->chart->type     = 'pie';
+        $chart->title->text     = 'Pie Chart';
 //        $chart->yAxis->title->text = "Total percent market share";
 //        $chart->plotOptions->pie->shadow = false;
 
@@ -103,9 +81,9 @@ class PieController extends AbstractActionController
             return '<b>'+ this.point.name +'</b>: '+ this.y; alert(this);
         }");
 
-        $chart->series[] = array(
-            'data'       => new HighchartJsExpr("primaryData"),
-            'size'       => "60%",
+        $chart->series[0] = array(
+            'data'       => new HighchartJsExpr('primaryData'),
+            'size'       => '50%',
             'dataLabels' => array(
 //                'formatter' => new HighchartJsExpr('function() {
 //                    return this.y > 5 ? this.point.name : null;
@@ -115,9 +93,9 @@ class PieController extends AbstractActionController
             )
         );
 
-        $chart->series[1]->name = 'Secondary';
-        $chart->series[1]->data = new HighchartJsExpr("secondaryData");
-        $chart->series[1]->innerSize = "60%";
+        $chart->series[1]->name      = 'Secondary';
+        $chart->series[1]->data      = new HighchartJsExpr('secondaryData');
+        $chart->series[1]->innerSize = "50%";
 
         $chart->series[1]->dataLabels->formatter = new HighchartJsExpr("function() {
             return this.y > 1 ? '<b>'+ this.point.name +':</b> '+ this.y : null;
@@ -131,7 +109,11 @@ class PieController extends AbstractActionController
      */
     protected function getGroupedData()
     {
-        $rowset = $this->getTransactions($this->getUserId());
+        $select = $this->getTransactionsSelect();
+
+        $select = $this->applyTransactionSelectFilters($select);
+
+        $rowset = $this->fetchTransactions($select);
 
         $data = array();
         foreach ($rowset as $model) {
@@ -142,13 +124,41 @@ class PieController extends AbstractActionController
     }
 
     /**
-     * @return \Zend\Db\ResultSet\HydratingResultSet
+     * @param \Zend\Db\Sql\Select $select
+     * @return \Zend\Db\Sql\Select
      */
-    protected function getTransactions($userId)
+    protected function applyTransactionSelectFilters(Select $select)
+    {
+        $whereArr = array();
+
+        $whereArr[] = $this->getWhere()
+                           ->between('date', '2013-05-01', date('Y-m-d H:i:s'));
+
+
+        foreach ($whereArr AS $where) {
+            $select->where($where);
+        }
+
+        return $select;
+    }
+
+    /**
+     * @return \Zend\Db\Sql\Where
+     */
+    protected function getWhere()
+    {
+        $where = new Where();
+        return $where;
+    }
+
+    /**
+     * @return \Zend\Db\Sql\Select
+     */
+    protected function getTransactionsSelect()
     {
         $transactionTable = array('t' => 'transaction');
 
-        $select = new \Zend\Db\Sql\Select();
+        $select = new Select();
         $select->from($transactionTable)
                ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item_name' => 'name'))
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
@@ -156,15 +166,21 @@ class PieController extends AbstractActionController
                ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email'))
                ->order('g.name ASC');
 
-//        $select->where('t.id_user = ?', $userId);
+        return $select;
+    }
 
+    /**
+     * @param \Zend\Db\Sql\Select $select
+     * @return \Zend\Db\ResultSet\HydratingResultSet
+     */
+    protected function fetchTransactions(Select $select)
+    {
         $transactions = $this->getTable('transactions');
         $table = $transactions->getTable();
-        $table->setTable($transactionTable);
+        $table->setTable(array('t' => 'transaction'));
 
         /** @var $transactionsResuls \Zend\Db\ResultSet\HydratingResultSet */
-        $transactionsResuls = $table->fetch($select);
-        return $transactionsResuls;
+        return $table->fetch($select);
     }
 
 }
