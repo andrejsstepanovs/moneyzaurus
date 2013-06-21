@@ -17,6 +17,9 @@ class PieController extends AbstractActionController
     /** @var integer */
     protected $userId;
 
+    /** @var arrat */
+    protected $transactionsData;
+
 
     public function indexAction()
     {
@@ -25,31 +28,35 @@ class PieController extends AbstractActionController
              ->appendFile('/js/highcharts/modules/exporting.js');
 
 
-        $groupedData = $this->getGroupedData();
-        $groupNames = array_keys($groupedData);
+        $groupedData = array();
+        foreach ($this->getTransactions() as $model) {
+            $groupedData[$model['group_name']][] = $model;
+        }
 
+        $sortedGroups = $this->getSortedGroups($groupedData);
 
         $chartData = new Highchart();
 
         $i = 0;
-        foreach ($groupedData AS $groupName => $rows) {
+        foreach ($sortedGroups AS $groupName) {
 
-            $data = array();
-            $categories = array();
+            $rows = $groupedData[$groupName];
+
+            $data = $categories = array();
+
             foreach ($rows AS $row) {
-                $data[]       = (float)$row->getData('price');
+                $data[]       = round((float)$row->getData('price'), 2);
                 $categories[] = $row->getData('item_name');
             }
 
 
-
-            $chartData[$i]->y = array_sum($data);
-            $chartData[$i]->z = 'EUR';
-            $chartData[$i]->color = new HighchartJsExpr('colors['.$i.']');
-            $chartData[$i]->drilldown->name = $groupName;
+            $chartData[$i]->y                     = array_sum($data);
+            $chartData[$i]->z                     = 'EUR';
+            $chartData[$i]->color                 = new HighchartJsExpr('colors['.$i.']');
+            $chartData[$i]->drilldown->name       = $groupName;
             $chartData[$i]->drilldown->categories = $categories;
-            $chartData[$i]->drilldown->data = $data;
-            $chartData[$i]->drilldown->color = new HighchartJsExpr("colors[0]");
+            $chartData[$i]->drilldown->data       = $data;
+            $chartData[$i]->drilldown->color      = new HighchartJsExpr("colors[0]");
 
             $i++;
         }
@@ -60,7 +67,7 @@ class PieController extends AbstractActionController
 
         return array(
             'chartData'  => $chartData,
-            'groupNames' => $groupNames
+            'groupNames' => $sortedGroups
         );
     }
 
@@ -83,19 +90,19 @@ class PieController extends AbstractActionController
 
         $chart->series[0] = array(
             'data'       => new HighchartJsExpr('primaryData'),
-            'size'       => '50%',
+            'size'       => '80%',
             'dataLabels' => array(
 //                'formatter' => new HighchartJsExpr('function() {
 //                    return this.y > 5 ? this.point.name : null;
 //                }'),
                 'color'    => 'white', // title color
-                'distance' => -40      // title distance
+                'distance' => -100     // title distance
             )
         );
 
         $chart->series[1]->name      = 'Secondary';
         $chart->series[1]->data      = new HighchartJsExpr('secondaryData');
-        $chart->series[1]->innerSize = "50%";
+        $chart->series[1]->innerSize = "60%";
 
         $chart->series[1]->dataLabels->formatter = new HighchartJsExpr("function() {
             return this.y > 1 ? '<b>'+ this.point.name +':</b> '+ this.y : null;
@@ -104,23 +111,31 @@ class PieController extends AbstractActionController
         return $chart;
     }
 
+    protected function getSortedGroups(array $groupedData)
+    {
+        $groups = array();
+
+        foreach ($this->getTransactions() AS $row) {
+            $groups[$row->getGroupName()] =+  $row->getPrice();
+        }
+
+        arsort($groups, SORT_NUMERIC);
+
+        return array_keys($groups);
+    }
+
     /**
      * @return array
      */
-    protected function getGroupedData()
+    protected function getTransactions()
     {
-        $select = $this->getTransactionsSelect();
+//        if (null === $this->transactionsData) {
+            $select = $this->getTransactionsSelect();
+            $select = $this->applyTransactionSelectFilters($select);
+            $this->transactionsData = $this->fetchTransactions($select);
+//        }
 
-        $select = $this->applyTransactionSelectFilters($select);
-
-        $rowset = $this->fetchTransactions($select);
-
-        $data = array();
-        foreach ($rowset as $model) {
-            $data[$model['group_name']][] = $model;
-        }
-
-        return $data;
+        return $this->transactionsData;
     }
 
     /**
@@ -129,15 +144,15 @@ class PieController extends AbstractActionController
      */
     protected function applyTransactionSelectFilters(Select $select)
     {
-        $whereArr = array();
+        $where = array();
 
-        $whereArr[] = $this->getWhere()
+        $where[] = $this->getWhere()
                            ->between('date', '2013-05-01', date('Y-m-d H:i:s'));
 
+        $where[] = $this->getWhere()
+                        ->expression('t.price > ?', 0);
 
-        foreach ($whereArr AS $where) {
-            $select->where($where);
-        }
+        $select->where($where);
 
         return $select;
     }
@@ -163,8 +178,7 @@ class PieController extends AbstractActionController
                ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item_name' => 'name'))
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
                ->join(array('c' => 'currency'), 't.id_currency = c.currency_id', array('currency_html' => 'html'))
-               ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email'))
-               ->order('g.name ASC');
+               ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email'));
 
         return $select;
     }
