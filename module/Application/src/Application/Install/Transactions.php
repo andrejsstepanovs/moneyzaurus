@@ -112,14 +112,19 @@ class Transactions extends Script
      * @param string $table
      * @return \Varient\Database\ActiveRecord\ActiveRecord
      */
-    protected function getTable($table = null, $schema = 'moneyzaurus')
+    protected function getTable($table = null, $schema = 'moneyzaurus', $clear = true)
     {
         $key = !$table ? 'null'.$schema : $table.$schema;
         if (!isset($this->activeRecords[$key])) {
             $this->activeRecords[$key] = new ActiveRecord($table, null, $schema);
         }
 
+        if ($clear) {
+            $this->activeRecords[$key]->clear();
+        }
+
         return $this->activeRecords[$key];
+
     }
 
 }
