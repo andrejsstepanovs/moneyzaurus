@@ -3,7 +3,7 @@ return array(
     'modules' => array(
         'Application',
         'jQueryMobileMenu',
-        'Varient',
+        'Db',
         'PHPConfig',
         'HighchartsPHP',
         'InstallScripts'

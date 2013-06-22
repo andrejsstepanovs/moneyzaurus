@@ -1,5 +1,5 @@
 <?php
-namespace Varient;
+namespace Db;
 
 class Module
 {
