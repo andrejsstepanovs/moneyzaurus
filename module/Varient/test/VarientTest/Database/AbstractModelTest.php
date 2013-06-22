@@ -3,14 +3,14 @@
 namespace VarientTest\Controller;
 
 use PHPUnit_Framework_TestCase;
-use Varient\Database\Model\AbstractModel;
+use Db\Db\AbstractModel;
 
 class AbstractModelTest extends PHPUnit_Framework_TestCase
 {
     protected $model;
 
     /**
-     * @return \Varient\Database\Model\AbstractModel
+     * @return \Db\Db\AbstractModel
      */
     public function getModel()
     {
@@ -283,7 +283,7 @@ class AbstractModelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Varient\Database\Exception\UnknownCallableException
+     * @expectedException Db\Db\Exception\UnknownCallableException
      */
     public function testUnknownCallable()
     {
@@ -291,7 +291,7 @@ class AbstractModelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Varient\Database\Exception\UnknownCallableException
+     * @expectedException Db\Db\Exception\UnknownCallableException
      */
     public function testUnknownCallableWithParams()
     {

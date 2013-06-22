@@ -3,7 +3,7 @@
 namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController AS ZendAbstractActionController;
-use Varient\Database\ActiveRecord\ActiveRecord;
+use Db\Db\ActiveRecord;
 
 
 class AbstractActionController extends ZendAbstractActionController
@@ -113,7 +113,7 @@ class AbstractActionController extends ZendAbstractActionController
 
     /**
      * @param string $table
-     * @return \Varient\Database\ActiveRecord\ActiveRecord
+     * @return \Db\Db\ActiveRecord
      */
     protected function getTable($table = null)
     {

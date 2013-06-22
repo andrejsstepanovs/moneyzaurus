@@ -1,6 +1,6 @@
 <?php
 
-namespace Varient\Database\Model;
+namespace Db\Db;
 
 /**
  * Abstract Db Model class.
@@ -74,13 +74,13 @@ class AbstractModel implements \ArrayAccess
                 return $this->hasData($key);
         }
 
-        throw new \Varient\Database\Exception\UnknownCallableException(
+        throw new \Db\Db\Exception\UnknownCallableException(
                 'Method "'.$method.'" dose not exist'
         );
     }
 
     /**
-     * @return \Varient\Database\Model\AbstractModel
+     * @return \Db\Db\AbstractModel
      */
     public function clear()
     {

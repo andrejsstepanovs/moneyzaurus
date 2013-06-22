@@ -1,6 +1,6 @@
 <?php
 
-namespace Varient\Database\Exception;
+namespace Db\Db\Exception;
 
 class UnknownCallableException extends \RuntimeException implements ExceptionInterface
 {}

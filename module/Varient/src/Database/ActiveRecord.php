@@ -1,14 +1,14 @@
 <?php
 
-namespace Varient\Database\ActiveRecord;
+namespace Db\Db;
 
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Adapter\AdapterAwareInterface;
 use Zend\Db\Sql\TableIdentifier;
 use Zend\Db\ResultSet\HydratingResultSet;
 use Zend\Stdlib\Hydrator\HydratorInterface;
-use Varient\Database\Table\AbstractTable;
-use Varient\Database\Model\AbstractModel;
+use Db\Db\AbstractTable;
+use Db\Db\AbstractModel;
 
 
 /**
@@ -22,10 +22,10 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     /** @var string */
     protected $schema;
 
-    /** @var \Varient\Database\Table\AbstractTable */
+    /** @var \Db\Db\AbstractTable */
     protected $table;
 
-    /** @var \Varient\Database\Model\AbstractModel */
+    /** @var \Db\Db\AbstractModel */
     protected $model;
 
     /** @var \Zend\Db\Adapter\Adapter */
@@ -75,7 +75,7 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
 
     /**
      * @param \Zend\Db\Adapter\Adapter $adapter
-     * @return \Varient\Database\ActiveRecord\ActiveRecord
+     * @return \Db\Db\ActiveRecord
      */
     public function setDbAdapter(Adapter $adapter)
     {
@@ -108,8 +108,8 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     }
 
     /**
-     * @param \Varient\Database\Table\AbstractTable $table
-     * @return \Varient\Database\ActiveRecord\ActiveRecord
+     * @param \Db\Db\AbstractTable $table
+     * @return \Db\Db\ActiveRecord
      */
     public function setTable($table)
     {
@@ -135,7 +135,7 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     }
 
     /**
-     * @param \Varient\Database\Model\AbstractModel $model
+     * @param \Db\Db\AbstractModel $model
      */
     public function setModel(AbstractModel $model)
     {
@@ -143,7 +143,7 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     }
 
     /**
-     * @return \Varient\Database\Model\AbstractModel
+     * @return \Db\Db\AbstractModel
      */
     public function getModel()
     {
@@ -155,7 +155,7 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     }
 
     /**
-     * @return \Varient\Database\Table\AbstractTable
+     * @return \Db\Db\AbstractTable
      */
     public function getTable()
     {
@@ -207,8 +207,8 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
 
     /**
      * @param mixed $id
-     * @return \Varient\Database\ActiveRecord\ActiveRecord
-     * @throws \Varient\Database\Exception\ModelNotFoundException
+     * @return \Db\Db\ActiveRecord
+     * @throws \Db\Db\Exception\ModelNotFoundException
      */
     public function load($id = null)
     {
@@ -223,13 +223,13 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
             return $this;
         }
 
-        throw new \Varient\Database\Exception\ModelNotFoundException(
+        throw new \Db\Db\Exception\ModelNotFoundException(
             '"'.$this->getTableName() . '" not found for primary "' . $this->getId() . '"'
         );
     }
 
     /**
-     * @return \Varient\Database\ActiveRecord\ActiveRecord
+     * @return \Db\Db\ActiveRecord
      */
     public function save()
     {

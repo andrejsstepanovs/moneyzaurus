@@ -1,7 +1,7 @@
 <?php
 namespace Application\Controller;
 
-use Varient\Database\ActiveRecord\ActiveRecord;
+use Db\Db\ActiveRecord;
 use Application\Form\Form\Login as LoginForm;
 use Application\Form\Validator\Login as LoginValidator;
 use Zend\Authentication\Storage\Session;
@@ -16,14 +16,14 @@ class UserController extends AbstractActionController
     /** @var \Zend\Authentication\Storage\Session */
     protected $storage;
 
-    /** @var \Varient\Database\ActiveRecord\ActiveRecord */
+    /** @var \Db\Db\ActiveRecord */
     protected $user;
 
     protected $validator;
 
 
     /**
-     * @return \Varient\Database\ActiveRecord\ActiveRecord
+     * @return \Db\Db\ActiveRecord
      */
     public function getUser()
     {

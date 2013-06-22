@@ -75,7 +75,7 @@ class TransactionController extends AbstractActionController
                 }
                 $column = $datalistElements[$name];
 
-                /** @var $table \Varient\Database\Table\AbstractTable */
+                /** @var $table \Db\Db\AbstractTable */
                 /** @var $results \Zend\Db\ResultSet\HydratingResultSet */
                 $table = $this->getTable($name)->getTable();
                 $results = $table->fetchUniqeColum($column, array(
@@ -152,7 +152,7 @@ class TransactionController extends AbstractActionController
                         $this->showMessage('Failed to save');
                     }
 
-                } catch (\Varient\Database\Exception\ModelNotFoundException $exc) {
+                } catch (\Db\Db\Exception\ModelNotFoundException $exc) {
                     $this->showMessage('Data missing');
                 } catch (Exception $exc) {
                     $this->showMessage($exc->getMessage());
@@ -175,7 +175,7 @@ class TransactionController extends AbstractActionController
      * @param float $price
      * @param string $currency
      * @param date $date
-     * @return \Varient\Database\ActiveRecord\ActiveRecord transaction
+     * @return \Db\Db\ActiveRecord transaction
      */
     protected function saveTransaction(
             $itemName,
@@ -193,7 +193,7 @@ class TransactionController extends AbstractActionController
             $item->setName($itemName)
                  ->setIdUser($this->getUserId())
                  ->load();
-        } catch (\Varient\Database\Exception\ModelNotFoundException $exc) {
+        } catch (\Db\Db\Exception\ModelNotFoundException $exc) {
             $item->save();
         }
 
@@ -202,7 +202,7 @@ class TransactionController extends AbstractActionController
             $group->setName($groupName)
                   ->setIdUser($this->getUserId())
                   ->load();
-        } catch (\Varient\Database\Exception\ModelNotFoundException $exc) {
+        } catch (\Db\Db\Exception\ModelNotFoundException $exc) {
             $group->save();
         }
 
