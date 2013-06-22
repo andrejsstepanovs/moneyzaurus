@@ -2,4 +2,47 @@
 $this->headTitle('User');
 ?>
 
-<a href="<?php echo $this->url('user', array('action' => 'logout')); ?>" ><?php echo $this->translate('Logout'); ?></a>
+<a href="<?php echo $this->url('user', array('action' => 'logout')); ?>"
+   style="float:right;"
+   data-role="button"
+   data-icon="delete"
+   data-mini="true"
+   data-theme="a" >
+    <?php echo $this->translate('Logout'); ?>
+</a>
+
+<br /><br /><hr /><br />
+
+<?php
+
+$form = $this->form;
+
+$form->setAttribute('action', $this->url('user'))
+     ->prepare();
+
+echo $this->form()->openTag($form);
+
+foreach ($form as $element) {
+
+    $formElementErrors = $this->formElementErrors($element);
+
+    ?>
+    <div  data-role="fieldcontain" <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
+        <label for="<?php echo $element->getAttribute('name'); ?>"><?php echo $element->getLabel() ?></label>
+
+        <?php
+        echo $this->formElement($element);
+
+        if ($formElementErrors) {
+            ?>
+            <span class="help-inline">
+                <?php echo $formElementErrors; ?>
+            </span>
+            <?php
+        }
+        ?>
+    </div>
+    <?php
+}
+
+echo $this->form()->closeTag();

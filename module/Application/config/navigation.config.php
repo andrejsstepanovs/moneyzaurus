@@ -12,29 +12,29 @@ return array(
                  )
              ),
              array(
-                 'label' => 'Pies',
+                 'label' => 'Pie',
                  'route' => 'pie',
                  'a_params' => array(
                     'data-transition' => 'slide',
-                    'data-icon'       => 'arrow-d',
+                    'data-icon'       => 'star',
                  )
              ),
-             array(
-                 'label' => 'Chart',
-                 'route' => 'chart',
-                 'data-transition' => 'slide',
-                 'a_params' => array(
-                    'data-transition' => 'slide',
-                    'data-icon'       => 'arrow-u',
-                 )
-             ),
+//             array(
+//                 'label' => 'Chart',
+//                 'route' => 'chart',
+//                 'data-transition' => 'slide',
+//                 'a_params' => array(
+//                    'data-transition' => 'slide',
+//                    'data-icon'       => 'arrow-u',
+//                 )
+//             ),
              array(
                  'label' => 'List',
                  'route' => 'list',
                  'data-transition' => 'slide',
                  'a_params' => array(
                     'data-transition' => 'slide',
-                    'data-icon'       => 'search',
+                    'data-icon'       => 'grid',
                  )
              ),
              array(
@@ -43,7 +43,7 @@ return array(
                  'data-transition' => 'slide',
                  'a_params' => array(
                     'data-transition' => 'slide',
-                    'data-icon'       => 'search',
+                    'data-icon'       => 'bars',
                  )
              ),
         ),

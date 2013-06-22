@@ -106,22 +106,6 @@ class TransactionController extends AbstractActionController
         return $this->validator;
     }
 
-    /**
-     * @return array
-     */
-    public function getCurrencyValueOptions()
-    {
-        $currency = $this->getTable('currency');
-        $currencies = $currency->getTable()->fetchAll();
-
-        $valueOptions = array();
-        foreach ($currencies AS $currency) {
-            $valueOptions[$currency->getId()] = $currency->getName();
-        }
-
-        return $valueOptions;
-    }
-
     public function indexAction()
     {
         $form = $this->getForm();

@@ -3,7 +3,9 @@ namespace Application\Controller;
 
 use Db\Db\ActiveRecord;
 use Application\Form\Form\Login as LoginForm;
+use Application\Form\Form\User as UserForm;
 use Application\Form\Validator\Login as LoginValidator;
+use Application\Form\Validator\User as UserValidator;
 use Zend\Authentication\Storage\Session;
 use Application\Controller\AbstractActionController;
 
@@ -11,7 +13,10 @@ use Application\Controller\AbstractActionController;
 class UserController extends AbstractActionController
 {
     /** @var \Application\Form\Login */
-    protected $form;
+    protected $loginForm;
+
+    /** @var \Application\Form\User */
+    protected $userForm;
 
     /** @var \Zend\Authentication\Storage\Session */
     protected $storage;
@@ -19,7 +24,11 @@ class UserController extends AbstractActionController
     /** @var \Db\Db\ActiveRecord */
     protected $user;
 
-    protected $validator;
+    /** @var \Application\Form\Validator\Login */
+    protected $loginValidator;
+
+    /** @var \Application\Form\Validator\User */
+    protected $userValidator;
 
 
     /**
@@ -48,25 +57,61 @@ class UserController extends AbstractActionController
     /**
      * @return \Application\Form\Login
      */
-    public function getForm()
+    public function getLoginForm()
     {
-        if (null === $this->form) {
-            $this->form = new LoginForm();
+        if (null === $this->loginForm) {
+            $this->loginForm = new LoginForm();
         }
 
-        return $this->form;
+        return $this->loginForm;
+    }
+
+    /**
+     * @return \Application\Form\User
+     */
+    public function getUserForm()
+    {
+        if (null === $this->userForm) {
+            $this->userForm = new UserForm();
+        }
+
+        $user = $this->getUser()->load($this->getUserId());
+
+
+        $formElements = $this->userForm->getElements();
+
+        $formElements['month_start_date']->setValue($user->getMonthStartDate());
+
+        $formElements['default_currency']->setValueOptions($this->getCurrencyValueOptions())
+                                         ->setValue($user->getDefaultCurrency());
+
+        $formElements['email']->setValue($user->getEmail());
+
+        return $this->userForm;
     }
 
     /**
      * @return \Application\Form\Validator\Login
      */
-    public function getValidator()
+    public function getLoginValidator()
     {
-        if (null === $this->validator) {
-            $this->validator = new LoginValidator();
+        if (null === $this->loginValidator) {
+            $this->loginValidator = new LoginValidator();
         }
 
-        return $this->validator;
+        return $this->loginValidator;
+    }
+
+    /**
+     * @return \Application\Form\Validator\User
+     */
+    public function getUserValidator()
+    {
+        if (null === $this->userValidator) {
+            $this->userValidator = new UserValidator();
+        }
+
+        return $this->userValidator;
     }
 
     /**
@@ -79,6 +124,36 @@ class UserController extends AbstractActionController
         if (!$this->getAuthService()->hasIdentity()) {
             return $this->redirect()->toRoute('user', array('action' => 'login'));
         }
+
+        $form = $this->getUserForm();
+
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+
+            $form->setInputFilter($this->getUserValidator()->getInputFilter());
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+
+                $keys = array('month_start_date', 'default_currency');
+
+                $user = $this->getUser()->load($this->getUserId());
+
+                foreach ($keys AS $key) {
+                    $user->setData($key, $request->getPost($key));
+                }
+
+                $user->save();
+
+            } else {
+                $this->flashmessenger()->addMessage('Wrong data');
+            }
+        }
+
+        return array(
+            'form'     => $this->getUserForm()
+        );
     }
 
     /**
@@ -99,7 +174,7 @@ class UserController extends AbstractActionController
         }
 
         return array(
-            'form' => $this->getForm()
+            'form' => $this->getLoginForm()
         );
     }
 
@@ -114,8 +189,8 @@ class UserController extends AbstractActionController
             return null;
         }
 
-        $form = $this->getForm();
-        $form->setInputFilter($this->getValidator()->getInputFilter());
+        $form = $this->getLoginForm();
+        $form->setInputFilter($this->getLoginValidator()->getInputFilter());
         $form->setData($request->getPost());
 
         if (!$form->isValid()) {
