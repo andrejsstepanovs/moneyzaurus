@@ -25,7 +25,22 @@ if ($order_by == 'title') {
     </tr>
 
 </table>
+
 <?php
-$this->paginationControl(
+
+echo $this->paginationControl(
     $paginator, 'Sliding', 'paginator-slide', array('order_by' => $order_by, 'order' => $order)
 );
+
+?>
+
+<style>
+/*    div.pagination ul{
+        list-style-type : none;
+    }
+    div.pagination ul li{
+        float  : left;
+        margin : 15px;
+    }*/
+
+</style>

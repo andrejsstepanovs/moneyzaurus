@@ -34,7 +34,9 @@ class ListController extends AbstractActionController
 
         $transactionsResuls = $this->getTransactions($order_by, $order);
 
-        $itemsPerPage = 2;
+//        \DEBUG::dump($transactionsResuls->toArray());
+
+        $itemsPerPage = 10;
 
         $transactionsResuls->current();
         $paginator = new Paginator(new PaginatorIterator($transactionsResuls));
@@ -42,8 +44,8 @@ class ListController extends AbstractActionController
                   ->setItemCountPerPage($itemsPerPage)
                   ->setPageRange(7);
 
-          \DEBUG::dump($paginator);
-          \DEBUG::dump($paginator->__toString());
+//          \DEBUG::dump($paginator);
+//          \DEBUG::dump($paginator->__toString());
 
         return array(
             'transactions' => $transactionsResuls,
