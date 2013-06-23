@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "97c98415dea8afead77c2369f14ae9b1",
+    "hash": "cf88ce9cfbbc6b3edb77f0f73f4e6119",
     "packages": [
         {
             "name": "wormhit/HighchartsPHP",
@@ -123,6 +123,50 @@
             "time": "2013-06-08 19:59:37"
         },
         {
+            "name": "wormhit/Paginator",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wormhit/Paginator.git",
+                "reference": "ea2aa7624b4c36239b8453d3005941e4551dbe95"
+            },
+            "require": {
+                "php": ">=5.3",
+                "zendframework/zendframework": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Paginator": "src/"
+                },
+                "classmap": [
+                    "./Module.php"
+                ]
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Andrejs Stepanovs",
+                    "email": "andrejsstepanovs@gmail.com"
+                }
+            ],
+            "description": "zf2 module overrides Zend\\Paginator\\Paginator to allow to use setTotalItemCount()",
+            "homepage": "https://github.com/wormhit/Paginator",
+            "keywords": [
+                "FOUND_ROWS",
+                "FOUND_ROWS()",
+                "Paginator",
+                "SQL_CALC_FOUND_ROWS",
+                "setTotalItemCount",
+                "totalItemCount",
+                "zend framework 2",
+                "zf2"
+            ],
+            "time": "2013-06-23 18:40:45"
+        },
+        {
             "name": "wormhit/jQueryMobileMenu",
             "version": "dev-master",
             "source": {
@@ -228,12 +272,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zf2.git",
-                "reference": "c3bf013cceab4acdb650bae8640b785ef2dd5dda"
+                "reference": "3ab70eeeb0af5232d09c8c16a4625684400e39be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zf2/zipball/c3bf013cceab4acdb650bae8640b785ef2dd5dda",
-                "reference": "c3bf013cceab4acdb650bae8640b785ef2dd5dda",
+                "url": "https://api.github.com/repos/zendframework/zf2/zipball/3ab70eeeb0af5232d09c8c16a4625684400e39be",
+                "reference": "3ab70eeeb0af5232d09c8c16a4625684400e39be",
                 "shasum": ""
             },
             "require": {
@@ -276,6 +320,7 @@
                 "zendframework/zend-permissions-acl": "self.version",
                 "zendframework/zend-permissions-rbac": "self.version",
                 "zendframework/zend-progressbar": "self.version",
+                "zendframework/zend-resources": "self.version",
                 "zendframework/zend-serializer": "self.version",
                 "zendframework/zend-server": "self.version",
                 "zendframework/zend-servicemanager": "self.version",
@@ -332,7 +377,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2013-06-20 17:34:05"
+            "time": "2013-06-21 14:21:28"
         }
     ],
     "packages-dev": [
@@ -342,12 +387,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "8d0a47217af4a0ed74ac0e155ec2007205d1408f"
+                "reference": "552ea79c79d268a5155e89061bc50efa04c82f49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/8d0a47217af4a0ed74ac0e155ec2007205d1408f",
-                "reference": "8d0a47217af4a0ed74ac0e155ec2007205d1408f",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/552ea79c79d268a5155e89061bc50efa04c82f49",
+                "reference": "552ea79c79d268a5155e89061bc50efa04c82f49",
                 "shasum": ""
             },
             "require": {
@@ -357,13 +402,18 @@
                 "phpunit/php-token-stream": ">=1.1.3@stable"
             },
             "require-dev": {
-                "phpunit/phpunit": "3.7.*"
+                "phpunit/phpunit": "3.7.*@dev"
             },
             "suggest": {
                 "ext-dom": "*",
                 "ext-xdebug": ">=2.0.5"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
                     "PHP/"
@@ -390,7 +440,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-06-12 07:14:37"
+            "time": "2013-06-23 07:04:55"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -576,12 +626,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1d9d8a84fd20011411f685a19ba60a37a88dbf38"
+                "reference": "30110580b640440f6442a58322ee657216d2d8ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1d9d8a84fd20011411f685a19ba60a37a88dbf38",
-                "reference": "1d9d8a84fd20011411f685a19ba60a37a88dbf38",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/30110580b640440f6442a58322ee657216d2d8ba",
+                "reference": "30110580b640440f6442a58322ee657216d2d8ba",
                 "shasum": ""
             },
             "require": {
@@ -590,11 +640,11 @@
                 "ext-reflection": "*",
                 "ext-spl": "*",
                 "php": ">=5.3.3",
-                "phpunit/php-code-coverage": ">=1.2.1,<1.3.0",
+                "phpunit/php-code-coverage": ">=1.2.1,<1.3",
                 "phpunit/php-file-iterator": ">=1.3.1",
                 "phpunit/php-text-template": ">=1.1.1",
-                "phpunit/php-timer": ">=1.0.2,<1.1.0",
-                "phpunit/phpunit-mock-objects": ">=1.2.0,<1.3.0",
+                "phpunit/php-timer": ">=1.0.2,<1.1",
+                "phpunit/phpunit-mock-objects": ">=1.2,<1.3",
                 "symfony/yaml": ">=2.0,<3.0"
             },
             "require-dev": {
@@ -642,7 +692,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-06-18 15:37:33"
+            "time": "2013-06-23 07:31:03"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -650,22 +700,31 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "8e9d897b39ca6310ccc2d81b8f29cabd5ce12786"
+                "reference": "977c5327c5f9e2a0f08728a59389ee604e5b2f47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/8e9d897b39ca6310ccc2d81b8f29cabd5ce12786",
-                "reference": "8e9d897b39ca6310ccc2d81b8f29cabd5ce12786",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/977c5327c5f9e2a0f08728a59389ee604e5b2f47",
+                "reference": "977c5327c5f9e2a0f08728a59389ee604e5b2f47",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
                 "phpunit/php-text-template": ">=1.1.1@stable"
             },
+            "require-dev": {
+                "pear-pear/pear": "1.9.4",
+                "phpunit/phpunit": "3.7.*@dev"
+            },
             "suggest": {
                 "ext-soap": "*"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
                     "PHPUnit/"
@@ -691,7 +750,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2013-05-07 12:11:45"
+            "time": "2013-06-23 05:41:31"
         },
         {
             "name": "symfony/yaml",

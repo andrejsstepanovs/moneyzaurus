@@ -12,18 +12,55 @@ if ($order_by == 'title') {
 } elseif ($order_by == 'artist') {
     $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
 }
+
+$columns = array(
+    'transaction_id' => $this->translate('Id'),
+    'item_name'      => $this->translate('Item'),
+    'group_name'     => $this->translate('Group'),
+    'price'          => $this->translate('Price'),
+    'currency_html'  => $this->translate('Currency'),
+    'date'           => $this->translate('Date'),
+    'date_created'   => $this->translate('Created'),
+    'id_user'        => $this->translate('User'),
+);
+
+
 ?>
 
 <table class="table">
     <tr>
-        <th>
-            <a href="<?php echo $this->url('list', array('order_by' => 'title', 'order' => $url_order)); ?>">Title <?php if ($order_by == 'title'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a>
-        </th>
-        <th>
-            <a href="<?php echo $this->url('list', array('order_by' => 'artist', 'order' => $url_order)); ?>">Artist <?php if ($order_by == 'artist'): ?><i class="icon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></i><?php endif; ?></a></th>
-        <th>&nbsp;</th>
+        <?php foreach ($columns AS $key => $label) : ?>
+            <th>
+                <?php
+
+                $icon = sprintf(
+                    '<i class="icon-chevron-%s"></i>',
+                    ($url_order == 'ASC' ? 'down' : 'up')
+                );
+
+                echo sprintf(
+                    '<a href="%s">%s</a>',
+                    $this->url('list', array('order_by' => $key, 'order' => $url_order)),
+                    $icon . $label
+                );
+
+                ?>
+            </th>
+        <?php endforeach; ?>
+
     </tr>
 
+    <?php foreach ($this->transactions AS $transaction) : ?>
+        <tr>
+            <?php foreach ($columns AS $key => $label) : ?>
+                <td>
+                    <?php
+                        echo $transaction->getData($key);
+                    ?>
+                </td>
+            <?php endforeach; ?>
+        </tr>
+    <?php endforeach; ?>
 </table>
 
 <?php
@@ -33,14 +70,3 @@ echo $this->paginationControl(
 );
 
 ?>
-
-<style>
-/*    div.pagination ul{
-        list-style-type : none;
-    }
-    div.pagination ul li{
-        float  : left;
-        margin : 15px;
-    }*/
-
-</style>
