@@ -36,13 +36,13 @@ class ListController extends AbstractActionController
 
 //        \DEBUG::dump($transactionsResuls->toArray());
 
-        $itemsPerPage = 10;
+        $itemsPerPage = 20;
 
         $transactionsResuls->current();
         $paginator = new Paginator(new PaginatorIterator($transactionsResuls));
         $paginator->setCurrentPageNumber($page)
                   ->setItemCountPerPage($itemsPerPage)
-                  ->setPageRange(7);
+                  ->setPageRange(5);
 
 //          \DEBUG::dump($paginator);
 //          \DEBUG::dump($paginator->__toString());

@@ -1,115 +1,155 @@
-<?php if ($this->pageCount): ?>
+<?php
+if (!$this->pageCount){
+    return;
+}
 
-    <?php
+$params = array(
+    'order_by' => $this->vars('order_by'),
+    'order'    => $this->vars('order')
+);
 
-        $firstUrl = $this->url('list', array(
-            'page'     => $this->first,
-            'order_by' => $order_by,
-            'order'    => $order
-        ));
+$show = array(
+    'first'    => false,
+    'previous' => false,
+    'next'     => false,
+    'last'     => false,
+);
 
-        $previousUrl = $this->url('list', array(
-            'page'     => $this->previous,
-            'order_by' => $order_by,
-            'order'    => $order
-        ));
+$firstUrl = $this->url('list', array_merge(
+    $params, array('page' => $this->first)
+));
 
-        $nextUrl = $this->url('list', array(
-            'page'     => $this->next,
-            'order_by' => $order_by,
-            'order'    => $order
-        ));
+$previousUrl = $this->url('list', array_merge(
+    $params, array('page' => $this->previous)
+));
 
-        $lastUrl = $this->url('list', array(
-            'page'     => $this->last,
-            'order_by' => $order_by,
-            'order'    => $order
-        ));
+$nextUrl = $this->url('list', array_merge(
+    $params, array('page' => $this->next)
+));
 
-        $previousDisabled = !isset($this->previous);
-        $nextDisabled     = !isset($this->next);
+$lastUrl = $this->url('list', array_merge(
+    $params, array('page' => $this->last)
+));
 
-        $data = 'data-role="button" data-mini="true"';
-    ?>
+$previousDisabled = !isset($this->previous);
+$nextDisabled     = !isset($this->next);
 
-<!--<div data-theme="b" data-role="footer" data-position="fixed">-->
-<div>
+$data = array(
+    'data-role' => 'button',
+    'data-mini' => 'true'
+);
 
-    <div data-role="navbar" class="ui-navbar ui-mini" role="navigation">
-        <ul class="navigation ui-grid" >
+$iterator = array('a', 'b', 'c', 'd', 'e');
+$maxI = count($iterator) - 1;
+$i = 0;
+?>
 
+
+<div style="margin-left: auto; margin-right: auto; width:100%;" >
+    <div class="grid-container ui-grid-d ui-responsive" >
+
+        <?php if ($show['first']) : ?>
             <!-- First page link -->
-            <li>
-                <a
-                    href="<?php echo $firstUrl; ?>"
-                    <?php echo $data; ?>
-                    data-theme="a"
-                    <?php echo $previousDisabled ? 'class="ui-disabled"' : ''; ?>
-                >
-                    &laquo;
-                </a>
-            </li>
-
-            <!-- Previous page link -->
-            <li>
-                <a
-                    href="<?php echo $previousUrl; ?>"
-                    <?php echo $data; ?>
-                    data-theme="a"
-                    <?php echo $previousDisabled ? 'class="ui-disabled"' : ''; ?>
-                >
-                    &lsaquo;
-                </a>
-            </li>
-
-            <!-- Numbered page links -->
-            <?php foreach ($this->pagesInRange as $page): ?>
-
+            <div class="ui-block-<?php echo $iterator[$i]; $i = $i >= $maxI ? 0 : ++$i; ?>" >
                 <?php
-                $url = $this->url('list', array(
-                    'page'     => $page,
-                    'order_by' => $order_by,
-                    'order'    => $order
-                ));
+                $rel = '';
 
-                $active = $this->current;
+                echo sprintf(
+                    '<a href="%s" data-role="%s" data-mini="%s" data-theme="%s" %s %s>%s</a>',
+                    $firstUrl, $data['data-role'], $data['data-mini'], 'a',
+                    ($previousDisabled ? 'class="ui-disabled"' : ''),
+                    $rel, '&laquo;'
+                );
+
                 ?>
+            </div>
+        <?php endif; ?>
 
-                <li>
-                    <a
-                        href="<?php echo $url; ?>"
-                        <?php echo $data; ?>
-                        <?php echo $page == $active ? 'data-theme="b"' : 'data-theme="a"'; ?>
-                    >
-                        <?php echo $page; ?>
-                    </a>
-                </li>
-            <?php endforeach; ?>
+        <?php if ($show['previous']) : ?>
+            <!-- Previous page link -->
+            <div class="ui-block-<?php echo $iterator[$i]; $i = $i >= $maxI ? 0 : ++$i; ?>" >
+                <?php
+                if ($this->current > 1) {
+                    $rel = 'rel="prev"';
+                } else {
+                    $rel = '';
+                }
 
+                echo sprintf(
+                    '<a href="%s" data-role="%s" data-mini="%s" data-theme="%s" %s %s>%s</a>',
+                    $previousUrl, $data['data-role'], $data['data-mini'], 'a',
+                    ($previousDisabled ? 'class="ui-disabled"' : ''),
+                    $rel, '&lsaquo;'
+                );
+
+                ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Numbered page links -->
+        <?php foreach ($this->pagesInRange as $page): ?>
+
+            <?php
+            $url = $this->url('list', array_merge(
+                $params, array('page' => $page)
+            ));
+
+            if ($this->current - 1 == $page) {
+                $rel = 'rel="prev"';
+            } elseif ($this->current + 1 == $page) {
+                $rel = 'rel="next"';
+            } else {
+                $rel = '';
+            }
+            ?>
+
+            <div class="ui-block-<?php echo $iterator[$i]; $i = $i >= $maxI ? 0 : ++$i; ?>" >
+                <?php
+
+                echo sprintf(
+                    '<a href="%s" data-role="%s" data-mini="%s" data-theme="%s" %s %s>%s</a>',
+                    $url, $data['data-role'], $data['data-mini'],
+                    ($page == $this->current ? 'b' : 'a'), '', $rel, $page
+                );
+
+                ?>
+            </div>
+        <?php endforeach; ?>
+
+        <?php if ($show['next']) : ?>
             <!-- Next page link -->
-            <li>
-                <a
-                    href="<?php echo $nextUrl; ?>"
-                    <?php echo $data; ?>
-                    data-theme="a"
-                    <?php echo $nextDisabled ? 'class="ui-disabled"' : ''; ?>
-                >
-                    &rsaquo;
-                </a>
-            </li>
+            <div class="ui-block-<?php echo $iterator[$i]; $i = $i >= $maxI ? 0 : ++$i; ?>" >
+                <?php
 
+                if ($this->current < $this->pageCount) {
+                    $rel = 'rel="next"';
+                } else {
+                    $rel = '';
+                }
+
+                echo sprintf(
+                    '<a href="%s" data-role="%s" data-mini="%s" data-theme="%s" %s %s>%s</a>',
+                    $nextUrl, $data['data-role'], $data['data-mini'], 'a',
+                    ($nextDisabled ? 'class="ui-disabled"' : ''), $rel, '&rsaquo;'
+                );
+
+                ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($show['last']) : ?>
             <!-- Last page link -->
-            <li>
-                <a
-                    href="<?php echo $lastUrl; ?>"
-                    <?php echo $data; ?>
-                    data-theme="a"
-                    <?php echo $nextDisabled ? 'class="ui-disabled"' : ''; ?>
-                >
-                    &raquo;
-                </a>
-            </li>
-        </ul>
+            <div class="ui-block-<?php echo $iterator[$i]; $i = $i >= $maxI ? 0 : ++$i; ?>" >
+                <?php
+
+                echo sprintf(
+                    '<a href="%s" data-role="%s" data-mini="%s" data-theme="%s" %s>%s</a>',
+                    $lastUrl, $data['data-role'], $data['data-mini'], 'a',
+                    ($nextDisabled ? 'class="ui-disabled"' : ''), '&raquo;'
+                );
+
+                ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
-<?php endif; ?>
