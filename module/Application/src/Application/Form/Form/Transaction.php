@@ -48,6 +48,7 @@ class Transaction extends Form
                 'type'        => 'text',
                 'placeholder' => '0.00',
                 'required'    => 'required',
+                'alt'         => 'decimal'
             ),
             'options' => array(
                 'label' => 'Price',

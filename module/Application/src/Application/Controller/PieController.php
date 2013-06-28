@@ -23,11 +23,6 @@ class PieController extends AbstractActionController
 
     public function indexAction()
     {
-        $this->getViewHelperPlugin('headscript')
-             ->appendFile('/js/highcharts/highcharts.js')
-             ->appendFile('/js/highcharts/modules/exporting.js');
-
-
         $groupedData = array();
         foreach ($this->getTransactions() as $model) {
             $groupedData[$model['group_name']][] = $model;

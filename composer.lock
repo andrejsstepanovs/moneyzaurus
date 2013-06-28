@@ -128,7 +128,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wormhit/Paginator.git",
-                "reference": "ea2aa7624b4c36239b8453d3005941e4551dbe95"
+                "reference": "b63fc9a95a9334a8b15a817a6e237bff7bba2b8b"
             },
             "require": {
                 "php": ">=5.3",
@@ -164,7 +164,7 @@
                 "zend framework 2",
                 "zf2"
             ],
-            "time": "2013-06-23 18:40:45"
+            "time": "2013-06-23 18:50:51"
         },
         {
             "name": "wormhit/jQueryMobileMenu",
@@ -272,12 +272,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zf2.git",
-                "reference": "3ab70eeeb0af5232d09c8c16a4625684400e39be"
+                "reference": "e23885794f8ffb28720c502cd8fcbb152231a488"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zf2/zipball/3ab70eeeb0af5232d09c8c16a4625684400e39be",
-                "reference": "3ab70eeeb0af5232d09c8c16a4625684400e39be",
+                "url": "https://api.github.com/repos/zendframework/zf2/zipball/e23885794f8ffb28720c502cd8fcbb152231a488",
+                "reference": "e23885794f8ffb28720c502cd8fcbb152231a488",
                 "shasum": ""
             },
             "require": {
@@ -363,8 +363,7 @@
             },
             "autoload": {
                 "psr-0": {
-                    "Zend\\": "library/",
-                    "ZendTest\\": "tests/"
+                    "Zend\\": "library/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -377,7 +376,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2013-06-21 14:21:28"
+            "time": "2013-06-28 16:25:43"
         }
     ],
     "packages-dev": [
@@ -387,12 +386,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "552ea79c79d268a5155e89061bc50efa04c82f49"
+                "reference": "56ad5a88f7503b9ecee4e1799cd7c48e31ada517"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/552ea79c79d268a5155e89061bc50efa04c82f49",
-                "reference": "552ea79c79d268a5155e89061bc50efa04c82f49",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/56ad5a88f7503b9ecee4e1799cd7c48e31ada517",
+                "reference": "56ad5a88f7503b9ecee4e1799cd7c48e31ada517",
                 "shasum": ""
             },
             "require": {
@@ -440,7 +439,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-06-23 07:04:55"
+            "time": "2013-06-27 08:20:15"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -626,12 +625,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "30110580b640440f6442a58322ee657216d2d8ba"
+                "reference": "1eb9164784848777ad3cb65859f33271b97b1d34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/30110580b640440f6442a58322ee657216d2d8ba",
-                "reference": "30110580b640440f6442a58322ee657216d2d8ba",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1eb9164784848777ad3cb65859f33271b97b1d34",
+                "reference": "1eb9164784848777ad3cb65859f33271b97b1d34",
                 "shasum": ""
             },
             "require": {
@@ -692,7 +691,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-06-23 07:31:03"
+            "time": "2013-06-27 09:55:21"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
