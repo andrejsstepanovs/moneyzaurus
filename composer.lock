@@ -213,16 +213,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/ZendDeveloperTools.git",
-                "reference": "8e04c24099ac4b843d101522fda17457765332ce"
+                "reference": "0.0.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/ZendDeveloperTools/zipball/8e04c24099ac4b843d101522fda17457765332ce",
-                "reference": "8e04c24099ac4b843d101522fda17457765332ce",
+                "url": "https://api.github.com/repos/zendframework/ZendDeveloperTools/zipball/0.0.2",
+                "reference": "0.0.2",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
+                "zendframework/zend-debug": "2.*",
                 "zendframework/zend-eventmanager": "2.*",
                 "zendframework/zend-mvc": "2.*",
                 "zendframework/zend-servicemanager": "2.*",
@@ -230,7 +231,8 @@
                 "zendframework/zend-version": "2.*"
             },
             "suggest": {
-                "bjyoungblood/bjy-profiler": "Version: dev-master, allows the usage of the (Zend) Db collector."
+                "bjyoungblood/bjy-profiler": "Version: dev-master, allows the usage of the (Zend) Db collector.",
+                "ocramius/ocra-service-manager": "OcraServiceManager can help you track dependencies within your application."
             },
             "type": "zf-module",
             "autoload": {
@@ -264,7 +266,7 @@
                 "module",
                 "zf2"
             ],
-            "time": "2013-06-15 07:41:17"
+            "time": "2013-07-08 19:52:34"
         },
         {
             "name": "zendframework/zendframework",
@@ -272,12 +274,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zf2.git",
-                "reference": "e23885794f8ffb28720c502cd8fcbb152231a488"
+                "reference": "0a747680a366e2b77030e26bf62c6840906f8323"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zf2/zipball/e23885794f8ffb28720c502cd8fcbb152231a488",
-                "reference": "e23885794f8ffb28720c502cd8fcbb152231a488",
+                "url": "https://api.github.com/repos/zendframework/zf2/zipball/0a747680a366e2b77030e26bf62c6840906f8323",
+                "reference": "0a747680a366e2b77030e26bf62c6840906f8323",
                 "shasum": ""
             },
             "require": {
@@ -340,7 +342,7 @@
                 "doctrine/annotations": ">=1.0",
                 "ircmaxell/random-lib": "dev-master",
                 "ircmaxell/security-lib": "dev-master",
-                "ocramius/proxy-manager": "0.3.*",
+                "ocramius/proxy-manager": "0.4.*",
                 "phpunit/phpunit": "3.7.*"
             },
             "suggest": {
@@ -352,7 +354,9 @@
                 "zendframework/zendservice-recaptcha": "ZendService\\ReCaptcha for rendering ReCaptchas in Zend\\Captcha and/or Zend\\Form"
             },
             "bin": [
-                "bin/classmap_generator.php"
+                "bin/classmap_generator.php",
+                "bin/pluginmap_generator.php",
+                "bin/templatemap_generator.php"
             ],
             "type": "library",
             "extra": {
@@ -376,7 +380,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2013-06-28 16:25:43"
+            "time": "2013-07-26 13:45:30"
         }
     ],
     "packages-dev": [
@@ -386,12 +390,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "56ad5a88f7503b9ecee4e1799cd7c48e31ada517"
+                "reference": "d274ffb5a9899ab71c769924071fb8aa09852fb6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/56ad5a88f7503b9ecee4e1799cd7c48e31ada517",
-                "reference": "56ad5a88f7503b9ecee4e1799cd7c48e31ada517",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/d274ffb5a9899ab71c769924071fb8aa09852fb6",
+                "reference": "d274ffb5a9899ab71c769924071fb8aa09852fb6",
                 "shasum": ""
             },
             "require": {
@@ -439,7 +443,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-06-27 08:20:15"
+            "time": "2013-07-13 13:31:16"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -580,12 +584,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "c25dd88e1592e66dee2553c99ef244203d5a1b98"
+                "reference": "7d3db0300098c76358d642c2338c73d5b958d80f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/c25dd88e1592e66dee2553c99ef244203d5a1b98",
-                "reference": "c25dd88e1592e66dee2553c99ef244203d5a1b98",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/7d3db0300098c76358d642c2338c73d5b958d80f",
+                "reference": "7d3db0300098c76358d642c2338c73d5b958d80f",
                 "shasum": ""
             },
             "require": {
@@ -617,7 +621,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2013-01-07 10:56:35"
+            "time": "2013-07-29 17:35:43"
         },
         {
             "name": "phpunit/phpunit",
@@ -625,12 +629,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1eb9164784848777ad3cb65859f33271b97b1d34"
+                "reference": "3ec5edb16623c41b9ba4429fc322b0c1795906b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1eb9164784848777ad3cb65859f33271b97b1d34",
-                "reference": "1eb9164784848777ad3cb65859f33271b97b1d34",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3ec5edb16623c41b9ba4429fc322b0c1795906b6",
+                "reference": "3ec5edb16623c41b9ba4429fc322b0c1795906b6",
                 "shasum": ""
             },
             "require": {
@@ -639,12 +643,12 @@
                 "ext-reflection": "*",
                 "ext-spl": "*",
                 "php": ">=5.3.3",
-                "phpunit/php-code-coverage": ">=1.2.1,<1.3",
+                "phpunit/php-code-coverage": "~1.2.1",
                 "phpunit/php-file-iterator": ">=1.3.1",
                 "phpunit/php-text-template": ">=1.1.1",
-                "phpunit/php-timer": ">=1.0.2,<1.1",
-                "phpunit/phpunit-mock-objects": ">=1.2,<1.3",
-                "symfony/yaml": ">=2.0,<3.0"
+                "phpunit/php-timer": "~1.0.2",
+                "phpunit/phpunit-mock-objects": "~1.2.0",
+                "symfony/yaml": "~2.0"
             },
             "require-dev": {
                 "pear-pear/pear": "1.9.4"
@@ -691,7 +695,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-06-27 09:55:21"
+            "time": "2013-07-29 14:28:47"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -699,12 +703,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "977c5327c5f9e2a0f08728a59389ee604e5b2f47"
+                "reference": "3e40f3b3f18c044a24688fe406440d7fd537744a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/977c5327c5f9e2a0f08728a59389ee604e5b2f47",
-                "reference": "977c5327c5f9e2a0f08728a59389ee604e5b2f47",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/3e40f3b3f18c044a24688fe406440d7fd537744a",
+                "reference": "3e40f3b3f18c044a24688fe406440d7fd537744a",
                 "shasum": ""
             },
             "require": {
@@ -749,7 +753,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2013-06-23 05:41:31"
+            "time": "2013-07-23 04:42:59"
         },
         {
             "name": "symfony/yaml",
@@ -758,12 +762,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "82100c7732c95452702d11433aad50988700d36c"
+                "reference": "4d80b4f4c447e8ad7cab8b3afb0b51aad0431f7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/82100c7732c95452702d11433aad50988700d36c",
-                "reference": "82100c7732c95452702d11433aad50988700d36c",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/4d80b4f4c447e8ad7cab8b3afb0b51aad0431f7f",
+                "reference": "4d80b4f4c447e8ad7cab8b3afb0b51aad0431f7f",
                 "shasum": ""
             },
             "require": {
@@ -796,7 +800,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2013-05-16 07:54:39"
+            "time": "2013-07-21 20:19:01"
         }
     ],
     "aliases": [
