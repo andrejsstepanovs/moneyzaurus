@@ -20,8 +20,9 @@ class PieController extends AbstractActionController
     protected function init()
     {
         $helper = new Helper();
-        $helper->setTransactionsData($this->getTransactionsData())
-               ->setRequest($this->getRequest());
+        $helper->setRequest($this->getRequest());
+        $this->setHelper($helper);
+        $helper->setTransactionsData($this->getTransactionsData());
         $this->setHelper($helper);
     }
 
@@ -103,15 +104,19 @@ class PieController extends AbstractActionController
     {
         $where = array();
 
+        $month = $this->getHelper()->getMonthRequestValue();
+
+        $timestamp = strtotime($month . '-01');
+        $monthDateTimeFrom = date('Y-m-d H:i:s', $timestamp);
+        $monthDateTimeTill = date('Y-m-d', strtotime($month . '-' . date('t', $timestamp))) . ' 23:59:59';
+
         $where[] = $this->getWhere()
-                   ->between('date', date('Y-m-d H:i:s', strtotime('-2 months')), date('Y-m-d H:i:s'));
+                   ->between('date', $monthDateTimeFrom, $monthDateTimeTill);
 
         $where[] = $this->getWhere()
                    ->expression('t.price > ?', 0);
 
         $select->where($where);
-
-        $select->limit(50);
 
         return $select;
     }
