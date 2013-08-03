@@ -2,39 +2,20 @@
 namespace Application\Controller;
 
 use Application\Controller\AbstractActionController;
-
-use HighchartsPHP\Highcharts as Highchart;
-use HighchartsPHP\HighchartsJsExpr as HighchartJsExpr;
+use Application\Helper\Pie\Helper;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
-use Application\Form\Form\Month as MonthForm;
-use Application\Form\Validator\Month as MonthValidator;
 
 class PieController extends AbstractActionController
 {
-    /** @var array */
-    protected $activeRecords = array();
-
-    /** @var integer */
-    protected $userId;
+    /**
+     * @var \Application\Helper\Pie\Helper
+     */
+    private $helper;
 
     /** @var array */
     protected $transactionsData;
 
-    /** @var array */
-    protected $sortedGroupsData;
-
-    /** @var array */
-    protected $groupedData;
-
-    /** @var Highchart */
-    protected $chartData;
-
-    /** @var \Application\Form\Month */
-    protected $monthForm;
-
-    /** @var \Application\Form\Validator\Month */
-    protected $monthValidator;
 
     /**
      * @return array
@@ -42,124 +23,29 @@ class PieController extends AbstractActionController
     public function indexAction()
     {
         $this->getViewHelperPlugin('inlineScript')->appendScript(
-            $this->getChart()->render()
+            $this->getHelper()->getChart()->render()
         );
 
         return array(
-            'chartData'  => $this->getChartData(),
-            'groupNames' => $this->getSortedGroups(),
-            'form' => $this->getMonthForm()
+            'chartData'  => $this->getHelper()->getChartData(),
+            'groupNames' => $this->getHelper()->getSortedGroups(),
+            'form' => $this->getHelper()->getMonthForm()
         );
     }
 
     /**
-     * @return array
+     * @return Helper
      */
-    private function getGroupedData()
+    private function getHelper()
     {
-        if (null === $this->groupedData) {
-            $this->groupedData = array();
-            foreach ($this->getTransactionsData() as $model) {
-                $this->groupedData[$model['group_name']][] = $model;
-            }
-        }
-        return $this->groupedData;
-    }
-
-    /**
-     * @return Highchart
-     */
-    private function getChartData()
-    {
-        if (null === $this->chartData) {
-            $groupedData = $this->getGroupedData();
-            $sortedGroups = $this->getSortedGroups();
-
-            $this->chartData = new Highchart();
-
-            $i = 0;
-            foreach ($sortedGroups AS $groupName) {
-                $rows = $groupedData[$groupName];
-
-                $data = $categories = array();
-
-                foreach ($rows AS $row) {
-                    $data[]       = round((float)$row->getData('price'), 2);
-                    $categories[] = $row->getData('item_name');
-                }
-
-                $this->chartData[$i]->y                     = array_sum($data);
-                $this->chartData[$i]->z                     = 'EUR';
-                $this->chartData[$i]->color                 = new HighchartJsExpr('colors[' . $i . ']');
-                $this->chartData[$i]->drilldown->name       = $groupName;
-                $this->chartData[$i]->drilldown->categories = $categories;
-                $this->chartData[$i]->drilldown->data       = $data;
-                $this->chartData[$i]->drilldown->color      = new HighchartJsExpr("colors[0]");
-
-                $i++;
-            }
+        if (null === $this->helper) {
+            $this->helper = new Helper();
+            $this->helper->setTransactionsData($this->getTransactionsData());
         }
 
-        return $this->chartData;
+        return $this->helper;
     }
 
-    /**
-     * @return \HighchartsPHP\Highcharts
-     */
-    public function getChart()
-    {
-        $chart = new Highchart();
-
-        $chart->chart->renderTo = 'container';
-        $chart->chart->type     = 'pie';
-        $chart->title->text     = 'Pie Chart';
-//        $chart->yAxis->title->text = "Total percent market share";
-//        $chart->plotOptions->pie->shadow = false;
-
-        $chart->tooltip->formatter = new HighchartJsExpr("function() {
-            return '<b>'+ this.point.name +'</b>: '+ this.y; alert(this);
-        }");
-
-        $chart->series[0] = array(
-            'data'       => new HighchartJsExpr('primaryData'),
-            'size'       => '80%',
-            'dataLabels' => array(
-//                'formatter' => new HighchartJsExpr('function() {
-//                    return this.y > 5 ? this.point.name : null;
-//                }'),
-                'color'    => 'white', // title color
-                'distance' => -100     // title distance
-            )
-        );
-
-        $chart->series[1]->name      = 'Secondary';
-        $chart->series[1]->data      = new HighchartJsExpr('secondaryData');
-        $chart->series[1]->innerSize = "60%";
-
-        $chart->series[1]->dataLabels->formatter = new HighchartJsExpr("function() {
-            return this.y > 1 ? '<b>'+ this.point.name +':</b> '+ this.y : null;
-        }");
-
-        return $chart;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getSortedGroups()
-    {
-        if (null === $this->sortedGroupsData) {
-            $groups = array();
-            foreach ($this->getTransactionsData() AS $row) {
-                $groups[$row->getGroupName()] =+  $row->getPrice();
-            }
-
-            arsort($groups, SORT_NUMERIC);
-            $this->sortedGroupsData = array_keys($groups);
-        }
-
-        return $this->sortedGroupsData;
-    }
 
     /**
      * @return array
@@ -183,6 +69,25 @@ class PieController extends AbstractActionController
         return $this->transactionsData;
     }
 
+
+    /**
+     * @return \Zend\Db\Sql\Select
+     */
+    protected function getTransactionsSelect()
+    {
+        $transactionTable = array('t' => 'transaction');
+
+        $select = new Select();
+        $select->from($transactionTable)
+        ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item_name' => 'name'))
+        ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
+        ->join(array('c' => 'currency'), 't.id_currency = c.currency_id', array('currency_html' => 'html'))
+        ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email'));
+
+        return $select;
+    }
+
+
     /**
      * @param \Zend\Db\Sql\Select $select
      * @return \Zend\Db\Sql\Select
@@ -192,10 +97,10 @@ class PieController extends AbstractActionController
         $where = array();
 
         $where[] = $this->getWhere()
-                           ->between('date', date('Y-m-d H:i:s', strtotime('-2 months')), date('Y-m-d H:i:s'));
+                   ->between('date', date('Y-m-d H:i:s', strtotime('-2 months')), date('Y-m-d H:i:s'));
 
         $where[] = $this->getWhere()
-                        ->expression('t.price > ?', 0);
+                   ->expression('t.price > ?', 0);
 
         $select->where($where);
 
@@ -209,25 +114,7 @@ class PieController extends AbstractActionController
      */
     protected function getWhere()
     {
-        $where = new Where();
-        return $where;
-    }
-
-    /**
-     * @return \Zend\Db\Sql\Select
-     */
-    protected function getTransactionsSelect()
-    {
-        $transactionTable = array('t' => 'transaction');
-
-        $select = new Select();
-        $select->from($transactionTable)
-               ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item_name' => 'name'))
-               ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
-               ->join(array('c' => 'currency'), 't.id_currency = c.currency_id', array('currency_html' => 'html'))
-               ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email'));
-
-        return $select;
+        return new Where();
     }
 
     /**
@@ -241,31 +128,7 @@ class PieController extends AbstractActionController
         $table->setTable(array('t' => 'transaction'));
 
         /** @var $transactionsResuls \Zend\Db\ResultSet\HydratingResultSet */
-        return $table->fetch($select);
+        $transactionsResuls = $table->fetch($select);
+        return $transactionsResuls;
     }
-
-    /**
-     * @return \Application\Form\Month
-     */
-    public function getMonthForm()
-    {
-        if (null === $this->monthForm) {
-            $this->monthForm = new MonthForm();
-        }
-
-        return $this->monthForm;
-    }
-
-    /**
-     * @return \Application\Form\Validator\Month
-     */
-    public function getMonthValidator()
-    {
-        if (null === $this->monthValidator) {
-            $this->monthValidator = new MonthValidator();
-        }
-
-        return $this->monthValidator;
-    }
-
 }
