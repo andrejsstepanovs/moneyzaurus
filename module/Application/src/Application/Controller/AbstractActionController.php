@@ -4,15 +4,19 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController AS ZendAbstractActionController;
 use Db\Db\ActiveRecord;
+use Application\Helper\AbstractHelper;
 
 
 class AbstractActionController extends ZendAbstractActionController
 {
     /** @var \Zend\Authentication\AuthenticationService */
-    protected $authservice;
+    protected $authService;
 
     /** @var integer */
     protected $userId;
+
+    /** @var \Application\Helper\AbstractHelper */
+    protected $helper;
 
     /** @var array */
     protected $activeRecords;
@@ -33,6 +37,11 @@ class AbstractActionController extends ZendAbstractActionController
      */
     public function onDispatch(\Zend\Mvc\MvcEvent $e)
     {
+        // Please use init() instead of __construct()
+        if (is_callable(array($this, 'init'))) {
+            $this->init();
+        }
+
         $actionResponse = parent::onDispatch($e);
 
         $messages = $this->flashmessenger()->getMessages();
@@ -72,6 +81,30 @@ class AbstractActionController extends ZendAbstractActionController
             }
         }
         return $this;
+    }
+
+    /**
+     * @param AbstractHelper $helper
+     *
+     * @return $this
+     */
+    protected function setHelper(AbstractHelper $helper)
+    {
+        $this->helper = $helper;
+
+        return $this;
+    }
+
+    /**
+     * @return AbstractHelper|int
+     */
+    protected function getHelper()
+    {
+        if (null === $this->helper) {
+            $this->helper = new AbstractHelper();
+        }
+
+        return $this->helper;
     }
 
     /**
@@ -117,14 +150,13 @@ class AbstractActionController extends ZendAbstractActionController
      */
     public function getAuthService()
     {
-        if (null === $this->authservice) {
-            $this->authservice = $this->getServiceLocator()
+        if (null === $this->authService) {
+            $this->authService = $this->getServiceLocator()
                                       ->get('AuthService');
         }
 
-        return $this->authservice;
+        return $this->authService;
     }
-
 
     /**
      * @param string $table
@@ -132,12 +164,7 @@ class AbstractActionController extends ZendAbstractActionController
      */
     protected function getTable($table = null)
     {
-        $key = !$table ? 'null' : $table;
-        if (!isset($this->activeRecords[$table])) {
-            $this->activeRecords[$key] = new ActiveRecord($table);
-        }
-
-        return $this->activeRecords[$key];
+        return $this->getHelper()->getTable($table);
     }
 
     /**

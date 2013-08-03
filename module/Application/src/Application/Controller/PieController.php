@@ -11,11 +11,20 @@ class PieController extends AbstractActionController
     /**
      * @var \Application\Helper\Pie\Helper
      */
-    private $helper;
+    protected $helper;
 
     /** @var array */
     protected $transactionsData;
 
+    /**
+     * @return void
+     */
+    protected function init()
+    {
+        $helper = new Helper();
+        $helper->setTransactionsData($this->getTransactionsData());
+        $this->setHelper($helper);
+    }
 
     /**
      * @return array
@@ -32,20 +41,6 @@ class PieController extends AbstractActionController
             'form' => $this->getHelper()->getMonthForm()
         );
     }
-
-    /**
-     * @return Helper
-     */
-    private function getHelper()
-    {
-        if (null === $this->helper) {
-            $this->helper = new Helper();
-            $this->helper->setTransactionsData($this->getTransactionsData());
-        }
-
-        return $this->helper;
-    }
-
 
     /**
      * @return array
