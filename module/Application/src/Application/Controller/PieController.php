@@ -6,13 +6,11 @@ use Application\Helper\Pie\Helper;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 
+/**
+ * @method \Application\Helper\Pie\Helper getHelper()
+ */
 class PieController extends AbstractActionController
 {
-    /**
-     * @var \Application\Helper\Pie\Helper
-     */
-    protected $helper;
-
     /** @var array */
     protected $transactionsData;
 
@@ -22,7 +20,8 @@ class PieController extends AbstractActionController
     protected function init()
     {
         $helper = new Helper();
-        $helper->setTransactionsData($this->getTransactionsData());
+        $helper->setTransactionsData($this->getTransactionsData())
+               ->setRequest($this->getRequest());
         $this->setHelper($helper);
     }
 
@@ -38,14 +37,27 @@ class PieController extends AbstractActionController
         return array(
             'chartData'  => $this->getHelper()->getChartData(),
             'groupNames' => $this->getHelper()->getSortedGroups(),
-            'form' => $this->getHelper()->getMonthForm()
+            'form' => $this->getForm()
         );
+    }
+
+    /**
+     * @return \Application\Form\Form\Month
+     */
+    private function getForm()
+    {
+        $form = $this->getHelper()->getMonthForm();
+
+        $month = $form->get('month');
+        $month->setValue($this->getHelper()->getMonthRequestValue());
+
+        return $form;
     }
 
     /**
      * @return array
      */
-    protected function getTransactionsData()
+    private function getTransactionsData()
     {
         if (null === $this->transactionsData) {
             $select = $this->getTransactionsSelect();
@@ -68,7 +80,7 @@ class PieController extends AbstractActionController
     /**
      * @return \Zend\Db\Sql\Select
      */
-    protected function getTransactionsSelect()
+    private function getTransactionsSelect()
     {
         $transactionTable = array('t' => 'transaction');
 
@@ -87,7 +99,7 @@ class PieController extends AbstractActionController
      * @param \Zend\Db\Sql\Select $select
      * @return \Zend\Db\Sql\Select
      */
-    protected function applyTransactionSelectFilters(Select $select)
+    private function applyTransactionSelectFilters(Select $select)
     {
         $where = array();
 
@@ -107,7 +119,7 @@ class PieController extends AbstractActionController
     /**
      * @return \Zend\Db\Sql\Where
      */
-    protected function getWhere()
+    private function getWhere()
     {
         return new Where();
     }
@@ -116,7 +128,7 @@ class PieController extends AbstractActionController
      * @param \Zend\Db\Sql\Select $select
      * @return \Zend\Db\ResultSet\HydratingResultSet
      */
-    protected function fetchTransactions(Select $select)
+    private function fetchTransactions(Select $select)
     {
         $transactions = $this->getTable('transactions');
         $table = $transactions->getTable();

@@ -1,9 +1,11 @@
 <?php
-
+/**
+ * @var $form Application\Form\Form\Month
+ */
 $form = $this->form;
 
 $form->setAttribute('action', $this->url('pie', array(
-'action' => 'index',
+    'action' => 'filter',
 )));
 $form->prepare();
 
