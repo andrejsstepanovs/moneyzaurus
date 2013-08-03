@@ -1,3 +1,42 @@
+<?php
+
+$form = $this->form;
+
+$form->setAttribute('action', $this->url('pie', array(
+'action' => 'index',
+)));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+
+
+foreach ($form as $element) {
+
+$formElementErrors = $this->formElementErrors($element);
+
+?>
+<div  data-role="fieldcontain" <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
+    <label for="<?php echo $element->getAttribute('name'); ?>"><?php echo $element->getLabel() ?></label>
+
+    <?php
+    echo $this->formElement($element);
+
+    if ($formElementErrors) {
+        ?>
+        <span class="help-inline">
+                <?php echo $formElementErrors; ?>
+            </span>
+    <?php
+    }
+    ?>
+</div>
+<?php
+}
+
+echo $this->form()->closeTag();
+
+?>
+
 <div id="container" style="width:100%;height:80%;" ></div>
 
 

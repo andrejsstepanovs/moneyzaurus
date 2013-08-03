@@ -34,18 +34,3 @@ foreach ($form as $element) {
 }
 
 echo $this->form()->closeTag();
-
-return;
-
-
-
-$form = $this->form;
-
-$form->setAttribute('action', $this->url('user', array(
-    'action' => 'authenticate',
-)));
-$form->prepare();
-
-echo $this->form()->openTag($form);
-echo $this->formCollection($form);
-echo $this->form()->closeTag();

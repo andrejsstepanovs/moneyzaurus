@@ -7,7 +7,8 @@ use HighchartsPHP\Highcharts as Highchart;
 use HighchartsPHP\HighchartsJsExpr as HighchartJsExpr;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
-
+use Application\Form\Form\Month as MonthForm;
+use Application\Form\Validator\Month as MonthValidator;
 
 class PieController extends AbstractActionController
 {
@@ -21,52 +22,85 @@ class PieController extends AbstractActionController
     protected $transactionsData;
 
     /** @var array */
-    protected $sortedgroupsData;
+    protected $sortedGroupsData;
 
+    /** @var array */
+    protected $groupedData;
 
+    /** @var Highchart */
+    protected $chartData;
+
+    /** @var \Application\Form\Month */
+    protected $monthForm;
+
+    /** @var \Application\Form\Validator\Month */
+    protected $monthValidator;
+
+    /**
+     * @return array
+     */
     public function indexAction()
     {
-        $groupedData = array();
-        foreach ($this->getTransactionsData() as $model) {
-            $groupedData[$model['group_name']][] = $model;
-        }
-
-        $sortedGroups = $this->getSortedGroups($groupedData);
-
-        $chartData = new Highchart();
-
-        $i = 0;
-        foreach ($sortedGroups AS $groupName) {
-
-            $rows = $groupedData[$groupName];
-
-            $data = $categories = array();
-
-            foreach ($rows AS $row) {
-                $data[]       = round((float)$row->getData('price'), 2);
-                $categories[] = $row->getData('item_name');
-            }
-
-
-            $chartData[$i]->y                     = array_sum($data);
-            $chartData[$i]->z                     = 'EUR';
-            $chartData[$i]->color                 = new HighchartJsExpr('colors['.$i.']');
-            $chartData[$i]->drilldown->name       = $groupName;
-            $chartData[$i]->drilldown->categories = $categories;
-            $chartData[$i]->drilldown->data       = $data;
-            $chartData[$i]->drilldown->color      = new HighchartJsExpr("colors[0]");
-
-            $i++;
-        }
-
         $this->getViewHelperPlugin('inlineScript')->appendScript(
             $this->getChart()->render()
         );
 
         return array(
-            'chartData'  => $chartData,
-            'groupNames' => $sortedGroups
+            'chartData'  => $this->getChartData(),
+            'groupNames' => $this->getSortedGroups(),
+            'form' => $this->getMonthForm()
         );
+    }
+
+    /**
+     * @return array
+     */
+    private function getGroupedData()
+    {
+        if (null === $this->groupedData) {
+            $this->groupedData = array();
+            foreach ($this->getTransactionsData() as $model) {
+                $this->groupedData[$model['group_name']][] = $model;
+            }
+        }
+        return $this->groupedData;
+    }
+
+    /**
+     * @return Highchart
+     */
+    private function getChartData()
+    {
+        if (null === $this->chartData) {
+            $groupedData = $this->getGroupedData();
+            $sortedGroups = $this->getSortedGroups();
+
+            $this->chartData = new Highchart();
+
+            $i = 0;
+            foreach ($sortedGroups AS $groupName) {
+                $rows = $groupedData[$groupName];
+
+                $data = $categories = array();
+
+                foreach ($rows AS $row) {
+                    $data[]       = round((float)$row->getData('price'), 2);
+                    $categories[] = $row->getData('item_name');
+                }
+
+                $this->chartData[$i]->y                     = array_sum($data);
+                $this->chartData[$i]->z                     = 'EUR';
+                $this->chartData[$i]->color                 = new HighchartJsExpr('colors[' . $i . ']');
+                $this->chartData[$i]->drilldown->name       = $groupName;
+                $this->chartData[$i]->drilldown->categories = $categories;
+                $this->chartData[$i]->drilldown->data       = $data;
+                $this->chartData[$i]->drilldown->color      = new HighchartJsExpr("colors[0]");
+
+                $i++;
+            }
+        }
+
+        return $this->chartData;
     }
 
     /**
@@ -114,17 +148,17 @@ class PieController extends AbstractActionController
      */
     protected function getSortedGroups()
     {
-        if (null === $this->sortedgroupsData) {
+        if (null === $this->sortedGroupsData) {
             $groups = array();
             foreach ($this->getTransactionsData() AS $row) {
                 $groups[$row->getGroupName()] =+  $row->getPrice();
             }
 
             arsort($groups, SORT_NUMERIC);
-            $this->sortedgroupsData = array_keys($groups);
+            $this->sortedGroupsData = array_keys($groups);
         }
 
-        return $this->sortedgroupsData;
+        return $this->sortedGroupsData;
     }
 
     /**
@@ -208,6 +242,30 @@ class PieController extends AbstractActionController
 
         /** @var $transactionsResuls \Zend\Db\ResultSet\HydratingResultSet */
         return $table->fetch($select);
+    }
+
+    /**
+     * @return \Application\Form\Month
+     */
+    public function getMonthForm()
+    {
+        if (null === $this->monthForm) {
+            $this->monthForm = new MonthForm();
+        }
+
+        return $this->monthForm;
+    }
+
+    /**
+     * @return \Application\Form\Validator\Month
+     */
+    public function getMonthValidator()
+    {
+        if (null === $this->monthValidator) {
+            $this->monthValidator = new MonthValidator();
+        }
+
+        return $this->monthValidator;
     }
 
 }
