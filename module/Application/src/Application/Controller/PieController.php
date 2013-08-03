@@ -17,14 +17,17 @@ class PieController extends AbstractActionController
     /** @var integer */
     protected $userId;
 
-    /** @var arrat */
+    /** @var array */
     protected $transactionsData;
+
+    /** @var array */
+    protected $sortedgroupsData;
 
 
     public function indexAction()
     {
         $groupedData = array();
-        foreach ($this->getTransactions() as $model) {
+        foreach ($this->getTransactionsData() as $model) {
             $groupedData[$model['group_name']][] = $model;
         }
 
@@ -106,30 +109,43 @@ class PieController extends AbstractActionController
         return $chart;
     }
 
-    protected function getSortedGroups(array $groupedData)
+    /**
+     * @return array
+     */
+    protected function getSortedGroups()
     {
-        $groups = array();
+        if (null === $this->sortedgroupsData) {
+            $groups = array();
+            foreach ($this->getTransactionsData() AS $row) {
+                $groups[$row->getGroupName()] =+  $row->getPrice();
+            }
 
-        foreach ($this->getTransactions() AS $row) {
-            $groups[$row->getGroupName()] =+  $row->getPrice();
+            arsort($groups, SORT_NUMERIC);
+            $this->sortedgroupsData = array_keys($groups);
         }
 
-        arsort($groups, SORT_NUMERIC);
-
-        return array_keys($groups);
+        return $this->sortedgroupsData;
     }
 
     /**
      * @return array
      */
-    protected function getTransactions()
+    protected function getTransactionsData()
     {
-//        if (null === $this->transactionsData) {
+        if (null === $this->transactionsData) {
             $select = $this->getTransactionsSelect();
             $select = $this->applyTransactionSelectFilters($select);
-            $this->transactionsData = $this->fetchTransactions($select);
-//        }
 
+            $this->transactionsData = array();
+
+            /** @var $resultSet Zend\Db\ResultSet\HydratingResultSet */
+            $resultSet = $this->fetchTransactions($select);
+            if ($resultSet->count()) {
+                foreach ($resultSet AS $row) {
+                    $this->transactionsData[] =  $row;
+                }
+            }
+        }
         return $this->transactionsData;
     }
 
@@ -142,12 +158,14 @@ class PieController extends AbstractActionController
         $where = array();
 
         $where[] = $this->getWhere()
-                           ->between('date', '2013-05-01', date('Y-m-d H:i:s'));
+                           ->between('date', date('Y-m-d H:i:s', strtotime('-2 months')), date('Y-m-d H:i:s'));
 
         $where[] = $this->getWhere()
                         ->expression('t.price > ?', 0);
 
         $select->where($where);
+
+        $select->limit(50);
 
         return $select;
     }

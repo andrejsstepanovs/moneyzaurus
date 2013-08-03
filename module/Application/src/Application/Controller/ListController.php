@@ -35,18 +35,18 @@ class ListController extends AbstractActionController
         $page     = $this->params()->fromRoute('page') ? (int) $this->params()->fromRoute('page') : 1;
 
         $itemsPerPage = 20;
-        $transactionsResuls = $this->getTransactions($page, $itemsPerPage, $order_by, $order);
+        $transactionsResults = $this->getTransactions($page, $itemsPerPage, $order_by, $order);
         $totalItemCount = $this->getTotalCount();
 
-        $transactionsResuls->current();
-        $paginator = new Paginator(new PaginatorIterator($transactionsResuls));
+        $transactionsResults->current();
+        $paginator = new Paginator(new PaginatorIterator($transactionsResults));
         $paginator->setTotalItemCount($totalItemCount)
                   ->setCurrentPageNumber($page)
                   ->setItemCountPerPage($itemsPerPage)
                   ->setPageRange(5);
 
         return array(
-            'transactions' => $transactionsResuls,
+            'transactions' => $transactionsResults,
             'order_by'     => $order_by,
             'order'        => $order,
             'page'         => $page,
