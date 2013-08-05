@@ -37,10 +37,7 @@ class AbstractActionController extends ZendAbstractActionController
      */
     public function onDispatch(\Zend\Mvc\MvcEvent $e)
     {
-        // Please use init() instead of __construct()
-        if (is_callable(array($this, 'init'))) {
-            $this->init();
-        }
+        $this->init();
 
         $actionResponse = parent::onDispatch($e);
 
@@ -50,6 +47,11 @@ class AbstractActionController extends ZendAbstractActionController
         }
 
         return $actionResponse;
+    }
+
+    protected function init()
+    {
+        return;
     }
 
     /**
