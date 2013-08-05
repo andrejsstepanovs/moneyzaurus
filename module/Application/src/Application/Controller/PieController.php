@@ -3,6 +3,7 @@ namespace Application\Controller;
 
 use Application\Controller\AbstractActionController;
 use Application\Helper\Pie\Helper as PieHelper;
+use Application\Helper\Month\Helper as MonthHelper;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 
@@ -14,13 +15,21 @@ class PieController extends AbstractActionController
     /** @var array */
     protected $transactionsData;
 
+    /** @var MonthHelper */
+    protected $monthHelper;
+
 
     /**
-     * @return Helper
+     * @return MonthHelper
      */
-    private function getHelperInstance()
+    private function getMonthHelper()
     {
-        return new PieHelper();
+        if (null === $this->monthHelper) {
+            $this->monthHelper = new MonthHelper();
+            $this->monthHelper->setRequest($this->getRequest());
+        }
+
+        return $this->monthHelper;
     }
 
     /**
@@ -28,7 +37,8 @@ class PieController extends AbstractActionController
      */
     protected function init()
     {
-        $helper = $this->getHelperInstance()->setRequest($this->getRequest());
+        $helper = new PieHelper();
+
         $this->setHelper($helper);
         $helper->setTransactionsData($this->getTransactionsData());
     }
@@ -54,10 +64,10 @@ class PieController extends AbstractActionController
      */
     private function getForm()
     {
-        $form = $this->getHelper()->getMonthForm();
+        $form = $this->getMonthHelper()->getMonthForm();
 
         $month = $form->get('month');
-        $month->setValue($this->getHelper()->getMonthRequestValue());
+        $month->setValue($this->getMonthHelper()->getMonthRequestValue());
 
         return $form;
     }
@@ -111,7 +121,7 @@ class PieController extends AbstractActionController
     {
         $where = array();
 
-        $month = $this->getHelper()->getMonthRequestValue();
+        $month = $this->getMonthHelper()->getMonthRequestValue();
 
         $timestamp = strtotime($month . '-01');
         $monthDateTimeFrom = date('Y-m-d H:i:s', $timestamp);

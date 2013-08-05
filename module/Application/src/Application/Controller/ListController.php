@@ -2,54 +2,44 @@
 namespace Application\Controller;
 
 use Application\Controller\AbstractActionController;
-use Paginator\Paginator;
+use Application\Helper\Lister\Helper as ListHelper;
 use Zend\Paginator\Adapter\Iterator as PaginatorIterator;
+use Paginator\Paginator;
 use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Select;
 
-
+/**
+ * @method \Application\Helper\Lister\Helper getHelper()
+ */
 class ListController extends AbstractActionController
 {
-    /** @var array */
-    protected $activeRecords = array();
-
-    /** @var integer */
-    protected $userId;
-
-    /** @var \Application\Form\Transaction */
-    protected $form;
-
-    /** @var \Application\Form\Validator\Transaction */
-    protected $validator;
-
-    /** @var array */
-    protected $datalist;
-
+    /**
+     * @return void
+     */
+    protected function init()
+    {
+        $helper = new ListHelper();
+        $helper->setParams($this->params());
+        $this->setHelper($helper);
+    }
 
     public function indexAction()
     {
-        /** @var $params \Zend\Mvc\Controller\Plugin\Params */
-        $params   = $this->params();
-        $order_by = $params->fromRoute('order_by')     ? $params->fromRoute('order_by') : 'transaction_id';
-        $order    = $params->fromRoute('order')        ? $params->fromRoute('order')    : \Zend\Db\Sql\Select::ORDER_ASCENDING;
-        $page     = $this->params()->fromRoute('page') ? (int) $this->params()->fromRoute('page') : 1;
-
-        $itemsPerPage = 20;
-        $transactionsResults = $this->getTransactions($page, $itemsPerPage, $order_by, $order);
+        $transactionsResults = $this->getTransactions();
         $totalItemCount = $this->getTotalCount();
 
         $transactionsResults->current();
         $paginator = new Paginator(new PaginatorIterator($transactionsResults));
         $paginator->setTotalItemCount($totalItemCount)
-                  ->setCurrentPageNumber($page)
-                  ->setItemCountPerPage($itemsPerPage)
+                  ->setCurrentPageNumber($this->getHelper()->getPage())
+                  ->setItemCountPerPage($this->getHelper()->getItemsPerPage())
                   ->setPageRange(5);
 
         return array(
             'transactions' => $transactionsResults,
-            'order_by'     => $order_by,
-            'order'        => $order,
-            'page'         => $page,
+            'order_by'     => $this->getHelper()->getOrderBy(),
+            'order'        => $this->getHelper()->getOrder(),
+            'page'         => $this->getHelper()->getPage(),
             'paginator'    => $paginator,
         );
     }
@@ -57,8 +47,13 @@ class ListController extends AbstractActionController
     /**
      * @return \Zend\Db\ResultSet\HydratingResultSet
      */
-    protected function getTransactions($page, $itemsPerPage, $order_by, $order)
+    protected function getTransactions()
     {
+        $order_by     = $this->getHelper()->getOrderBy();
+        $order        = $this->getHelper()->getOrder();
+        $page         = $this->getHelper()->getPage();
+        $itemsPerPage = $this->getHelper()->getItemsPerPage();
+
         $transactionTable = array('t' => 'transaction');
 
         $select = new Select();
