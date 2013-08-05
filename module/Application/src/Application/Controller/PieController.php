@@ -2,7 +2,7 @@
 namespace Application\Controller;
 
 use Application\Controller\AbstractActionController;
-use Application\Helper\Pie\Helper;
+use Application\Helper\Pie\Helper as PieHelper;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 
@@ -14,16 +14,23 @@ class PieController extends AbstractActionController
     /** @var array */
     protected $transactionsData;
 
+
+    /**
+     * @return Helper
+     */
+    private function getHelperInstance()
+    {
+        return new PieHelper();
+    }
+
     /**
      * @return void
      */
     protected function init()
     {
-        $helper = new Helper();
-        $helper->setRequest($this->getRequest());
+        $helper = $this->getHelperInstance()->setRequest($this->getRequest());
         $this->setHelper($helper);
         $helper->setTransactionsData($this->getTransactionsData());
-        $this->setHelper($helper);
     }
 
     /**
@@ -66,7 +73,7 @@ class PieController extends AbstractActionController
 
             $this->transactionsData = array();
 
-            /** @var $resultSet Zend\Db\ResultSet\HydratingResultSet */
+            /** @var $resultSet \Zend\Db\ResultSet\HydratingResultSet */
             $resultSet = $this->fetchTransactions($select);
             if ($resultSet->count()) {
                 foreach ($resultSet AS $row) {
