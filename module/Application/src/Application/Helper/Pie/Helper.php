@@ -29,6 +29,9 @@ class Helper extends AbstractHelper
     /** @var \Highchart */
     protected $_chartData;
 
+    /** @var int */
+    protected $_groupCount = 5;
+
     /**
      * @return array
      */
@@ -50,20 +53,16 @@ class Helper extends AbstractHelper
     /**
      * @return Highchart
      */
-    public function getChartData($groupCount = 5)
+    public function getChartData()
     {
         if (null === $this->getChartDataValue()) {
             $groupedData = $this->getGroupedData();
             $sortedGroups = $this->getSortedGroups();
+            $count = count($sortedGroups);
 
-            foreach ($sortedGroups AS $i => $groupName) {
-                if ($i >= $groupCount) {
-                    break;
-                }
-
-                /** @var \Db\Db\ActiveRecord $row */
+            for ($i = 0; $i < $this->_groupCount; $i++) {
                 $priceData = $categories = array();
-                $rows = $this->_compactRows($groupedData[$groupName]);
+                $rows = $this->_compactRows($groupedData[$sortedGroups[$i]]);
                 foreach ($rows AS $row) {
                     $priceData[]  = round((float)$row->getPrice(), 2);
                     $categories[] = $row->getData('item_name');
@@ -72,7 +71,7 @@ class Helper extends AbstractHelper
             }
 
             $priceData = $categories = array();
-            for ($i; $i < count($sortedGroups); $i++) {
+            for ($i; $i < $count; $i++) {
                 $groupName = $sortedGroups[$i];
                 $categories[] = $groupName;
 
@@ -84,9 +83,8 @@ class Helper extends AbstractHelper
                 $priceData[] = $total;
             }
 
-            $this->_setChartData($priceData, $categories);
-
-            $this->setChartDataValue($this->_getHighchart());
+            $this->_setChartData($priceData, $categories)
+                 ->setChartDataValue($this->_getHighchart());
         }
 
         return $this->getChartDataValue();
@@ -149,7 +147,7 @@ class Helper extends AbstractHelper
             $price += $row->getPrice();
         }
 
-        $newRows[] = $row->setPrice($price)->setItemName('..');
+        $newRows[] = $row->setPrice($price)->setItemName('Other Items');
 
         return $newRows;
     }
@@ -198,7 +196,7 @@ class Helper extends AbstractHelper
     /**
      * @return array
      */
-    public function getSortedGroups()
+    public function getSortedGroups($full = true)
     {
         if (null === $this->getSortedGroupsDataValue()) {
             $groups = array();
@@ -211,7 +209,14 @@ class Helper extends AbstractHelper
             $this->setSortedGroupsDataValue(array_keys($groups));
         }
 
-        return $this->getSortedGroupsDataValue();
+        $data = $this->getSortedGroupsDataValue();
+
+        if (!$full) {
+            $data = array_slice($data, 0, $this->_groupCount);
+            $data[] = 'Other Groups';
+        }
+
+        return $data;
     }
 
     /**
