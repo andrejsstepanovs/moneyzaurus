@@ -35,6 +35,9 @@ class Helper extends AbstractHelper
     /** @var int */
     protected $_itemCount = 4;
 
+    /** @var int */
+    protected $_otherGroupCount = 4;
+
     /**
      * @return array
      */
@@ -73,20 +76,35 @@ class Helper extends AbstractHelper
                 $this->_setChartData($priceData, $categories);
             }
 
-            $priceData = $categories = array();
+            $priceDataTmp = $categoriesTmp = array();
             for ($i; $i < $count; $i++) {
                 $groupName = $sortedGroups[$i];
-                $categories[] = $groupName;
+                $categoriesTmp[] = $groupName;
 
                 $total = 0;
                 foreach ($groupedData[$groupName] AS $row) {
                     $total += round((float)$row->getPrice(), 2);
                 }
 
-                $priceData[] = $total;
+                $priceDataTmp[] = $total;
             }
 
-            $this->_setChartData($priceData, $categories)
+            $count = count($priceDataTmp);
+            $priceData = $categories = array();
+            for ($i = 0; $i < $this->_otherGroupCount; $i++) {
+                $priceData[] = $priceDataTmp[$i];
+                $categories[] = $categoriesTmp[$i];
+            }
+
+            $total = 0;
+            for ($i; $i < $count; $i++) {
+                $total += $priceDataTmp[$i];
+            }
+            $priceData[] = $total;
+            $categories[] = 'Other';
+
+
+                $this->_setChartData($priceData, $categories)
                  ->setChartDataValue($this->_getHighchart());
         }
 
