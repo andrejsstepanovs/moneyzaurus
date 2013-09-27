@@ -30,10 +30,10 @@ class Helper extends AbstractHelper
     protected $_chartData;
 
     /** @var int */
-    protected $_groupCount = 8;
+    protected $_groupCount = 9;
 
     /** @var int */
-    protected $_itemCount = 4;
+    protected $_itemCount = 9;
 
     /** @var int */
     protected $_otherGroupCount = 4;
@@ -65,6 +65,10 @@ class Helper extends AbstractHelper
             $groupedData = $this->getGroupedData();
             $sortedGroups = $this->getSortedGroups();
             $count = count($sortedGroups);
+
+            if ($this->_groupCount > $count) {
+                $this->_groupCount = $count;
+            }
 
             for ($i = 0; $i < $this->_groupCount; $i++) {
                 $priceData = $categories = array();
@@ -189,6 +193,7 @@ class Helper extends AbstractHelper
         $chart->plotOptions->pie->shadow = true;
 
         $chart->series[0]->dataLabels->distance = -80;
+        $chart->series[0]->dataLabels->color = 'white';
         $chart->series[0]->name      = 'EUR';
         $chart->series[0]->data      = new HighchartJsExpr('primaryData');
         $chart->series[0]->size      = '80%';
@@ -210,7 +215,12 @@ class Helper extends AbstractHelper
             $groups = array();
             /** @var \Db\Db\ActiveRecord $row */
             foreach ($this->getTransactionsData() AS $row) {
-                $groups[$row->getGroupName()] += $row->getPrice();
+                $groupName = $row->getGroupName();
+                if (!array_key_exists($groupName, $groups)) {
+                    $groups[$groupName] = $row->getPrice();
+                } else {
+                    $groups[$groupName] += $row->getPrice();
+                }
             }
 
             arsort($groups, SORT_NUMERIC);
