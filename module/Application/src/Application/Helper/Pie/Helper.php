@@ -56,21 +56,63 @@ class Helper extends AbstractHelper
             $groupedData = $this->getGroupedData();
             $sortedGroups = $this->getSortedGroups();
 
-            foreach ($sortedGroups AS $groupName) {
+            foreach ($sortedGroups AS $i => $groupName) {
+                if ($i >= $groupCount) {
+                    break;
+                }
+
                 /** @var \Db\Db\ActiveRecord $row */
                 $priceData = $categories = array();
                 $rows = $this->_compactRows($groupedData[$groupName]);
                 foreach ($rows AS $row) {
-                    $priceData[]  = round((float)$row->getData('price'), 2);
+                    $priceData[]  = round((float)$row->getPrice(), 2);
                     $categories[] = $row->getData('item_name');
                 }
-                $this->_setChartData($priceData, $groupName, $categories);
+                $this->_setChartData($priceData, $categories);
             }
+
+            $priceData = $categories = array();
+            for ($i; $i < count($sortedGroups); $i++) {
+                $groupName = $sortedGroups[$i];
+                $categories[] = $groupName;
+
+                $total = 0;
+                foreach ($groupedData[$groupName] AS $row) {
+                    $total += round((float)$row->getPrice(), 2);
+                }
+
+                $priceData[] = $total;
+            }
+
+            $this->_setChartData($priceData, $categories);
 
             $this->setChartDataValue($this->_getHighchart());
         }
 
         return $this->getChartDataValue();
+    }
+
+    /**
+     * @param array  $priceData
+     * @param string $categories
+     * @param string $groupName
+     *
+     * @return $this
+     */
+    protected function _setChartData($priceData, $categories, $groupName = '')
+    {
+        $i = $this->_charDataIterator++;
+
+        $this->_chartData = $this->_getHighchart();
+        $this->_chartData[$i]->y                     = array_sum($priceData);
+        $this->_chartData[$i]->z                     = 'EUR';
+        $this->_chartData[$i]->color                 = new HighchartJsExpr('colors[' . $i . ']');
+        $this->_chartData[$i]->drilldown->name       = $groupName;
+        $this->_chartData[$i]->drilldown->categories = $categories;
+        $this->_chartData[$i]->drilldown->data       = $priceData;
+        $this->_chartData[$i]->drilldown->color      = new HighchartJsExpr('colors[0]');
+
+        return $this;
     }
 
     /**
@@ -82,29 +124,6 @@ class Helper extends AbstractHelper
             $this->_chartData = new Highchart();
         }
         return $this->_chartData;
-    }
-
-    /**
-     * @param array  $data
-     * @param string $groupName
-     * @param string $categories
-     *
-     * @return $this
-     */
-    protected function _setChartData($data, $groupName, $categories)
-    {
-        $i = $this->_charDataIterator++;
-
-        $this->_chartData = $this->_getHighchart();
-        $this->_chartData[$i]->y                     = array_sum($data);
-        $this->_chartData[$i]->z                     = 'EUR';
-        $this->_chartData[$i]->color                 = new HighchartJsExpr('colors[' . $i . ']');
-        $this->_chartData[$i]->drilldown->name       = $groupName;
-        $this->_chartData[$i]->drilldown->categories = $categories;
-        $this->_chartData[$i]->drilldown->data       = $data;
-        $this->_chartData[$i]->drilldown->color      = new HighchartJsExpr("colors[0]");
-
-        return $this;
     }
 
     /**
@@ -154,18 +173,19 @@ class Helper extends AbstractHelper
 
         $chart->series[0] = array(
             'data'       => new HighchartJsExpr('primaryData'),
-            'size'       => '80%',
+            'size'       => '60%',
             'dataLabels' => array(
 //                'formatter' => new HighchartJsExpr('function() {
 //                    return this.y > 5 ? this.point.name : null;
 //                }'),
                 'color'    => 'white', // title color
-                'distance' => -100     // title distance
+                'distance' => -50     // title distance
             )
         );
 
         $chart->series[1]->name      = 'Secondary';
         $chart->series[1]->data      = new HighchartJsExpr('secondaryData');
+        $chart->series[1]->size      = "80%";
         $chart->series[1]->innerSize = "60%";
 
         $chart->series[1]->dataLabels->formatter = new HighchartJsExpr("function() {
@@ -184,7 +204,7 @@ class Helper extends AbstractHelper
             $groups = array();
             /** @var \Db\Db\ActiveRecord $row */
             foreach ($this->getTransactionsData() AS $row) {
-                $groups[$row->getGroupName()] =+ $row->getPrice();
+                $groups[$row->getGroupName()] += $row->getPrice();
             }
 
             arsort($groups, SORT_NUMERIC);
