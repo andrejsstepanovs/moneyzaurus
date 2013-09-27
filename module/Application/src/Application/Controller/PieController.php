@@ -4,7 +4,7 @@ namespace Application\Controller;
 use Application\Controller\AbstractActionController;
 use Application\Helper\Pie\Helper as PieHelper;
 use Application\Helper\Month\Helper as MonthHelper;
-use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Select as Select;
 use Zend\Db\Sql\Where;
 
 /**
@@ -78,8 +78,10 @@ class PieController extends AbstractActionController
     private function getTransactionsData()
     {
         if (null === $this->transactionsData) {
+            /** @var Select $select */
             $select = $this->getTransactionsSelect();
             $select = $this->applyTransactionSelectFilters($select);
+            $select->order('price ' . Select::ORDER_DESCENDING);
 
             $this->transactionsData = array();
 

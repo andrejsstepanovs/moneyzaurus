@@ -12,9 +12,23 @@ use Zend\Http\PhpEnvironment\Request;
 /**
  * @method \Zend\Http\PhpEnvironment\Request getRequest()
  * @method Helper setRequest(Request $request)
+ * @method Helper setTransactionsDataValue(array $data)
+ * @method Helper setSortedGroupsDataValue(array $data)
+ * @method Helper setChartDataValue(array $data)
+ * @method Helper setGroupedDataValue(array $data)
+ * @method array getTransactionsDataValue()
+ * @method array getSortedGroupsDataValue()
+ * @method array getChartDataValue()
+ * @method array getGroupedDataValue()
  */
 class Helper extends AbstractHelper
 {
+    /** @var int */
+    protected $_charDataIterator = 0;
+
+    /** @var \Highchart */
+    protected $_chartData;
+
     /**
      * @return array
      */
@@ -36,40 +50,89 @@ class Helper extends AbstractHelper
     /**
      * @return Highchart
      */
-    public function getChartData()
+    public function getChartData($groupCount = 5)
     {
         if (null === $this->getChartDataValue()) {
             $groupedData = $this->getGroupedData();
             $sortedGroups = $this->getSortedGroups();
 
-            $chartData = new Highchart();
-
-            $i = 0;
             foreach ($sortedGroups AS $groupName) {
-                $rows = $groupedData[$groupName];
-
-                $data = $categories = array();
-
+                /** @var \Db\Db\ActiveRecord $row */
+                $priceData = $categories = array();
+                $rows = $this->_compactRows($groupedData[$groupName]);
                 foreach ($rows AS $row) {
-                    $data[]       = round((float)$row->getData('price'), 2);
+                    $priceData[]  = round((float)$row->getData('price'), 2);
                     $categories[] = $row->getData('item_name');
                 }
-
-                $chartData[$i]->y                     = array_sum($data);
-                $chartData[$i]->z                     = 'EUR';
-                $chartData[$i]->color                 = new HighchartJsExpr('colors[' . $i . ']');
-                $chartData[$i]->drilldown->name       = $groupName;
-                $chartData[$i]->drilldown->categories = $categories;
-                $chartData[$i]->drilldown->data       = $data;
-                $chartData[$i]->drilldown->color      = new HighchartJsExpr("colors[0]");
-
-                $i++;
+                $this->_setChartData($priceData, $groupName, $categories);
             }
 
-            $this->setChartDataValue($chartData);
+            $this->setChartDataValue($this->_getHighchart());
         }
 
         return $this->getChartDataValue();
+    }
+
+    /**
+     * @return Highchart
+     */
+    private function _getHighchart()
+    {
+        if (null === $this->_chartData) {
+            $this->_chartData = new Highchart();
+        }
+        return $this->_chartData;
+    }
+
+    /**
+     * @param array  $data
+     * @param string $groupName
+     * @param string $categories
+     *
+     * @return $this
+     */
+    protected function _setChartData($data, $groupName, $categories)
+    {
+        $i = $this->_charDataIterator++;
+
+        $this->_chartData = $this->_getHighchart();
+        $this->_chartData[$i]->y                     = array_sum($data);
+        $this->_chartData[$i]->z                     = 'EUR';
+        $this->_chartData[$i]->color                 = new HighchartJsExpr('colors[' . $i . ']');
+        $this->_chartData[$i]->drilldown->name       = $groupName;
+        $this->_chartData[$i]->drilldown->categories = $categories;
+        $this->_chartData[$i]->drilldown->data       = $data;
+        $this->_chartData[$i]->drilldown->color      = new HighchartJsExpr("colors[0]");
+
+        return $this;
+    }
+
+    /**
+     * @param array $rows
+     *
+     * @return array
+     */
+    private function _compactRows(array $rows, $maxCount = 4)
+    {
+        $count = count($rows);
+        if ($count <= $maxCount) {
+            return $rows;
+        }
+
+        $newRows = array();
+        for ($i = 0; $i < $maxCount; $i++) {
+            $newRows[] = $rows[$i];
+        }
+
+        $price = 0;
+        for ($i; $i < $count; $i++) {
+            $row = $rows[$i];
+            $price += $row->getPrice();
+        }
+
+        $newRows[] = $row->setPrice($price)->setItemName('..');
+
+        return $newRows;
     }
 
     /**
@@ -119,8 +182,9 @@ class Helper extends AbstractHelper
     {
         if (null === $this->getSortedGroupsDataValue()) {
             $groups = array();
+            /** @var \Db\Db\ActiveRecord $row */
             foreach ($this->getTransactionsData() AS $row) {
-                $groups[$row->getGroupName()] =+  $row->getPrice();
+                $groups[$row->getGroupName()] =+ $row->getPrice();
             }
 
             arsort($groups, SORT_NUMERIC);
