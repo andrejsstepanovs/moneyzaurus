@@ -30,7 +30,10 @@ class Helper extends AbstractHelper
     protected $_chartData;
 
     /** @var int */
-    protected $_groupCount = 5;
+    protected $_groupCount = 8;
+
+    /** @var int */
+    protected $_itemCount = 4;
 
     /**
      * @return array
@@ -62,7 +65,7 @@ class Helper extends AbstractHelper
 
             for ($i = 0; $i < $this->_groupCount; $i++) {
                 $priceData = $categories = array();
-                $rows = $this->_compactRows($groupedData[$sortedGroups[$i]]);
+                $rows = $this->_compactItems($groupedData[$sortedGroups[$i]]);
                 foreach ($rows AS $row) {
                     $priceData[]  = round((float)$row->getPrice(), 2);
                     $categories[] = $row->getData('item_name');
@@ -129,15 +132,15 @@ class Helper extends AbstractHelper
      *
      * @return array
      */
-    private function _compactRows(array $rows, $maxCount = 4)
+    private function _compactItems(array $rows)
     {
         $count = count($rows);
-        if ($count <= $maxCount) {
+        if ($count <= $this->_itemCount) {
             return $rows;
         }
 
         $newRows = array();
-        for ($i = 0; $i < $maxCount; $i++) {
+        for ($i = 0; $i < $this->_itemCount; $i++) {
             $newRows[] = $rows[$i];
         }
 
@@ -162,33 +165,18 @@ class Helper extends AbstractHelper
         $chart->chart->renderTo = 'container';
         $chart->chart->type     = 'pie';
         $chart->title->text     = 'Pie Chart';
-//        $chart->yAxis->title->text = "Total percent market share";
-//        $chart->plotOptions->pie->shadow = false;
 
-        $chart->tooltip->formatter = new HighchartJsExpr("function() {
-            return '<b>' + this.point.name + '</b>: '+ this.y; alert(this);
-        }");
+        $chart->plotOptions->pie->allowPointSelect = true;
+        $chart->plotOptions->pie->dataLabels->enabled = true;
+        $chart->plotOptions->pie->shadow = true;
 
-        $chart->series[0] = array(
-            'data'       => new HighchartJsExpr('primaryData'),
-            'size'       => '60%',
-            'dataLabels' => array(
-//                'formatter' => new HighchartJsExpr('function() {
-//                    return this.y > 5 ? this.point.name : null;
-//                }'),
-                'color'    => 'white', // title color
-                'distance' => -50     // title distance
-            )
-        );
+        $chart->series[0]->name      = 'EUR';
+        $chart->series[0]->data      = new HighchartJsExpr('primaryData');
+        $chart->series[0]->size      = '60%';
 
-        $chart->series[1]->name      = 'Secondary';
+        $chart->series[1]->name      = 'EUR';
         $chart->series[1]->data      = new HighchartJsExpr('secondaryData');
-        $chart->series[1]->size      = "80%";
-        $chart->series[1]->innerSize = "60%";
-
-        $chart->series[1]->dataLabels->formatter = new HighchartJsExpr("function() {
-            return this.y > 1 ? '<b>'+ this.point.name +':</b> '+ this.y : null;
-        }");
+        $chart->series[1]->innerSize = '60%';
 
         return $chart;
     }
