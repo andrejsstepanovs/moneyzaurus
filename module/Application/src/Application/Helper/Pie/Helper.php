@@ -14,16 +14,16 @@ use Zend\Http\PhpEnvironment\Request;
  *
  * @method \Zend\Http\PhpEnvironment\Request getRequest()
  * @method Helper setRequest(Request $request)
- * @method Helper setTransactionsDataValue(array $data)
- * @method Helper setSortedGroupsDataValue(array $data)
- * @method Helper setChartDataValue(\HighchartsPHP\Highcharts $data)
- * @method Helper setGroupedDataValue(array $data)
+ * @method Helper setTransactionsDataCache(array $data)
+ * @method Helper setSortedGroupsDataCache(array $data)
+ * @method Helper setChartDataCache(\HighchartsPHP\Highcharts $data)
+ * @method Helper setGroupedDataCache(array $data)
  * @method Helper setPieHighchartHelper(\Application\Helper\Pie\Highchart $data)
  * @method \Application\Helper\Pie\Highchart getPieHighchartHelper()
- * @method array getTransactionsDataValue()
- * @method array getSortedGroupsDataValue()
- * @method array getChartDataValue()
- * @method array getGroupedDataValue()
+ * @method array getTransactionsDataCache()
+ * @method array getSortedGroupsDataCache()
+ * @method array getChartDataCache()
+ * @method array getGroupedDataCache()
  */
 class Helper extends AbstractHelper
 {
@@ -41,7 +41,7 @@ class Helper extends AbstractHelper
      */
     private function getGroupedData()
     {
-        if (null === $this->getGroupedDataValue()) {
+        if (null === $this->getGroupedDataCache()) {
             $groupedData = array();
             $transactionsData = $this->getTransactionsData();
             if ($transactionsData) {
@@ -49,9 +49,9 @@ class Helper extends AbstractHelper
                     $groupedData[$model['group_name']][] = $model;
                 }
             }
-            $this->setGroupedDataValue($groupedData);
+            $this->setGroupedDataCache($groupedData);
         }
-        return $this->getGroupedDataValue();
+        return $this->getGroupedDataCache();
     }
 
     /**
@@ -59,7 +59,7 @@ class Helper extends AbstractHelper
      */
     public function getChartData()
     {
-        if (null === $this->getChartDataValue()) {
+        if (null === $this->getChartDataCache()) {
             $groupedData = $this->getGroupedData();
             $sortedGroups = $this->getSortedGroups();
             $count = count($sortedGroups);
@@ -106,10 +106,10 @@ class Helper extends AbstractHelper
             $categories[] = 'Other';
 
             $this->getPieHighchartHelper()->setChartData($priceData, $categories);
-            $this->setChartDataValue($this->getPieHighchartHelper()->getChartData());
+            $this->setChartDataCache($this->getPieHighchartHelper()->getChartData());
         }
 
-        return $this->getChartDataValue();
+        return $this->getChartDataCache();
     }
 
     /**
@@ -135,7 +135,9 @@ class Helper extends AbstractHelper
             $price += $row->getPrice();
         }
 
-        $newRows[] = $row->setPrice($price)->setItemName('Other Items');
+        if (isset($row)) {
+            $newRows[] = $row->setPrice($price)->setItemName('Other Items');
+        }
 
         return $newRows;
     }
@@ -145,7 +147,7 @@ class Helper extends AbstractHelper
      */
     public function getSortedGroups($full = true)
     {
-        if (null === $this->getSortedGroupsDataValue()) {
+        if (null === $this->getSortedGroupsDataCache()) {
             $groups = array();
             /** @var \Db\Db\ActiveRecord $row */
             foreach ($this->getTransactionsData() AS $row) {
@@ -158,10 +160,10 @@ class Helper extends AbstractHelper
             }
 
             arsort($groups, SORT_NUMERIC);
-            $this->setSortedGroupsDataValue(array_keys($groups));
+            $this->setSortedGroupsDataCache(array_keys($groups));
         }
 
-        $data = $this->getSortedGroupsDataValue();
+        $data = $this->getSortedGroupsDataCache();
 
         if (!$full) {
             $data = array_slice($data, 0, $this->_groupCount);
@@ -176,7 +178,7 @@ class Helper extends AbstractHelper
      */
     protected function getTransactionsData()
     {
-        return $this->getTransactionsDataValue();
+        return $this->getTransactionsDataCache();
     }
 
     /**
@@ -184,7 +186,7 @@ class Helper extends AbstractHelper
      */
     public function setTransactionsData(array $transactionsData)
     {
-        return $this->setTransactionsDataValue($transactionsData);
+        return $this->setTransactionsDataCache($transactionsData);
     }
 
 }
