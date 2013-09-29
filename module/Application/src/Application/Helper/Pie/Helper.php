@@ -3,19 +3,23 @@
 namespace Application\Helper\Pie;
 
 use Application\Helper\AbstractHelper;
-use HighchartsPHP\Highcharts as Highchart;
-use HighchartsPHP\HighchartsJsExpr as HighchartJsExpr;
 use Zend\Db\Sql\Select;
 use Zend\Http\PhpEnvironment\Request;
 
 
 /**
+ * Class Helper
+ *
+ * @package Application\Helper\Pie
+ *
  * @method \Zend\Http\PhpEnvironment\Request getRequest()
  * @method Helper setRequest(Request $request)
  * @method Helper setTransactionsDataValue(array $data)
  * @method Helper setSortedGroupsDataValue(array $data)
- * @method Helper setChartDataValue(array $data)
+ * @method Helper setChartDataValue(\HighchartsPHP\Highcharts $data)
  * @method Helper setGroupedDataValue(array $data)
+ * @method Helper setPieHighchartHelper(\Application\Helper\Pie\Highchart $data)
+ * @method \Application\Helper\Pie\Highchart getPieHighchartHelper()
  * @method array getTransactionsDataValue()
  * @method array getSortedGroupsDataValue()
  * @method array getChartDataValue()
@@ -23,12 +27,6 @@ use Zend\Http\PhpEnvironment\Request;
  */
 class Helper extends AbstractHelper
 {
-    /** @var int */
-    protected $_charDataIterator = 0;
-
-    /** @var \Highchart */
-    protected $_chartData;
-
     /** @var int */
     protected $_groupCount = 9;
 
@@ -77,7 +75,7 @@ class Helper extends AbstractHelper
                     $priceData[]  = round((float)$row->getPrice(), 2);
                     $categories[] = $row->getData('item_name');
                 }
-                $this->_setChartData($priceData, $categories);
+                $this->getPieHighchartHelper()->setChartData($priceData, $categories);
             }
 
             $priceDataTmp = $categoriesTmp = array();
@@ -107,46 +105,11 @@ class Helper extends AbstractHelper
             $priceData[] = $total;
             $categories[] = 'Other';
 
-
-                $this->_setChartData($priceData, $categories)
-                 ->setChartDataValue($this->_getHighchart());
+            $this->getPieHighchartHelper()->setChartData($priceData, $categories);
+            $this->setChartDataValue($this->getPieHighchartHelper()->getChartData());
         }
 
         return $this->getChartDataValue();
-    }
-
-    /**
-     * @param array  $priceData
-     * @param string $categories
-     * @param string $groupName
-     *
-     * @return $this
-     */
-    protected function _setChartData($priceData, $categories, $groupName = '')
-    {
-        $i = $this->_charDataIterator++;
-
-        $this->_chartData = $this->_getHighchart();
-        $this->_chartData[$i]->y                     = array_sum($priceData);
-        $this->_chartData[$i]->z                     = 'EUR';
-        $this->_chartData[$i]->color                 = new HighchartJsExpr('colors[' . $i . ']');
-        $this->_chartData[$i]->drilldown->name       = $groupName;
-        $this->_chartData[$i]->drilldown->categories = $categories;
-        $this->_chartData[$i]->drilldown->data       = $priceData;
-        $this->_chartData[$i]->drilldown->color      = new HighchartJsExpr('colors[0]');
-
-        return $this;
-    }
-
-    /**
-     * @return Highchart
-     */
-    private function _getHighchart()
-    {
-        if (null === $this->_chartData) {
-            $this->_chartData = new Highchart();
-        }
-        return $this->_chartData;
     }
 
     /**
@@ -175,35 +138,6 @@ class Helper extends AbstractHelper
         $newRows[] = $row->setPrice($price)->setItemName('Other Items');
 
         return $newRows;
-    }
-
-    /**
-     * @return \HighchartsPHP\Highcharts
-     */
-    public function getChart()
-    {
-        $chart = new Highchart();
-
-        $chart->chart->renderTo = 'container';
-        $chart->chart->type     = 'pie';
-        $chart->title->text     = 'Pie Chart';
-
-        $chart->plotOptions->pie->allowPointSelect = true;
-        $chart->plotOptions->pie->dataLabels->enabled = true;
-        $chart->plotOptions->pie->shadow = true;
-
-        $chart->series[0]->dataLabels->distance = -80;
-        $chart->series[0]->dataLabels->color = 'white';
-        $chart->series[0]->name      = 'EUR';
-        $chart->series[0]->data      = new HighchartJsExpr('primaryData');
-        $chart->series[0]->size      = '80%';
-
-        $chart->series[1]->dataLabels->enabled = false;
-        $chart->series[1]->name      = 'EUR';
-        $chart->series[1]->data      = new HighchartJsExpr('secondaryData');
-        $chart->series[1]->innerSize = '80%';
-
-        return $chart;
     }
 
     /**

@@ -3,6 +3,7 @@ namespace Application\Controller;
 
 use Application\Controller\AbstractActionController;
 use Application\Helper\Pie\Helper as PieHelper;
+use Application\Helper\Pie\Highchart as PieHighchartHelper;
 use Application\Helper\Month\Helper as MonthHelper;
 use Zend\Db\Sql\Select as Select;
 use Zend\Db\Sql\Where;
@@ -37,10 +38,11 @@ class PieController extends AbstractActionController
      */
     protected function init()
     {
-        $helper = new PieHelper();
+        $pieHelper = new PieHelper();
+        $pieHelper->setPieHighchartHelper(new PieHighchartHelper());
 
-        $this->setHelper($helper);
-        $helper->setTransactionsData($this->getTransactionsData());
+        $this->setHelper($pieHelper);
+        $pieHelper->setTransactionsData($this->getTransactionsData());
     }
 
     /**
@@ -49,7 +51,7 @@ class PieController extends AbstractActionController
     public function indexAction()
     {
         $this->getViewHelperPlugin('inlineScript')->appendScript(
-            $this->getHelper()->getChart()->render()
+            $this->getHelper()->getPieHighchartHelper()->getMainChart()->render()
         );
 
         return array(
