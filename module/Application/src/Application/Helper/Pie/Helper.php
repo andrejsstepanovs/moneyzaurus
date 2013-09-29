@@ -61,27 +61,47 @@ class Helper extends AbstractHelper
     {
         if (null === $this->getChartDataCache()) {
             $groupedData = $this->getGroupedData();
-            $sortedGroups = $this->getSortedGroups();
+            $sortedGroups = $this->getSortedGroups(true, 'name');
             $count = count($sortedGroups);
 
             if ($this->_groupCount > $count) {
                 $this->_groupCount = $count;
             }
 
+            // initial limited data
             for ($i = 0; $i < $this->_groupCount; $i++) {
                 $priceData = $categories = array();
                 $rows = $this->_compactItems($groupedData[$sortedGroups[$i]]);
                 foreach ($rows AS $row) {
                     $priceData[]  = round((float)$row->getPrice(), 2);
-                    $categories[] = $row->getData('item_name');
+
+                    $categories[] = array(
+                        'name'     => $row->getItemName(),
+                        'id_group' => $row->getIdGroup(),
+                        'id_item'  => $row->getIdItem(),
+                        'type'     => 'item'
+                    );
                 }
                 $this->getPieHighchartHelper()->setChartData($priceData, $categories);
             }
 
-            $priceDataTmp = $categoriesTmp = array();
+            // preparing other items data total price
+            $priceDataTmp = $groupsTmp = $categoriesIds = array();
             for ($i; $i < $count; $i++) {
                 $groupName = $sortedGroups[$i];
-                $categoriesTmp[] = $groupName;
+
+                $groupId = null;
+                foreach ($groupedData[$groupName] as $group) {
+                    $groupId = $group->getIdGroup();
+                    break;
+                }
+
+                $groupsTmp[] = array(
+                    'name'     => $groupName,
+                    'id_group' => $groupId,
+                    'id_item'  => 0,
+                    'type'     => 'group'
+                );
 
                 $total = 0;
                 foreach ($groupedData[$groupName] AS $row) {
@@ -91,21 +111,30 @@ class Helper extends AbstractHelper
                 $priceDataTmp[] = $total;
             }
 
-            $count = count($priceDataTmp);
+            // set rest items as groups
             $priceData = $categories = array();
             for ($i = 0; $i < $this->_otherGroupCount; $i++) {
                 $priceData[] = $priceDataTmp[$i];
-                $categories[] = $categoriesTmp[$i];
+                $categories[] = $groupsTmp[$i];
             }
 
+            // limit rest items as groups
             $total = 0;
+            $count = count($priceDataTmp);
             for ($i; $i < $count; $i++) {
                 $total += $priceDataTmp[$i];
             }
+
             $priceData[] = $total;
-            $categories[] = 'Other';
+            $categories[] = array(
+                'name'     => 'Other',
+                'id_group' => 0,
+                'id_item'  => 0,
+                'type'     => 'group'
+            );
 
             $this->getPieHighchartHelper()->setChartData($priceData, $categories);
+
             $this->setChartDataCache($this->getPieHighchartHelper()->getChartData());
         }
 
@@ -143,9 +172,12 @@ class Helper extends AbstractHelper
     }
 
     /**
+     * @param null|bool   $full
+     * @param null|string $selectKey
+     *
      * @return array
      */
-    public function getSortedGroups($full = true)
+    public function getSortedGroups($full = true, $selectKey = null)
     {
         if (null === $this->getSortedGroupsDataCache()) {
             $groups = array();
@@ -153,21 +185,42 @@ class Helper extends AbstractHelper
             foreach ($this->getTransactionsData() AS $row) {
                 $groupName = $row->getGroupName();
                 if (!array_key_exists($groupName, $groups)) {
-                    $groups[$groupName] = $row->getPrice();
+                    $groups[$groupName] = array(
+                        'name'  => $groupName,
+                        'id'    => $row->getIdGroup(),
+                        'price' => $row->getPrice()
+                    );
                 } else {
-                    $groups[$groupName] += $row->getPrice();
+                    $groups[$groupName]['price'] += $row->getPrice();
                 }
             }
 
-            arsort($groups, SORT_NUMERIC);
-            $this->setSortedGroupsDataCache(array_keys($groups));
+            uasort($groups, function($a, $b){return intval($b['price'] - $a['price']);});
+
+            $this->setSortedGroupsDataCache(array_values($groups));
         }
 
         $data = $this->getSortedGroupsDataCache();
 
         if (!$full) {
             $data = array_slice($data, 0, $this->_groupCount);
-            $data[] = 'Other Groups';
+            $data[] = array(
+                'name'  => 'Other Groups',
+                'id'    => 0,
+                'price' => 0
+            );
+        }
+
+        if (null !== $selectKey) {
+            $return = array();
+            foreach ($data as $groupData) {
+                foreach ($groupData as $key => $val) {
+                    if ($selectKey == $key) {
+                        $return[] = $val;
+                    }
+                }
+            }
+            return $return;
         }
 
         return $data;

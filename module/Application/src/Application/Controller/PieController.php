@@ -56,8 +56,9 @@ class PieController extends AbstractActionController
 
         return array(
             'chartData'  => $this->getHelper()->getChartData(),
-            'groupNames' => $this->getHelper()->getSortedGroups(false),
-            'form' => $this->getForm()
+            'groupNames' => $this->getHelper()->getSortedGroups(false, 'name'),
+            'groupIds'   => $this->getHelper()->getSortedGroups(false, 'id'),
+            'form'       => $this->getForm()
         );
     }
 

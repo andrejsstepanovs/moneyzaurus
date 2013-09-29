@@ -40,18 +40,13 @@ class Highchart extends AbstractHelper
         $chart->series[0]->size      = '80%';
         $chart->series[0]->point->events->click = new HighchartJsExpr(
             'function (e) {
-                console.log(this.name);
                 console.log(this);
             }'
         );
 
         $chart->series[1]->point->events->click = new HighchartJsExpr(
             'function (e) {
-                var parentSerie = this.options.parentId;
-                console.log(parentSerie);
-                console.log(this.name);
                 console.log(this);
-                //pieChartSliceSelected();
             }'
         );
         $chart->series[1]->dataLabels->enabled = false;
@@ -63,27 +58,36 @@ class Highchart extends AbstractHelper
     }
 
     /**
-     * @param array  $priceData
-     * @param string $categories
-     * @param string $groupName
+     * @param array $priceData
+     * @param array $data
      *
      * @return $this
      */
-    public function setChartData($priceData, $categories)
+    public function setChartData(array $priceData, array $data)
     {
         $i = $this->_charDataIterator++;
 
         if (null === $this->_chart) {
             $this->_chart = new Highcharts();
         }
-        $this->_chart[$i]->y                     = array_sum($priceData);
-        $this->_chart[$i]->z                     = 'EUR';
-        $this->_chart[$i]->color                 = new HighchartJsExpr('colors[' . $i . ']');
-        $this->_chart[$i]->drilldown->name       = '';
-        $this->_chart[$i]->drilldown->categories = array_values($categories);
-        $this->_chart[$i]->drilldown->data       = $priceData;
-        $this->_chart[$i]->drilldown->color      = new HighchartJsExpr('colors[0]');
-        $this->_chart[$i]->drilldown->ids        = array_keys($categories);
+
+        $itemNames = $groupIds = $itemIds = $types = array();
+        foreach ($data as $itemData) {
+            $itemNames[] = $itemData['name'];
+            $groupIds[]  = $itemData['id_group'];
+            $itemIds[]   = $itemData['id_item'];
+            $types[]     = $itemData['type'];
+        }
+
+        $this->_chart[$i]->color            = new HighchartJsExpr('colors[' . $i . ']');
+        $this->_chart[$i]->drilldown->color = new HighchartJsExpr('colors[0]');
+        $this->_chart[$i]->y                = array_sum($priceData);
+        $this->_chart[$i]->z                = 'EUR';
+        $this->_chart[$i]->drilldown->data  = $priceData;
+        $this->_chart[$i]->drilldown->items = $itemNames;
+        $this->_chart[$i]->drilldown->id_groups = $groupIds;
+        $this->_chart[$i]->drilldown->id_items = $itemIds;
+        $this->_chart[$i]->drilldown->types  = $types;
 
         return $this;
     }
