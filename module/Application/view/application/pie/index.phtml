@@ -48,6 +48,8 @@ echo $this->form()->closeTag();
         categories = <?php echo json_encode($this->groupNames); ?>,
         data       = <?php echo $this->chartData->renderOptions(); ?>;
 
+    console.log(data);
+
     var primaryData   = [];
     var secondaryData = [];
 
@@ -55,6 +57,7 @@ echo $this->form()->closeTag();
 
         primaryData.push({
             name  : categories[i],
+            type  : "group",
             y     : data[i].y,
             color : data[i].color
         });
@@ -63,8 +66,10 @@ echo $this->form()->closeTag();
             var brightness = 0.2 - (j / data[i].drilldown.data.length) / 5;
             secondaryData.push({
                 name  : data[i].drilldown.categories[j],
+                type  : "item",
                 y     : data[i].drilldown.data[j],
-                color : Highcharts.Color(data[i].color).brighten(brightness).get()
+                color : Highcharts.Color(data[i].color).brighten(brightness).get(),
+                id    : data[i].drilldown.ids[j]
             });
         }
     }
