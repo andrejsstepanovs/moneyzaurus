@@ -18,22 +18,26 @@
       <library name="PHARS">
         <CLASSES>
           <root url="phar://$MODULE_DIR$/vendor/zendframework/zendframework/tests/ZendTest/View/_templates/view.phar" />
+          <root url="phar://$MODULE_DIR$/vendor/wormhit/InstallScripts/composer.phar" />
           <root url="phar://$MODULE_DIR$/vendor/zendframework/zendframework/tests/ZendTest/Loader/_files/PharModulePharZip.phar.zip" />
           <root url="phar://$MODULE_DIR$/vendor/zendframework/zendframework/tests/ZendTest/Loader/_files/PharModuleMap.phar" />
           <root url="phar://$MODULE_DIR$/vendor/zendframework/zendframework/tests/ZendTest/Loader/_files/PharModulePharTarGz.phar.tar.gz" />
           <root url="phar://$MODULE_DIR$/vendor/zendframework/zendframework/tests/ZendTest/Loader/_files/PharModule.phar" />
           <root url="phar://$MODULE_DIR$/vendor/zendframework/zendframework/tests/ZendTest/Loader/_files/classmap.phar" />
           <root url="phar://$MODULE_DIR$/vendor/zendframework/zendframework/tests/ZendTest/Loader/_files/PharModuleExplicit.phar" />
+          <root url="phar://$MODULE_DIR$/composer.phar" />
           <root url="phar://$MODULE_DIR$/vendor/zendframework/zendframework/tests/ZendTest/Loader/_files/PharModulePharTar.phar.tar" />
         </CLASSES>
         <SOURCES>
           <root url="phar://$MODULE_DIR$/vendor/zendframework/zendframework/tests/ZendTest/View/_templates/view.phar" />
+          <root url="phar://$MODULE_DIR$/vendor/wormhit/InstallScripts/composer.phar" />
           <root url="phar://$MODULE_DIR$/vendor/zendframework/zendframework/tests/ZendTest/Loader/_files/PharModulePharZip.phar.zip" />
           <root url="phar://$MODULE_DIR$/vendor/zendframework/zendframework/tests/ZendTest/Loader/_files/PharModuleMap.phar" />
           <root url="phar://$MODULE_DIR$/vendor/zendframework/zendframework/tests/ZendTest/Loader/_files/PharModulePharTarGz.phar.tar.gz" />
           <root url="phar://$MODULE_DIR$/vendor/zendframework/zendframework/tests/ZendTest/Loader/_files/PharModule.phar" />
           <root url="phar://$MODULE_DIR$/vendor/zendframework/zendframework/tests/ZendTest/Loader/_files/classmap.phar" />
           <root url="phar://$MODULE_DIR$/vendor/zendframework/zendframework/tests/ZendTest/Loader/_files/PharModuleExplicit.phar" />
+          <root url="phar://$MODULE_DIR$/composer.phar" />
           <root url="phar://$MODULE_DIR$/vendor/zendframework/zendframework/tests/ZendTest/Loader/_files/PharModulePharTar.phar.tar" />
         </SOURCES>
       </library>
