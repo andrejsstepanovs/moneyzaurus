@@ -55,6 +55,27 @@ class Helper extends AbstractHelper
     }
 
     /**
+     * @return string
+     */
+    public function renderChart()
+    {
+        $groupName = $this->getSortedGroups(false, 'name');
+        $groupIds  = $this->getSortedGroups(false, 'id');
+
+        $html = array();
+        $html[] = 'var primaryData = [];';
+        $html[] = 'var secondaryData = [];';
+        $html[] = 'var colors = Highcharts.getOptions().colors;';
+        $html[] = 'var groups = ' . json_encode($groupName) . ';';
+        $html[] = 'var groupIds = ' . json_encode($groupIds) . ';';
+        $html[] = 'var data = ' . $this->getChartData()->renderOptions() . ';';
+        $html[] = 'renderChart(data, groups, groupIds);';
+
+        $script = $this->getPieHighchartHelper()->getMainChart()->renderChart(implode('', $html));
+        return $script;
+    }
+
+    /**
      * @return Highchart
      */
     public function getChartData()

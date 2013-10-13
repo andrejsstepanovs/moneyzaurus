@@ -42,7 +42,7 @@ return array(
             'pie' => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/pie',
+                    'route'    => '/pie[/:action]',
                     'defaults' => array(
                         'controller' => 'Application\Controller\Pie',
                         'action'     => 'index',

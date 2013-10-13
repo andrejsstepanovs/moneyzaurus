@@ -50,16 +50,24 @@ class PieController extends AbstractActionController
      */
     public function indexAction()
     {
-        $this->getViewHelperPlugin('inlineScript')->appendScript(
-            $this->getHelper()->getPieHighchartHelper()->getMainChart()->render()
-        );
+        $script = $this->getHelper()->renderChart();
+
+        $this->getViewHelperPlugin('inlineScript')->appendScript($script);
 
         return array(
-            'chartData'  => $this->getHelper()->getChartData(),
-            'groupNames' => $this->getHelper()->getSortedGroups(false, 'name'),
-            'groupIds'   => $this->getHelper()->getSortedGroups(false, 'id'),
-            'form'       => $this->getForm()
+            'form' => $this->getForm()
         );
+    }
+
+    public function ajaxAction()
+    {
+        $response = $this->getResponse();
+
+        $data = array('success' => 1);
+
+        $response->setContent(\Zend\Json\Json::encode($data));
+
+        return $response;
     }
 
     /**

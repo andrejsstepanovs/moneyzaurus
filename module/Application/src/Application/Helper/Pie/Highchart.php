@@ -38,23 +38,41 @@ class Highchart extends AbstractHelper
         $chart->series[0]->name                 = 'EUR';
         $chart->series[0]->data                 = new HighchartJsExpr('primaryData');
         $chart->series[0]->size                 = '80%';
-        $chart->series[0]->point->events->click = new HighchartJsExpr(
-            'function (e) {
-                console.log(this);
-            }'
-        );
+        $chart->series[0]->point->events->click = new HighchartJsExpr($this->_getSubPieChartJs());
 
-        $chart->series[1]->point->events->click = new HighchartJsExpr(
-            'function (e) {
-                console.log(this);
-            }'
-        );
+        $chart->series[1]->point->events->click = new HighchartJsExpr($this->_getSubPieChartJs());
         $chart->series[1]->dataLabels->enabled = false;
         $chart->series[1]->name                = 'EUR';
         $chart->series[1]->data                = new HighchartJsExpr('secondaryData');
         $chart->series[1]->innerSize           = '80%';
 
         return $chart;
+    }
+
+    protected function _getSubPieChartJs()
+    {
+        return 'function (e) {
+            var url = "pie/ajax";
+
+            console.log(this.id_item);
+            console.log(this);
+
+            var data = {
+                "id":       this.id,
+                "type":     this.type,
+                "id_item":  this.id_item,
+                "id_group": this.id_group
+            };
+
+            $.ajax({
+                url:      url,
+                data:     data,
+                success:  function (event) {
+                    console.log(event);
+                }
+                /* ,dataType: dataType */
+            });
+        }';
     }
 
     /**
