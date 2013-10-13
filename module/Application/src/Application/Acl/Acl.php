@@ -11,7 +11,7 @@ use Application\Exception;
 use Zend\Console\Request as ConsoleRequest;
 
 
-class Acl //implements ServiceManagerAwareInterface//, EventManagerAwareInterface
+class Acl
 {
     /** @var \Zend\ServiceManager\ServiceManager */
     protected $serviceManager;
@@ -38,7 +38,7 @@ class Acl //implements ServiceManagerAwareInterface//, EventManagerAwareInterfac
 
     /**
      * @param \Zend\Mvc\MvcEvent $eventManager
-     * @return \Application\EventManager\Acl
+     * @return $this
      */
     public function setMvcEvent(MvcEvent $eventManager)
     {
@@ -74,7 +74,7 @@ class Acl //implements ServiceManagerAwareInterface//, EventManagerAwareInterfac
 
     /**
      * @param \Zend\ServiceManager\ServiceManager $serviceManager
-     * @return \Application\EventManager\Acl
+     * @return $this
      */
     public function setServiceManager(ServiceManager $serviceManager)
     {
@@ -84,7 +84,7 @@ class Acl //implements ServiceManagerAwareInterface//, EventManagerAwareInterfac
 
     /**
      * @param array $config
-     * @return \Application\EventManager\Acl
+     * @return $this
      */
     public function setAclConfig(array $config)
     {
@@ -109,7 +109,7 @@ class Acl //implements ServiceManagerAwareInterface//, EventManagerAwareInterfac
 
     /**
      * @param \Zend\Permissions\Acl\Acl $acl
-     * @return \Application\EventManager\Acl
+     * @return $this
      */
     public function setAcl(ZendAcl $acl)
     {

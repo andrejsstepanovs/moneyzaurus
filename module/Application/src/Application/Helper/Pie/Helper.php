@@ -114,7 +114,7 @@ class Helper extends AbstractHelper
             // set rest items as groups
             $priceData = $categories = array();
             for ($i = 0; $i < $this->_otherGroupCount; $i++) {
-                $priceData[] = $priceDataTmp[$i];
+                $priceData[]  = $priceDataTmp[$i];
                 $categories[] = $groupsTmp[$i];
             }
 

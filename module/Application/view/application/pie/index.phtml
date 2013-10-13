@@ -27,8 +27,8 @@ $formElementErrors = $this->formElementErrors($element);
     if ($formElementErrors) {
         ?>
         <span class="help-inline">
-                <?php echo $formElementErrors; ?>
-            </span>
+            <?php echo $formElementErrors; ?>
+        </span>
     <?php
     }
     ?>
@@ -67,10 +67,10 @@ echo $this->form()->closeTag();
         for (var j = 0; j < data[i].drilldown.data.length; j++) {
             var brightness = 0.2 - (j / data[i].drilldown.data.length) / 5;
             secondaryData.push({
-                name  : data[i].drilldown.items[j],
-                type  : data[i].drilldown.types[j],
-                y     : data[i].drilldown.data[j],
-                color : Highcharts.Color(data[i].color).brighten(brightness).get(),
+                name     : data[i].drilldown.items[j],
+                type     : data[i].drilldown.types[j],
+                y        : data[i].drilldown.data[j],
+                color    : Highcharts.Color(data[i].color).brighten(brightness).get(),
                 id_group : data[i].drilldown.id_groups[j],
                 id_item  : data[i].drilldown.id_items[j]
             });

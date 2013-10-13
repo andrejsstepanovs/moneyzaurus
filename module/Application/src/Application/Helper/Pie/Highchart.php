@@ -34,10 +34,10 @@ class Highchart extends AbstractHelper
         $chart->plotOptions->pie->shadow = true;
 
         $chart->series[0]->dataLabels->distance = -80;
-        $chart->series[0]->dataLabels->color = 'white';
-        $chart->series[0]->name      = 'EUR';
-        $chart->series[0]->data      = new HighchartJsExpr('primaryData');
-        $chart->series[0]->size      = '80%';
+        $chart->series[0]->dataLabels->color    = 'white';
+        $chart->series[0]->name                 = 'EUR';
+        $chart->series[0]->data                 = new HighchartJsExpr('primaryData');
+        $chart->series[0]->size                 = '80%';
         $chart->series[0]->point->events->click = new HighchartJsExpr(
             'function (e) {
                 console.log(this);
@@ -50,9 +50,9 @@ class Highchart extends AbstractHelper
             }'
         );
         $chart->series[1]->dataLabels->enabled = false;
-        $chart->series[1]->name      = 'EUR';
-        $chart->series[1]->data      = new HighchartJsExpr('secondaryData');
-        $chart->series[1]->innerSize = '80%';
+        $chart->series[1]->name                = 'EUR';
+        $chart->series[1]->data                = new HighchartJsExpr('secondaryData');
+        $chart->series[1]->innerSize           = '80%';
 
         return $chart;
     }
@@ -79,15 +79,15 @@ class Highchart extends AbstractHelper
             $types[]     = $itemData['type'];
         }
 
-        $this->_chart[$i]->color            = new HighchartJsExpr('colors[' . $i . ']');
-        $this->_chart[$i]->drilldown->color = new HighchartJsExpr('colors[0]');
-        $this->_chart[$i]->y                = array_sum($priceData);
-        $this->_chart[$i]->z                = 'EUR';
-        $this->_chart[$i]->drilldown->data  = $priceData;
-        $this->_chart[$i]->drilldown->items = $itemNames;
+        $this->_chart[$i]->color                = new HighchartJsExpr('colors[' . $i . ']');
+        $this->_chart[$i]->drilldown->color     = new HighchartJsExpr('colors[0]');
+        $this->_chart[$i]->y                    = array_sum($priceData);
+        $this->_chart[$i]->z                    = 'EUR';
+        $this->_chart[$i]->drilldown->data      = $priceData;
+        $this->_chart[$i]->drilldown->items     = $itemNames;
         $this->_chart[$i]->drilldown->id_groups = $groupIds;
-        $this->_chart[$i]->drilldown->id_items = $itemIds;
-        $this->_chart[$i]->drilldown->types  = $types;
+        $this->_chart[$i]->drilldown->id_items  = $itemIds;
+        $this->_chart[$i]->drilldown->types     = $types;
 
         return $this;
     }
