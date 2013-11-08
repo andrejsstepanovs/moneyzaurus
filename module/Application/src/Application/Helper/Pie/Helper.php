@@ -65,17 +65,24 @@ class Helper extends AbstractHelper
         $groupName = $this->getSortedGroups(false, 'name');
         $groupIds  = $this->getSortedGroups(false, 'id');
 
+        $prefix = uniqid('a') . '_';
         $html = array();
-        $html[] = 'var primaryData = [];';
-        $html[] = 'var secondaryData = [];';
+        $html[] = 'var ' . $prefix . 'primaryData = [];';
+        $html[] = 'var ' . $prefix . 'secondaryData = [];';
         $html[] = 'var colors = Highcharts.getOptions().colors;';
-        $html[] = 'var groups = ' . json_encode($groupName) . ';';
-        $html[] = 'var groupIds = ' . json_encode($groupIds) . ';';
-        $html[] = 'var data = ' . $this->getChartData()->renderOptions() . ';';
-        $html[] = 'renderChart(data, groups, groupIds);';
+        $html[] = 'var ' . $prefix . 'groups = ' . json_encode($groupName) . ';';
+        $html[] = 'var ' . $prefix . 'groupIds = ' . json_encode($groupIds) . ';';
+        $html[] = 'var ' . $prefix . 'data = ' . $this->getChartData()->renderOptions() . ';';
+        $html[] = 'renderChart(
+            ' . $prefix . 'data,
+            ' . $prefix . 'groups,
+            ' . $prefix . 'groupIds,
+            ' . $prefix . 'primaryData,
+            ' . $prefix . 'secondaryData
+        );';
 
         $script = $this->getPieHighchartHelper()
-            ->getMainChart($elementId, $parameters)
+            ->getMainChart($elementId, $prefix, $parameters)
             ->renderChart(implode('', $html));
 
         return $script;

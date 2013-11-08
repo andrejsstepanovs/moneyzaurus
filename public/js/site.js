@@ -10,10 +10,9 @@ $(document).bind("mobileinit", function(){
     }
 });
 
-function renderChart(data, groups, groupIds)
+function renderChart(data, groups, groupIds, primaryData, secondaryData)
 {
     for (var i = 0; i < data.length; i++) {
-
         primaryData.push({
             name  : groups[i],
             id    : groupIds[i],

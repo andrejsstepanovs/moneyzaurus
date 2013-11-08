@@ -20,11 +20,12 @@ class Highchart extends AbstractHelper
 
     /**
      * @param string     $elementId  html element id
+     * @param string     $prefix
      * @param null|array $parameters
      *
      * @return \HighchartsPHP\Highcharts
      */
-    public function getMainChart($elementId, array $parameters = null)
+    public function getMainChart($elementId, $prefix, array $parameters = null)
     {
         $chart = new Highcharts();
 
@@ -39,14 +40,14 @@ class Highchart extends AbstractHelper
         $chart->series[0]->dataLabels->distance = -80;
         $chart->series[0]->dataLabels->color    = 'white';
         $chart->series[0]->name                 = 'EUR';
-        $chart->series[0]->data                 = new HighchartJsExpr('primaryData');
+        $chart->series[0]->data                 = new HighchartJsExpr($prefix . 'primaryData');
         $chart->series[0]->size                 = '80%';
         $chart->series[0]->point->events->click = new HighchartJsExpr($this->_getSubPieChartJs($parameters));
 
         $chart->series[1]->point->events->click = new HighchartJsExpr($this->_getSubPieChartJs($parameters));
         $chart->series[1]->dataLabels->enabled = false;
         $chart->series[1]->name                = 'EUR';
-        $chart->series[1]->data                = new HighchartJsExpr('secondaryData');
+        $chart->series[1]->data                = new HighchartJsExpr($prefix . 'secondaryData');
         $chart->series[1]->innerSize           = '80%';
 
         return $chart;
@@ -83,7 +84,6 @@ class Highchart extends AbstractHelper
                 .done (function(json) {
                     if (json.success) {
                         jQuery.globalEval(json.script);
-                        //eval(json.script);
                     }
                 })
                 .fail (function(jqxhr, textStatus, error) {

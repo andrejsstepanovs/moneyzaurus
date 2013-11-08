@@ -65,16 +65,18 @@ class PieController extends AbstractActionController
         );
     }
 
+    /**
+     * @return \Zend\Stdlib\ResponseInterface
+     */
     public function ajaxAction()
     {
-        $response = $this->getResponse();
-
         $script = $this->getHelper()->renderChart('ajax');
         $data = array(
             'success' => 1,
             'script'  => $script
         );
 
+        $response = $this->getResponse();
         $response->setContent(\Zend\Json\Json::encode($data));
 
         return $response;
