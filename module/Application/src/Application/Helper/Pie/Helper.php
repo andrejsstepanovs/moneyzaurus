@@ -134,27 +134,30 @@ class Helper extends AbstractHelper
 
             // set rest items as groups
             $priceData = $categories = array();
-            for ($i = 0; $i < $this->_otherGroupCount; $i++) {
-                $priceData[]  = $priceDataTmp[$i];
-                $categories[] = $groupsTmp[$i];
+
+            if (!empty($priceDataTmp)) {
+                for ($i = 0; $i < $this->_otherGroupCount; $i++) {
+                    //if (array_key_exists($i, ))
+                    $priceData[]  = $priceDataTmp[$i];
+                    $categories[] = $groupsTmp[$i];
+                }
+
+                // limit rest items as groups
+                $total = 0;
+                $count = count($priceDataTmp);
+                for ($i; $i < $count; $i++) {
+                    $total += $priceDataTmp[$i];
+                }
+
+                $priceData[] = $total;
+                $categories[] = array(
+                    'name'     => 'Other',
+                    'id_group' => 0,
+                    'id_item'  => 0,
+                    'type'     => 'group'
+                );
+                $this->getPieHighchartHelper()->setChartData($priceData, $categories);
             }
-
-            // limit rest items as groups
-            $total = 0;
-            $count = count($priceDataTmp);
-            for ($i; $i < $count; $i++) {
-                $total += $priceDataTmp[$i];
-            }
-
-            $priceData[] = $total;
-            $categories[] = array(
-                'name'     => 'Other',
-                'id_group' => 0,
-                'id_item'  => 0,
-                'type'     => 'group'
-            );
-
-            $this->getPieHighchartHelper()->setChartData($priceData, $categories);
 
             $this->setChartDataCache($this->getPieHighchartHelper()->getChartData());
         }
@@ -223,7 +226,7 @@ class Helper extends AbstractHelper
 
         $data = $this->getSortedGroupsDataCache();
 
-        if (!$full) {
+        if (!$full && count($data) > $this->_groupCount) {
             $data = array_slice($data, 0, $this->_groupCount);
             $data[] = array(
                 'name'  => 'Other Groups',

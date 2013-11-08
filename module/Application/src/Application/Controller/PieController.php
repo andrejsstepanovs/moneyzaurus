@@ -134,7 +134,9 @@ class PieController extends AbstractActionController
      */
     private function applyTransactionSelectFilters(Select $select)
     {
-        $where = array();
+        /** @var \Zend\Http\PhpEnvironment\Request $request */
+        $request = $this->getRequest();
+        $query = $request->getQuery();
 
         $month = $this->getMonthHelper()->getMonthRequestValue();
 
@@ -142,11 +144,33 @@ class PieController extends AbstractActionController
         $monthDateTimeFrom = date('Y-m-d H:i:s', $timestamp);
         $monthDateTimeTill = date('Y-m-d', strtotime($month . '-' . date('t', $timestamp))) . ' 23:59:59';
 
-        $where[] = $this->getWhere()
-                   ->between('date', $monthDateTimeFrom, $monthDateTimeTill);
+        $where = array(
+            $this->getWhere()->between('date', $monthDateTimeFrom, $monthDateTimeTill),
+            $this->getWhere()->expression('t.price > ?', 0)
+        );
 
-        $where[] = $this->getWhere()
-                   ->expression('t.price > ?', 0);
+        $name = $query->get('name');
+        switch ($query->get('type')) {
+            case 'group':
+                $idGroup = $query->get('id');
+                if (!empty($idGroup)) {
+                    $where[] = $this->getWhere()->expression('t.id_group = ?', $idGroup);
+                }
+                break;
+            case 'item':
+                $idItem  = $query->get('id_item');
+                $idGroup = $query->get('id_group');
+                if (!empty($idItem)) {
+                    $where[] = $this->getWhere()->expression('t.id_item = ?', $idItem);
+                }
+                if (!empty($idGroup)) {
+                    $where[] = $this->getWhere()->expression('t.id_group = ?', $idGroup);
+                }
+                break;
+            default:
+
+                break;
+        }
 
         $select->where($where);
 
