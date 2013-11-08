@@ -55,12 +55,13 @@ class Helper extends AbstractHelper
     }
 
     /**
+     * @param string     $title
      * @param string     $elementId  html element id
      * @param null|array $parameters
      *
      * @return string
      */
-    public function renderChart($elementId, array $parameters = null)
+    public function renderChart($title, $elementId, array $parameters = null)
     {
         $groupName = $this->getSortedGroups(false, 'name');
         $groupIds  = $this->getSortedGroups(false, 'id');
@@ -82,7 +83,7 @@ class Helper extends AbstractHelper
         );';
 
         $script = $this->getPieHighchartHelper()
-            ->getMainChart($elementId, $prefix, $parameters)
+            ->getMainChart($title, $elementId, $prefix, $parameters)
             ->renderChart(implode('', $html));
 
         return $script;

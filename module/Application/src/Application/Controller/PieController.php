@@ -54,7 +54,11 @@ class PieController extends AbstractActionController
             'month' => $this->getMonthHelper()->getMonthRequestValue()
         );
 
-        $script = $this->getHelper()->renderChart('container', $parameters);
+        $script = $this->getHelper()->renderChart(
+            $this->getPieChartTitle(),
+            'container',
+            $parameters
+        );
 
         /** @var \Zend\View\Helper\InlineScript $inlineScript */
         $inlineScript = $this->getViewHelperPlugin('inlineScript');
@@ -70,7 +74,16 @@ class PieController extends AbstractActionController
      */
     public function ajaxAction()
     {
-        $script = $this->getHelper()->renderChart('ajax');
+        $parameters = array(
+            'month' => $this->getMonthHelper()->getMonthRequestValue()
+        );
+
+        $script = $this->getHelper()->renderChart(
+            $this->getPieChartTitle(),
+            'ajax',
+            $parameters
+        );
+
         $data = array(
             'success' => 1,
             'script'  => $script
@@ -149,8 +162,7 @@ class PieController extends AbstractActionController
         $query = $request->getQuery();
 
         $month = $this->getMonthHelper()->getMonthRequestValue();
-//var_dump($month);
-//        die();
+
         $timestamp = strtotime($month . '-01');
         $monthDateTimeFrom = date('Y-m-d H:i:s', $timestamp);
         $monthDateTimeTill = date('Y-m-d', strtotime($month . '-' . date('t', $timestamp))) . ' 23:59:59';
@@ -209,5 +221,20 @@ class PieController extends AbstractActionController
         /** @var $transactionsResuls \Zend\Db\ResultSet\HydratingResultSet */
         $transactionsResuls = $table->fetch($select);
         return $transactionsResuls;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPieChartTitle()
+    {
+        /** @var \Zend\Http\PhpEnvironment\Request $request */
+        $request = $this->getRequest();
+        $query = $request->getQuery();
+        $name = $query->get('name', 'Pie Chart');
+
+        $name = $this->getEscaper()->escapeHtml($name);
+
+        return $name;
     }
 }

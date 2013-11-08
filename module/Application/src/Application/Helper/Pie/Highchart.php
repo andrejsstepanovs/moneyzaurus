@@ -19,19 +19,20 @@ class Highchart extends AbstractHelper
     protected $_charDataIterator = 0;
 
     /**
+     * @param string     $title
      * @param string     $elementId  html element id
      * @param string     $prefix
      * @param null|array $parameters
      *
      * @return \HighchartsPHP\Highcharts
      */
-    public function getMainChart($elementId, $prefix, array $parameters = null)
+    public function getMainChart($title, $elementId, $prefix, array $parameters = null)
     {
         $chart = new Highcharts();
 
         $chart->chart->renderTo = $elementId;
         $chart->chart->type     = 'pie';
-        $chart->title->text     = 'Pie Chart';
+        $chart->title->text     = $title;
 
         $chart->plotOptions->pie->allowPointSelect = true;
         $chart->plotOptions->pie->dataLabels->enabled = true;
@@ -74,10 +75,6 @@ class Highchart extends AbstractHelper
 
         return 'function (e) {
             var url = "pie/ajax";
-
-            console.log(this.id_item);
-            console.log(this);
-
             var data = ' . $jsonData . ';
 
             $.getJSON(url, data)

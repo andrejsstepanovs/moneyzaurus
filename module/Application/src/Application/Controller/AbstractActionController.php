@@ -7,6 +7,7 @@ use Db\Db\ActiveRecord;
 use Application\Helper\AbstractHelper;
 use Zend\Mvc\Exception;
 use Zend\Mvc\MvcEvent;
+use Zend\Escaper\Escaper;
 
 
 class AbstractActionController extends ZendAbstractActionController
@@ -25,6 +26,9 @@ class AbstractActionController extends ZendAbstractActionController
 
     /** @var \Zend\View\HelperPluginManager */
     protected $viewHelper;
+
+    /** @var Escaper */
+    protected $escaper;
 
     /** @var array */
     protected $viewHelperPlugin = array();
@@ -197,6 +201,18 @@ class AbstractActionController extends ZendAbstractActionController
         }
 
         return $this->viewHelperPlugin[$plugin];
+    }
+
+    /**
+     * @return Escaper
+     */
+    protected function getEscaper()
+    {
+        if (null === $this->escaper) {
+            $this->escaper = new Escaper();
+        }
+
+        return $this->escaper;
     }
 
 }
