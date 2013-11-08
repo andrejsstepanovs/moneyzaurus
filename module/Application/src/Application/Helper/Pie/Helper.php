@@ -55,9 +55,12 @@ class Helper extends AbstractHelper
     }
 
     /**
+     * @param string     $elementId  html element id
+     * @param null|array $parameters
+     *
      * @return string
      */
-    public function renderChart()
+    public function renderChart($elementId, array $parameters = null)
     {
         $groupName = $this->getSortedGroups(false, 'name');
         $groupIds  = $this->getSortedGroups(false, 'id');
@@ -71,12 +74,15 @@ class Helper extends AbstractHelper
         $html[] = 'var data = ' . $this->getChartData()->renderOptions() . ';';
         $html[] = 'renderChart(data, groups, groupIds);';
 
-        $script = $this->getPieHighchartHelper()->getMainChart()->renderChart(implode('', $html));
+        $script = $this->getPieHighchartHelper()
+            ->getMainChart($elementId, $parameters)
+            ->renderChart(implode('', $html));
+
         return $script;
     }
 
     /**
-     * @return Highchart
+     * @return \HighchartsPHP\Highcharts
      */
     public function getChartData()
     {

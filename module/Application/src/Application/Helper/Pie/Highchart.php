@@ -19,13 +19,16 @@ class Highchart extends AbstractHelper
     protected $_charDataIterator = 0;
 
     /**
+     * @param string     $elementId  html element id
+     * @param null|array $parameters
+     *
      * @return \HighchartsPHP\Highcharts
      */
-    public function getMainChart()
+    public function getMainChart($elementId, array $parameters = null)
     {
         $chart = new Highcharts();
 
-        $chart->chart->renderTo = 'container';
+        $chart->chart->renderTo = $elementId;
         $chart->chart->type     = 'pie';
         $chart->title->text     = 'Pie Chart';
 
@@ -38,9 +41,9 @@ class Highchart extends AbstractHelper
         $chart->series[0]->name                 = 'EUR';
         $chart->series[0]->data                 = new HighchartJsExpr('primaryData');
         $chart->series[0]->size                 = '80%';
-        $chart->series[0]->point->events->click = new HighchartJsExpr($this->_getSubPieChartJs());
+        $chart->series[0]->point->events->click = new HighchartJsExpr($this->_getSubPieChartJs($parameters));
 
-        $chart->series[1]->point->events->click = new HighchartJsExpr($this->_getSubPieChartJs());
+        $chart->series[1]->point->events->click = new HighchartJsExpr($this->_getSubPieChartJs($parameters));
         $chart->series[1]->dataLabels->enabled = false;
         $chart->series[1]->name                = 'EUR';
         $chart->series[1]->data                = new HighchartJsExpr('secondaryData');
@@ -49,29 +52,44 @@ class Highchart extends AbstractHelper
         return $chart;
     }
 
-    protected function _getSubPieChartJs()
+    /**
+     * @param null|array $parameters
+     *
+     * @return string
+     */
+    protected function _getSubPieChartJs(array $parameters = null)
     {
+        $defaultParameters = array(
+            'id'       => 'this.id',
+            'type'     => 'this.type',
+            'id_item'  => 'this.id_item',
+            'id_group' => 'this.id_group'
+        );
+        if ($parameters) {
+            $defaultParameters = array_merge($parameters, $defaultParameters);
+        }
+
+        $jsonData = json_encode($defaultParameters);
+
         return 'function (e) {
             var url = "pie/ajax";
 
             console.log(this.id_item);
             console.log(this);
 
-            var data = {
-                "id":       this.id,
-                "type":     this.type,
-                "id_item":  this.id_item,
-                "id_group": this.id_group
-            };
+            var data = ' . $jsonData . ';
 
-            $.ajax({
-                url:      url,
-                data:     data,
-                success:  function (event) {
-                    console.log(event);
-                }
-                /* ,dataType: dataType */
-            });
+            $.getJSON(url, data)
+                .done (function(json) {
+                    if (json.success) {
+                        jQuery.globalEval(json.script);
+                        //eval(json.script);
+                    }
+                })
+                .fail (function(jqxhr, textStatus, error) {
+                    var err = textStatus + ", " + error;
+                    console.log("Request Failed: " + err);
+                });
         }';
     }
 

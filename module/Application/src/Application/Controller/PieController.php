@@ -50,7 +50,11 @@ class PieController extends AbstractActionController
      */
     public function indexAction()
     {
-        $script = $this->getHelper()->renderChart();
+        $parameters = array(
+            'month' => $this->getMonthHelper()->getMonthRequestValue()
+        );
+
+        $script = $this->getHelper()->renderChart('container', $parameters);
 
         /** @var \Zend\View\Helper\InlineScript $inlineScript */
         $inlineScript = $this->getViewHelperPlugin('inlineScript');
@@ -65,7 +69,11 @@ class PieController extends AbstractActionController
     {
         $response = $this->getResponse();
 
-        $data = array('success' => 1);
+        $script = $this->getHelper()->renderChart('ajax');
+        $data = array(
+            'success' => 1,
+            'script'  => $script
+        );
 
         $response->setContent(\Zend\Json\Json::encode($data));
 
@@ -139,7 +147,8 @@ class PieController extends AbstractActionController
         $query = $request->getQuery();
 
         $month = $this->getMonthHelper()->getMonthRequestValue();
-
+//var_dump($month);
+//        die();
         $timestamp = strtotime($month . '-01');
         $monthDateTimeFrom = date('Y-m-d H:i:s', $timestamp);
         $monthDateTimeTill = date('Y-m-d', strtotime($month . '-' . date('t', $timestamp))) . ' 23:59:59';
