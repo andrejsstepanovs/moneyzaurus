@@ -52,7 +52,9 @@ class PieController extends AbstractActionController
     {
         $script = $this->getHelper()->renderChart();
 
-        $this->getViewHelperPlugin('inlineScript')->appendScript($script);
+        /** @var \Zend\View\Helper\InlineScript $inlineScript */
+        $inlineScript = $this->getViewHelperPlugin('inlineScript');
+        $inlineScript->appendScript($script);
 
         return array(
             'form' => $this->getForm()

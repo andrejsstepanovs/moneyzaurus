@@ -5,6 +5,8 @@ namespace Application\Controller;
 use Zend\Mvc\Controller\AbstractActionController AS ZendAbstractActionController;
 use Db\Db\ActiveRecord;
 use Application\Helper\AbstractHelper;
+use Zend\Mvc\Exception;
+use Zend\Mvc\MvcEvent;
 
 
 class AbstractActionController extends ZendAbstractActionController
@@ -56,7 +58,7 @@ class AbstractActionController extends ZendAbstractActionController
 
     /**
      * @param string $message
-     * @return \Varient\Controller\AbstractActionController
+     * @return AbstractActionController
      */
     public function showMessage($message)
     {
@@ -65,7 +67,7 @@ class AbstractActionController extends ZendAbstractActionController
 
     /**
      * @param array $messages
-     * @return \Varient\Controller\AbstractActionController
+     * @return AbstractActionController
      */
     public function showMessages($messages)
     {
@@ -183,6 +185,8 @@ class AbstractActionController extends ZendAbstractActionController
 
     /**
      * @param string $pluginName
+     *
+     * @return \Zend\View\Helper\InlineScript
      */
     protected function getViewHelperPlugin($plugin)
     {
