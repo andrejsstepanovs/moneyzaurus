@@ -51,12 +51,13 @@ class PieController extends AbstractActionController
     public function indexAction()
     {
         $parameters = array(
-            'month' => $this->getMonthHelper()->getMonthRequestValue()
+            'month'         => $this->getMonthHelper()->getMonthRequestValue(),
+            'targetElement' => 'secondary_piechart'
         );
 
         $script = $this->getHelper()->renderChart(
             $this->getPieChartTitle(),
-            'container',
+            'primary_piechart',
             $parameters
         );
 
@@ -78,9 +79,14 @@ class PieController extends AbstractActionController
             'month' => $this->getMonthHelper()->getMonthRequestValue()
         );
 
+        /** @var \Zend\Http\PhpEnvironment\Request $request */
+        $request = $this->getRequest();
+        $targetElement = $request->getQuery()->get('targetElement');
+
+
         $script = $this->getHelper()->renderChart(
             $this->getPieChartTitle(),
-            'ajax',
+            $targetElement,
             $parameters
         );
 
