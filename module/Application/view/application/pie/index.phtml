@@ -38,6 +38,6 @@ $formElementErrors = $this->formElementErrors($element);
 
 echo $this->form()->closeTag();
 
-?>
-<div id="primary_piechart" style="width:100%;height:100%;" ></div>
-<div id="secondary_piechart" style="width:100%;height:100%;" ></div>
+foreach ($this->pieChartElements as $id): ?>
+    <div id="<?php echo $id; ?>" style="width:100%;height:100%;" ></div>
+<?php endforeach; ?>

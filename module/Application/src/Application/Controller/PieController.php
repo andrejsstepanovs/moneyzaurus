@@ -50,14 +50,19 @@ class PieController extends AbstractActionController
      */
     public function indexAction()
     {
+        $pieChartElements = array(
+            'primaryPieChart',
+            'secondaryPieChart'
+        );
+
         $parameters = array(
             'month'         => $this->getMonthHelper()->getMonthRequestValue(),
-            'targetElement' => 'secondary_piechart'
+            'targetElement' => $pieChartElements[1]
         );
 
         $script = $this->getHelper()->renderChart(
             $this->getPieChartTitle(),
-            'primary_piechart',
+            $pieChartElements[0],
             $parameters
         );
 
@@ -66,7 +71,8 @@ class PieController extends AbstractActionController
         $inlineScript->appendScript($script);
 
         return array(
-            'form' => $this->getForm()
+            'form'             => $this->getForm(),
+            'pieChartElements' => $pieChartElements
         );
     }
 
