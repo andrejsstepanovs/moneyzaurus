@@ -68,17 +68,18 @@ class Helper extends AbstractHelper
 
         $jsChartClass = uniqid('a') . '_pieChart';
 
+        $html = array();
+        $html[] = 'var ' . $jsChartClass . ' = new PieChartData();';
+        $html[] = $jsChartClass;
+        $html[] = '.setData(' . $this->getChartData($jsChartClass)->renderOptions() . ')';
+        $html[] = '.setGroups(' . json_encode($groupName) . ')';
+        $html[] = '.setGroupIds(' . json_encode($groupIds) . ');';
+
         $highchartOptions = $this
             ->getPieHighchartHelper()
             ->getMainChart($title, $elementId, $jsChartClass, $parameters)
             ->renderOptions();
 
-        $html = array();
-        $html[] = 'var ' . $jsChartClass . ' = new PieChart(
-            ' . $this->getChartData($jsChartClass)->renderOptions() . ',
-            ' . json_encode($groupName) . ',
-            ' . json_encode($groupIds) . '
-        );';
         $html[] = 'var ' . $jsChartClass . 'Render = new PieChartRender(' . $highchartOptions . ');';
         $html[] = $jsChartClass . 'Render.renderChart();';
 

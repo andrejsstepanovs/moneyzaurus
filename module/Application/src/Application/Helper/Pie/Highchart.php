@@ -21,12 +21,12 @@ class Highchart extends AbstractHelper
     /**
      * @param string     $title
      * @param string     $elementId  html element id
-     * @param string     $jsPieChartClassName
+     * @param string     $jsChartClass
      * @param null|array $parameters
      *
      * @return \HighchartsPHP\Highcharts
      */
-    public function getMainChart($title, $elementId, $jsPieChartClassName, array $parameters = null)
+    public function getMainChart($title, $elementId, $jsChartClass, array $parameters = null)
     {
         $chart = new Highcharts();
 
@@ -41,14 +41,14 @@ class Highchart extends AbstractHelper
         $chart->series[0]->dataLabels->distance = -80;
         $chart->series[0]->dataLabels->color    = 'white';
         $chart->series[0]->name                 = 'EUR';
-        $chart->series[0]->data                 = new HighchartJsExpr($jsPieChartClassName . '.getPrimaryData()');
+        $chart->series[0]->data                 = new HighchartJsExpr($jsChartClass . '.getPrimaryData()');
         $chart->series[0]->size                 = '80%';
         $chart->series[0]->point->events->click = new HighchartJsExpr($this->_getSubPieChartJs($parameters));
 
         $chart->series[1]->point->events->click = new HighchartJsExpr($this->_getSubPieChartJs($parameters));
         $chart->series[1]->dataLabels->enabled = false;
         $chart->series[1]->name                = 'EUR';
-        $chart->series[1]->data                = new HighchartJsExpr($jsPieChartClassName . '.getSecondaryData()');
+        $chart->series[1]->data                = new HighchartJsExpr($jsChartClass . '.getSecondaryData()');
         $chart->series[1]->innerSize           = '80%';
 
         return $chart;
@@ -74,10 +74,7 @@ class Highchart extends AbstractHelper
         $jsonData = str_replace(array('*"', '"*'), '', json_encode($defaultParameters));
 
         return 'function (e) {
-            var url = "pie/ajax";
-            var data = ' . $jsonData . ';
-
-            $.getJSON(url, data)
+            $.getJSON("pie/ajax", ' . $jsonData . ')
                 .done (function(json) {
                     if (json.success) {
                         jQuery.globalEval(json.script);
@@ -109,8 +106,8 @@ class Highchart extends AbstractHelper
         }
 
         $chart = $this->getChartData();
-        $chart[$i]->color                = new HighchartJsExpr('new PieChart().getColors()[' . $i . ']');
-        $chart[$i]->drilldown->color     = new HighchartJsExpr('new PieChart().getColors()[0]');
+        $chart[$i]->color                = new HighchartJsExpr('new PieChartData().getColors()[' . $i . ']');
+        $chart[$i]->drilldown->color     = new HighchartJsExpr('new PieChartData().getColors()[0]');
         $chart[$i]->y                    = array_sum($priceData);
         $chart[$i]->z                    = 'EUR';
         $chart[$i]->drilldown->data      = $priceData;
