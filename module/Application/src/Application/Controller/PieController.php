@@ -19,6 +19,9 @@ class PieController extends AbstractActionController
     /** @var MonthHelper */
     protected $monthHelper;
 
+    /** @var array */
+    protected $pieChartElements;
+
 
     /**
      * @return MonthHelper
@@ -46,23 +49,40 @@ class PieController extends AbstractActionController
     }
 
     /**
+     * @param int $key
+     *
+     * @return array
+     */
+    protected function _getPieChartElements($key = null)
+    {
+        if (null === $this->pieChartElements) {
+            $this->pieChartElements = array(
+                0 => 'primaryPieChart',
+                1 => 'secondaryPieChart',
+                2 => 'tertiaryPieChart',
+            );
+        }
+
+        if ($key !== null) {
+            return $this->pieChartElements[$key];
+        }
+
+        return $this->pieChartElements;
+    }
+
+    /**
      * @return array
      */
     public function indexAction()
     {
-        $pieChartElements = array(
-            'primaryPieChart',
-            'secondaryPieChart'
-        );
-
         $parameters = array(
             'month'         => $this->getMonthHelper()->getMonthRequestValue(),
-            'targetElement' => $pieChartElements[1]
+            'targetElement' => $this->_getPieChartElements(1)
         );
 
         $script = $this->getHelper()->renderChart(
             $this->getPieChartTitle(),
-            $pieChartElements[0],
+            $this->_getPieChartElements(0),
             $parameters
         );
 
@@ -72,7 +92,7 @@ class PieController extends AbstractActionController
 
         return array(
             'form'             => $this->getForm(),
-            'pieChartElements' => $pieChartElements
+            'pieChartElements' => $this->_getPieChartElements()
         );
     }
 
@@ -82,7 +102,8 @@ class PieController extends AbstractActionController
     public function ajaxAction()
     {
         $parameters = array(
-            'month' => $this->getMonthHelper()->getMonthRequestValue()
+            'month'         => $this->getMonthHelper()->getMonthRequestValue(),
+            'targetElement' => $this->_getPieChartElements(2)
         );
 
         /** @var \Zend\Http\PhpEnvironment\Request $request */
