@@ -215,4 +215,19 @@ class AbstractActionController extends ZendAbstractActionController
         return $this->escaper;
     }
 
+    /**
+     * @param string $key
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
+    protected function getParam($key, $default = null)
+    {
+        /** @var \Zend\Http\PhpEnvironment\Request $request */
+        $request = $this->getRequest();
+        $value = $request->getQuery()->get($key, $default);
+
+        return $value;
+    }
+
 }

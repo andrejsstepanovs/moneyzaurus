@@ -106,14 +106,9 @@ class PieController extends AbstractActionController
             'targetElement' => $this->_getPieChartElements(2)
         );
 
-        /** @var \Zend\Http\PhpEnvironment\Request $request */
-        $request = $this->getRequest();
-        $targetElement = $request->getQuery()->get('targetElement');
-
-
         $script = $this->getHelper()->renderChart(
             $this->getPieChartTitle(),
-            $targetElement,
+            $this->getParam('targetElement'),
             $parameters
         );
 
@@ -190,10 +185,6 @@ class PieController extends AbstractActionController
      */
     private function applyTransactionSelectFilters(Select $select)
     {
-        /** @var \Zend\Http\PhpEnvironment\Request $request */
-        $request = $this->getRequest();
-        $query = $request->getQuery();
-
         $month = $this->getMonthHelper()->getMonthRequestValue();
 
         $timestamp = strtotime($month . '-01');
@@ -205,17 +196,16 @@ class PieController extends AbstractActionController
             $this->getWhere()->expression('t.price > ?', 0)
         );
 
-        $name = $query->get('name');
-        switch ($query->get('type')) {
+        switch ($this->getParam('type')) {
             case 'group':
-                $idGroup = $query->get('id');
+                $idGroup = $this->getParam('id');
                 if (!empty($idGroup)) {
                     $where[] = $this->getWhere()->expression('t.id_group = ?', $idGroup);
                 }
                 break;
             case 'item':
-                $idItem  = $query->get('id_item');
-                $idGroup = $query->get('id_group');
+                $idItem  = $this->getParam('id_item');
+                $idGroup = $this->getParam('id_group');
                 if (!empty($idItem)) {
                     $where[] = $this->getWhere()->expression('t.id_item = ?', $idItem);
                 }
@@ -251,9 +241,9 @@ class PieController extends AbstractActionController
         $table = $transactions->getTable();
         $table->setTable(array('t' => 'transaction'));
 
-        /** @var $transactionsResuls \Zend\Db\ResultSet\HydratingResultSet */
-        $transactionsResuls = $table->fetch($select);
-        return $transactionsResuls;
+        /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
+        $transactionsResults = $table->fetch($select);
+        return $transactionsResults;
     }
 
     /**
@@ -261,11 +251,7 @@ class PieController extends AbstractActionController
      */
     protected function getPieChartTitle()
     {
-        /** @var \Zend\Http\PhpEnvironment\Request $request */
-        $request = $this->getRequest();
-        $query = $request->getQuery();
-        $name = $query->get('name', 'Pie Chart');
-
+        $name = $this->getParam('name', 'Pie Chart');
         $name = $this->getEscaper()->escapeHtml($name);
 
         return $name;
