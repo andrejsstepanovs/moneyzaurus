@@ -100,10 +100,6 @@ class Highchart extends AbstractHelper
     {
         $i = $this->_charDataIterator++;
 
-        if (null === $this->_chart) {
-            $this->_chart = new Highcharts();
-        }
-
         $itemNames = $groupIds = $itemIds = $types = array();
         foreach ($data as $itemData) {
             $itemNames[] = $itemData['name'];
@@ -112,15 +108,16 @@ class Highchart extends AbstractHelper
             $types[]     = $itemData['type'];
         }
 
-        $this->_chart[$i]->color                = new HighchartJsExpr('colors[' . $i . ']');
-        $this->_chart[$i]->drilldown->color     = new HighchartJsExpr('colors[0]');
-        $this->_chart[$i]->y                    = array_sum($priceData);
-        $this->_chart[$i]->z                    = 'EUR';
-        $this->_chart[$i]->drilldown->data      = $priceData;
-        $this->_chart[$i]->drilldown->items     = $itemNames;
-        $this->_chart[$i]->drilldown->id_groups = $groupIds;
-        $this->_chart[$i]->drilldown->id_items  = $itemIds;
-        $this->_chart[$i]->drilldown->types     = $types;
+        $chart = $this->getChartData();
+        $chart[$i]->color                = new HighchartJsExpr('colors[' . $i . ']');
+        $chart[$i]->drilldown->color     = new HighchartJsExpr('colors[0]');
+        $chart[$i]->y                    = array_sum($priceData);
+        $chart[$i]->z                    = 'EUR';
+        $chart[$i]->drilldown->data      = $priceData;
+        $chart[$i]->drilldown->items     = $itemNames;
+        $chart[$i]->drilldown->id_groups = $groupIds;
+        $chart[$i]->drilldown->id_items  = $itemIds;
+        $chart[$i]->drilldown->types     = $types;
 
         return $this;
     }
@@ -130,6 +127,9 @@ class Highchart extends AbstractHelper
      */
     public function getChartData()
     {
+        if (null === $this->_chart) {
+            $this->_chart = new Highcharts();
+        }
         return $this->_chart;
     }
 }
