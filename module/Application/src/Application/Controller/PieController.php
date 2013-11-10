@@ -2,6 +2,7 @@
 namespace Application\Controller;
 
 use Application\Controller\AbstractActionController;
+use Application\Form\Form\AjaxMonth;
 use Application\Helper\Pie\Helper as PieHelper;
 use Application\Helper\Pie\Highchart as PieHighchartHelper;
 use Application\Helper\Month\Helper as MonthHelper;
@@ -80,15 +81,15 @@ class PieController extends AbstractActionController
             'targetElement' => $this->_getPieChartElements(1)
         );
 
-        $script = $this->getHelper()->renderChart(
-            $this->getPieChartTitle(),
-            $this->_getPieChartElements(0),
-            $parameters
-        );
-
-        /** @var \Zend\View\Helper\InlineScript $inlineScript */
-        $inlineScript = $this->getViewHelperPlugin('inlineScript');
-        $inlineScript->appendScript($script);
+//        $script = $this->getHelper()->renderChart(
+//            $this->getPieChartTitle(),
+//            $this->_getPieChartElements(0),
+//            $parameters
+//        );
+//
+//        /** @var \Zend\View\Helper\InlineScript $inlineScript */
+//        $inlineScript = $this->getViewHelperPlugin('inlineScript');
+//        $inlineScript->appendScript($script);
 
         return array(
             'form'             => $this->getForm(),
@@ -129,6 +130,10 @@ class PieController extends AbstractActionController
     private function getForm()
     {
         $form = $this->getMonthHelper()->getMonthForm();
+
+//        $form = $this->getMonthHelper()
+//                ->setMonthFormValue(new AjaxMonth())
+//                ->getMonthForm();
 
         $month = $form->get('month');
         $month->setValue($this->getMonthHelper()->getMonthRequestValue());

@@ -88,8 +88,9 @@ class Highchart extends AbstractHelper
     }
 
     /**
-     * @param array  $priceData
-     * @param array  $data
+     * @param array    $priceData
+     * @param array    $data
+     * @param null|int $count
      *
      * @return $this
      */
@@ -107,7 +108,7 @@ class Highchart extends AbstractHelper
 
         $chart = $this->getChartData();
         $chart[$i]->color                = new HighchartJsExpr('new PieChartData().getColors()[' . $i . ']');
-        $chart[$i]->drilldown->color     = new HighchartJsExpr('new PieChartData().getColors()[0]');
+        //$chart[$i]->drilldown->color     = new HighchartJsExpr('new PieChartData().getColors()');
         $chart[$i]->y                    = array_sum($priceData);
         $chart[$i]->z                    = 'EUR';
         $chart[$i]->drilldown->data      = $priceData;

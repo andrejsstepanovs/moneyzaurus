@@ -83,7 +83,7 @@ class Helper extends AbstractHelper
         $html[] = 'var ' . $jsChartClass . 'Render = new PieChartRender(' . $highchartOptions . ');';
         $html[] = $jsChartClass . 'Render.renderChart();';
 
-        $script = implode('', $html);
+        $script = implode(PHP_EOL, $html);
         return $script;
     }
 

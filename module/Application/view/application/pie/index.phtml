@@ -5,9 +5,13 @@
  */
 $form = $this->form;
 
-$form->setAttribute('action', $this->url('pie', array(
-    'action' => 'index',
-)));
+$form->setAttributes(
+    array(
+         'action' => $this->url('pie', array('action' => 'index')),
+         'class'  => 'pie'
+    )
+);
+
 $form->prepare();
 
 echo $this->form()->openTag($form);

@@ -13,10 +13,10 @@ use Zend\Http\PhpEnvironment\Request;
  * @method string getMonthRequestValueValue()
  * @method MonthForm getMonthFormValue()
  * @method MonthValidator getMonthValidatorValue()
- * @method Helper setMonthFormValue(MonthForm $monthForm)
- * @method Helper setRequest(Request $request)
- * @method Helper setMonthRequestValueValue(string $value)
- * @method Helper setMonthValidatorValue(MonthValidator $monthValidator)
+ * @method $this setMonthFormValue(MonthForm $monthForm)
+ * @method $this setRequest(Request $request)
+ * @method $this setMonthRequestValueValue(string $value)
+ * @method $this setMonthValidatorValue(MonthValidator $monthValidator)
  */
 class Helper extends AbstractHelper
 {
