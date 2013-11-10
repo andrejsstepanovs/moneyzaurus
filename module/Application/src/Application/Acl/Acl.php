@@ -25,6 +25,8 @@ class Acl
     /** @var array */
     protected $config;
 
+    /** @var \Zend\EventManager\EventManager */
+    protected $eventManager;
 
     /**
      * @param null|\Zend\ServiceManager\ServiceManager $serviceManager
@@ -80,6 +82,17 @@ class Acl
     {
         $this->serviceManager = $serviceManager;
         return $this;
+    }
+
+    /**
+     * @return \Zend\EventManager\EventManager
+     */
+    protected function getEventManager()
+    {
+        if (null === $this->eventManager) {
+            $this->eventManager = $this->getServiceManager()->get('EventManager');
+        }
+        return $this->eventManager;
     }
 
     /**
@@ -150,11 +163,16 @@ class Acl
     }
 
     /**
+     * @param MvcEvent|null $mvcEvent
+     *
+     * @return $this
      * @throws Exception\AclResourceNotAllowedException
      */
-    public function checkAcl()
+    public function checkAcl(MvcEvent $mvcEvent = null)
     {
-        $mvcEvent = $this->getMvcEvent();
+        if ($mvcEvent === null) {
+            $mvcEvent = $this->getMvcEvent();
+        }
 
         $request = $mvcEvent->getRequest();
         if ($request instanceof ConsoleRequest) {
@@ -182,11 +200,31 @@ class Acl
 
         $allowed = $this->getAcl()->isAllowed($userRole, $controller);
         if (!$allowed) {
-            throw new Exception\AclResourceNotAllowedException(
-                'Resource "' . $controller . '" is not allowed '
-                . 'for role "'.$userRole.'"'
-            );
+            $this->redirect($mvcEvent, 'user');
         }
+
+        return $this;
     }
 
+    /**
+     * @param MvcEvent $mvcEvent
+     * @param string   $controllerName
+     */
+    protected function redirect(MvcEvent $mvcEvent, $controllerName)
+    {
+        $url = $mvcEvent->getRouter()->assemble(
+            array(),
+            array('name' => $controllerName)
+        );
+
+        /** @var \Zend\Http\PhpEnvironment\Response $response */
+        $response = $mvcEvent->getResponse();
+
+        $header = new \Zend\Http\Headers();
+        $header->addHeaderLine('Location', $url);
+
+        $response->setHeaders($header);
+        $response->setStatusCode(302);
+        $response->sendHeaders();
+    }
 }

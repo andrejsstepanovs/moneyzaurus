@@ -31,12 +31,13 @@ class Module
         /** @var $acl \Application\Acl\Acl */
         $acl = $serviceManager->get('Application\Acl\Acl');
 
-        $application->getEventManager()
-                    ->attach(
-                         \Zend\Mvc\MvcEvent::EVENT_ROUTE,
-                         array($acl, 'checkAcl'),
-                         -100
-                    );
+        $application
+            ->getEventManager()
+            ->attach(
+                \Zend\Mvc\MvcEvent::EVENT_ROUTE,
+                array($acl, 'checkAcl'),
+                -100
+            );
     }
 
     public function getAutoloaderConfig()
