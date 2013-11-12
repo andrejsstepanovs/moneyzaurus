@@ -12,9 +12,8 @@ $(document).bind("pageinit", function(){
     primaryChart.setFormElement(formElement).request();
 
     formElement.submit(function(){
-        primaryChart.request();
+        primaryChart.resetData().request();
         return false;
     });
-
 });
 

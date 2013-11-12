@@ -1,12 +1,8 @@
 function PieChart(parameters)
 {
-    if (parameters) {
-        this.parameters = parameters;
-    } else {
-        this.parameters = {};
-    }
+    this.parameters = parameters ? parameters : {};
     this.formElement = null;
-    this.data = null;
+    this.resetData();
 }
 
 PieChart.prototype.setFormElement = function(formElement)
@@ -15,22 +11,22 @@ PieChart.prototype.setFormElement = function(formElement)
     return this;
 }
 
+PieChart.prototype.resetData = function()
+{
+    this.data = null;
+    return this;
+}
+
 PieChart.prototype.getData = function()
 {
     if (null === this.data) {
-        if (this.parameters) {
-            var data = this.parameters;
-        } else {
-            var data = {};
-        }
+        var data = this.parameters ? this.parameters : {};
 
         if (this.formElement != null) {
             var formData = this.formElement.serializeArray();
 
             $.map(formData, function(n, i){
-                if (n.name) {
-                    data[n.name] = n.value;
-                }
+                data[n.name] = n.value;
             });
         }
 
