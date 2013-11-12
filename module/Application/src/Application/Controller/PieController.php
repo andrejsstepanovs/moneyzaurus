@@ -76,21 +76,6 @@ class PieController extends AbstractActionController
      */
     public function indexAction()
     {
-        $parameters = array(
-            'month'         => $this->getMonthHelper()->getMonthRequestValue(),
-            'targetElement' => $this->_getPieChartElements(1)
-        );
-
-//        $script = $this->getHelper()->renderChart(
-//            $this->getPieChartTitle(),
-//            $this->_getPieChartElements(0),
-//            $parameters
-//        );
-//
-//        /** @var \Zend\View\Helper\InlineScript $inlineScript */
-//        $inlineScript = $this->getViewHelperPlugin('inlineScript');
-//        $inlineScript->appendScript($script);
-
         return array(
             'form'             => $this->getForm(),
             'pieChartElements' => $this->_getPieChartElements()

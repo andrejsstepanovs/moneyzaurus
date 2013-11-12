@@ -5,14 +5,16 @@ $(document).bind("mobileinit", function(){
 });
 
 $(document).bind("pageinit", function(){
-    var formElelemt = $("form.pie");
+    var formElement = $("form.pie");
 
-    var primaryChart = new PieChart(formElelemt, "primaryPieChart");
-    primaryChart.request();
+    var parameters = {"targetElement":"primaryPieChart"};
+    var primaryChart = new PieChart(parameters);
+    primaryChart.setFormElement(formElement).request();
 
-    formElelemt.submit(function(){
+    formElement.submit(function(){
         primaryChart.request();
         return false;
     });
+
 });
 

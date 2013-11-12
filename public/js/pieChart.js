@@ -1,19 +1,43 @@
-function PieChart(formElement, targetElement)
+function PieChart(parameters)
 {
-    this.formElement   = formElement;
-    this.targetElement = targetElement;
+    if (parameters) {
+        this.parameters = parameters;
+    } else {
+        this.parameters = {};
+    }
+    this.formElement = null;
+    this.data = null;
+}
+
+PieChart.prototype.setFormElement = function(formElement)
+{
+    this.formElement = formElement;
+    return this;
 }
 
 PieChart.prototype.getData = function()
 {
-    var formData = this.formElement.serializeArray();
+    if (null === this.data) {
+        if (this.parameters) {
+            var data = this.parameters;
+        } else {
+            var data = {};
+        }
 
-    var data = {"targetElement":this.targetElement};
-    $.map(formData, function(n, i){
-        data[n['name']] = n['value'];
-    });
+        if (this.formElement != null) {
+            var formData = this.formElement.serializeArray();
 
-    return data;
+            $.map(formData, function(n, i){
+                if (n.name) {
+                    data[n.name] = n.value;
+                }
+            });
+        }
+
+        this.data = data;
+    }
+
+    return this.data;
 }
 
 PieChart.prototype.request = function()

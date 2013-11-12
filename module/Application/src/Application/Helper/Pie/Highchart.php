@@ -74,16 +74,9 @@ class Highchart extends AbstractHelper
         $jsonData = str_replace(array('*"', '"*'), '', json_encode($defaultParameters));
 
         return 'function (e) {
-            $.getJSON("pie/ajax", ' . $jsonData . ')
-                .done (function(json) {
-                    if (json.success) {
-                        jQuery.globalEval(json.script);
-                    }
-                })
-                .fail (function(jqxhr, textStatus, error) {
-                    var err = textStatus + ", " + error;
-                    console.log("Request Failed: " + err);
-                });
+            var parameters = ' . $jsonData . ';
+            var primaryChart = new PieChart(parameters);
+            primaryChart.request();
         }';
     }
 
