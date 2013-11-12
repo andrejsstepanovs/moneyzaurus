@@ -6,14 +6,15 @@ $(document).bind("mobileinit", function(){
 
 $(document).bind("pageinit", function(){
     var formElement = $("form.pie");
+    if (formElement.length) {
+        var parameters = {"targetElement":"primaryPieChart"};
+        var primaryChart = new PieChart(parameters);
+        primaryChart.setFormElement(formElement).request();
 
-    var parameters = {"targetElement":"primaryPieChart"};
-    var primaryChart = new PieChart(parameters);
-    primaryChart.setFormElement(formElement).request();
-
-    formElement.submit(function(){
-        primaryChart.resetData().request();
-        return false;
-    });
+        formElement.submit(function(){
+            primaryChart.resetData().request();
+            return false;
+        });
+    }
 });
 
