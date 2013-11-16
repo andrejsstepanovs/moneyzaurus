@@ -95,7 +95,8 @@ class PieController extends AbstractActionController
 
         $parameters = array(
             'month'         => $this->getMonthHelper()->getMonthRequestValue(),
-            'targetElement' => $this->_getPieChartElements($id)
+            'targetElement' => $this->_getPieChartElements($id),
+            'level'         => $id
         );
 
         $script = $this->getHelper()->renderChart(
