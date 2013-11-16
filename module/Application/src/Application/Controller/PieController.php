@@ -87,14 +87,20 @@ class PieController extends AbstractActionController
      */
     public function ajaxAction()
     {
+        $requestedTargetElement = $this->getParam('targetElement');
+
+        $targetElementCount = count($this->_getPieChartElements()) - 1;
+        $id = array_search($requestedTargetElement, $this->_getPieChartElements());
+        $id = $id + 1 >= $targetElementCount ? $targetElementCount : $id + 1;
+
         $parameters = array(
             'month'         => $this->getMonthHelper()->getMonthRequestValue(),
-            'targetElement' => $this->_getPieChartElements(2)
+            'targetElement' => $this->_getPieChartElements($id)
         );
 
         $script = $this->getHelper()->renderChart(
             $this->getPieChartTitle(),
-            $this->getParam('targetElement'),
+            $requestedTargetElement,
             $parameters
         );
 
