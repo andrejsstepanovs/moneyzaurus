@@ -27,6 +27,10 @@ use Zend\Http\PhpEnvironment\Request;
  */
 class Helper extends AbstractHelper
 {
+    const GET_ALL     = 1;
+    const GET_LIMITED = 2;
+    const GET_LIMIT   = 3;
+
     /** @var int */
     protected $_groupCount = 9;
 
@@ -63,8 +67,8 @@ class Helper extends AbstractHelper
      */
     public function renderChart($title, $elementId, array $parameters = null)
     {
-        $groupName = $this->getSortedGroups(false, 'name');
-        $groupIds  = $this->getSortedGroups(false, 'id');
+        $groupName = $this->getSortedGroups(self::GET_LIMITED, 'name');
+        $groupIds  = $this->getSortedGroups(self::GET_LIMITED, 'id');
 
         $jsChartClass = uniqid('a') . '_pieChart';
 
@@ -94,7 +98,7 @@ class Helper extends AbstractHelper
     {
         if (null === $this->getChartDataCache()) {
             $groupedData = $this->getGroupedData();
-            $sortedGroups = $this->getSortedGroups(true, 'name');
+            $sortedGroups = $this->getSortedGroups(self::GET_ALL, 'name');
             $count = count($sortedGroups);
 
             if ($this->_groupCount > $count) {
@@ -221,37 +225,22 @@ class Helper extends AbstractHelper
     }
 
     /**
-     * @param null|bool   $full
+     * @param bool        $full
      * @param null|string $selectKey
+     * @param null|int    $level     will return other groups in specific level
      *
      * @return array
      */
-    public function getSortedGroups($full = true, $selectKey = null)
+    public function getSortedGroups($full = self::GET_ALL, $selectKey = null, $level = null)
     {
         if (null === $this->getSortedGroupsDataCache()) {
-            $groups = array();
-            /** @var \Db\Db\ActiveRecord $row */
-            foreach ($this->getTransactionsData() AS $row) {
-                $groupName = $row->getGroupName();
-                if (!array_key_exists($groupName, $groups)) {
-                    $groups[$groupName] = array(
-                        'name'  => $groupName,
-                        'id'    => $row->getIdGroup(),
-                        'price' => $row->getPrice()
-                    );
-                } else {
-                    $groups[$groupName]['price'] += $row->getPrice();
-                }
-            }
-
-            uasort($groups, function($a, $b){return intval($b['price'] - $a['price']);});
-
+            $groups = $this->fetchSortedGroupsData();
             $this->setSortedGroupsDataCache(array_values($groups));
         }
 
         $data = $this->getSortedGroupsDataCache();
 
-        if (!$full && count($data) > $this->_groupCount) {
+        if ($full == self::GET_LIMITED && count($data) > $this->_groupCount) {
             $data = array_slice($data, 0, $this->_groupCount);
             $data[] = array(
                 'name'  => 'Other Groups',
@@ -260,19 +249,59 @@ class Helper extends AbstractHelper
             );
         }
 
+        if ($full == self::GET_LIMIT) {
+            $data = array_slice($data, $this->_groupCount * $level);
+        }
+
         if (null !== $selectKey) {
-            $return = array();
-            foreach ($data as $groupData) {
-                foreach ($groupData as $key => $val) {
-                    if ($selectKey == $key) {
-                        $return[] = $val;
-                    }
-                }
-            }
-            return $return;
+            $data = $this->filterByKey($data, $selectKey);
         }
 
         return $data;
+    }
+
+    /**
+     * @return array
+     */
+    protected function fetchSortedGroupsData()
+    {
+        $groups = array();
+        /** @var \Db\Db\ActiveRecord $row */
+        foreach ($this->getTransactionsData() AS $row) {
+            $groupName = $row->getGroupName();
+            if (!array_key_exists($groupName, $groups)) {
+                $groups[$groupName] = array(
+                    'name'  => $groupName,
+                    'id'    => $row->getIdGroup(),
+                    'price' => $row->getPrice()
+                );
+            } else {
+                $groups[$groupName]['price'] += $row->getPrice();
+            }
+        }
+
+        uasort($groups, function($a, $b){return intval($b['price'] - $a['price']);});
+
+        return $groups;
+    }
+
+    /**
+     * @param array  $data
+     * @param string $selectKey
+     *
+     * @return array
+     */
+    protected function filterByKey(array $data, $selectKey)
+    {
+        $return = array();
+        foreach ($data as $groupData) {
+            foreach ($groupData as $key => $val) {
+                if ($selectKey == $key) {
+                    $return[] = $val;
+                }
+            }
+        }
+        return $return;
     }
 
     /**

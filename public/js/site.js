@@ -7,7 +7,7 @@ $(document).bind("mobileinit", function(){
 $(document).bind("pageinit", function(){
     var formElement = $("form.pie");
     if (formElement.length) {
-        var parameters = {"targetElement":"primaryPieChart"};
+        var parameters = {"targetElement":"primaryPieChart",level:0};
         var primaryChart = new PieChart(parameters);
         primaryChart.setFormElement(formElement).request();
 

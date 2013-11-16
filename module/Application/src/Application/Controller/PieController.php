@@ -2,7 +2,6 @@
 namespace Application\Controller;
 
 use Application\Controller\AbstractActionController;
-use Application\Form\Form\AjaxMonth;
 use Application\Helper\Pie\Helper as PieHelper;
 use Application\Helper\Pie\Highchart as PieHighchartHelper;
 use Application\Helper\Month\Helper as MonthHelper;
@@ -188,25 +187,18 @@ class PieController extends AbstractActionController
             $this->getWhere()->expression('t.price > ?', 0)
         );
 
+        $level = $this->getParam('level');
+
         switch ($this->getParam('type')) {
             case 'group':
-                $idGroup = $this->getParam('id');
-                if (!empty($idGroup)) {
-                    $where[] = $this->getWhere()->expression('t.id_group = ?', $idGroup);
-                } else {
-                    // set type = null to get all transaction data. Use this data to get other group ids.
-                    $transactionData = $this->setParam('type', null)->getTransactionsData();
-                    $this->getHelper()->setTransactionsData($transactionData);
-
-                    $allGroups = $this->getHelper()->getSortedGroups(true, 'id');
-                    $visibleGroups = $this->getHelper()->getSortedGroups(false, 'id');
-
-                    $otherGroupIds = array_diff($allGroups, $visibleGroups);
-
-                    $where[] = $this->getWhere()->in('t.id_group', $otherGroupIds);
-
-                    $this->getHelper()->reset();
+                $groupIds = $this->getParam('id');
+                if (!is_array($groupIds) && !empty($groupIds)) {
+                    $groupIds = array($groupIds);
                 }
+                if ($level > 0 && (empty($groupIds) || $groupIds == 0)) {
+                    $groupIds = $this->getOtherGroupsIdsForLevel($level);
+                }
+                $where[] = $this->getWhere()->in('t.id_group', $groupIds);
                 break;
             case 'item':
                 $idItem  = $this->getParam('id_item');
@@ -226,6 +218,29 @@ class PieController extends AbstractActionController
         $select->where($where);
 
         return $select;
+    }
+
+    /**
+     * @param int $level
+     *
+     * @return array
+     */
+    private function getOtherGroupsIdsForLevel($level)
+    {
+        $this->transactionsData = null;
+        // set type = null to get all transaction data. Use this data to get other group ids.
+        $transactionData = $this->setParam('type', null)->getTransactionsData();
+
+        \DEBUG::log(count($transactionData));
+
+        $this->getHelper()->setTransactionsData($transactionData);
+
+        $otherGroupIds = $this->getHelper()->getSortedGroups(PieHelper::GET_LIMIT, 'id', $level);
+
+        $this->setParam('type', 'group');
+
+        $this->getHelper()->reset();
+        return $otherGroupIds;
     }
 
     /**
