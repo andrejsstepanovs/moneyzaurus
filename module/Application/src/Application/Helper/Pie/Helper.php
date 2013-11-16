@@ -258,7 +258,7 @@ class Helper extends AbstractHelper
         }
 
         if (isset($row)) {
-            $newRows[] = $row->setPrice($price)->setItemName('Other Items');
+            $newRows[] = $row->setPrice($price)->setIdItem(0)->setItemName('Other Items');
         }
 
         return $newRows;
