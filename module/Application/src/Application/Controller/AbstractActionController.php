@@ -33,6 +33,9 @@ class AbstractActionController extends ZendAbstractActionController
     /** @var array */
     protected $viewHelperPlugin = array();
 
+    /** @var array */
+    protected $paramCache = array();
+
 
     /**
      * Execute the request
@@ -223,11 +226,25 @@ class AbstractActionController extends ZendAbstractActionController
      */
     protected function getParam($key, $default = null)
     {
-        /** @var \Zend\Http\PhpEnvironment\Request $request */
-        $request = $this->getRequest();
-        $value = $request->getQuery()->get($key, $default);
+        if (!array_key_exists($key, $this->paramCache)) {
+            /** @var \Zend\Http\PhpEnvironment\Request $request */
+            $request = $this->getRequest();
+            $this->paramCache[$key] = $request->getQuery()->get($key, $default);
+        }
 
-        return $value;
+        return $this->paramCache[$key];
+    }
+
+    /**
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @return $this
+     */
+    protected function setParam($key, $value)
+    {
+        $this->paramCache[$key] = $value;
+        return $this;
     }
 
 }

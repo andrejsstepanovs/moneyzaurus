@@ -115,11 +115,6 @@ class PieController extends AbstractActionController
     private function getForm()
     {
         $form = $this->getMonthHelper()->getMonthForm();
-
-//        $form = $this->getMonthHelper()
-//                ->setMonthFormValue(new AjaxMonth())
-//                ->getMonthForm();
-
         $month = $form->get('month');
         $month->setValue($this->getMonthHelper()->getMonthRequestValue());
 
@@ -191,6 +186,19 @@ class PieController extends AbstractActionController
                 $idGroup = $this->getParam('id');
                 if (!empty($idGroup)) {
                     $where[] = $this->getWhere()->expression('t.id_group = ?', $idGroup);
+                } else {
+                    // set type = null to get all transaction data. Use this data to get other group ids.
+                    $transactionData = $this->setParam('type', null)->getTransactionsData();
+                    $this->getHelper()->setTransactionsData($transactionData);
+
+                    $allGroups = $this->getHelper()->getSortedGroups(true, 'id');
+                    $visibleGroups = $this->getHelper()->getSortedGroups(false, 'id');
+
+                    $otherGroupIds = array_diff($allGroups, $visibleGroups);
+
+                    $where[] = $this->getWhere()->in('t.id_group', $otherGroupIds);
+
+                    $this->getHelper()->reset();
                 }
                 break;
             case 'item':

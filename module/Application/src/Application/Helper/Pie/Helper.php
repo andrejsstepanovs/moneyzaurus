@@ -208,6 +208,19 @@ class Helper extends AbstractHelper
     }
 
     /**
+     * @return $this
+     */
+    public function reset()
+    {
+        $this->setChartDataCache(null);
+        $this->setGroupedDataCache(null);
+        $this->setSortedGroupsDataCache(null);
+        //$this->setTransactionsDataCache(null);
+
+        return $this;
+    }
+
+    /**
      * @param null|bool   $full
      * @param null|string $selectKey
      *
