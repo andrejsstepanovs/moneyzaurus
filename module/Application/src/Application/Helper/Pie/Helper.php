@@ -32,10 +32,10 @@ class Helper extends AbstractHelper
     const GET_LIMIT   = 3;
 
     /** @var int */
-    protected $_groupCount = 9;
+    protected $_groupCount;
 
     /** @var int */
-    protected $_itemCount = 9;
+    protected $_itemCount;
 
     /** @var int */
     protected $_otherGroupCount = 4;
@@ -101,12 +101,12 @@ class Helper extends AbstractHelper
             $sortedGroups = $this->getSortedGroups(self::GET_ALL, 'name');
             $count = count($sortedGroups);
 
-            if ($this->_groupCount > $count) {
+            if ($this->getOptimalGroupCount() > $count) {
                 $this->_groupCount = $count;
             }
 
             // initial limited data
-            for ($i = 0; $i < $this->_groupCount; $i++) {
+            for ($i = 0; $i < $this->getOptimalGroupCount(); $i++) {
                 $priceData = $categories = array();
                 $rows = $this->_compactItems($groupedData[$sortedGroups[$i]]);
                 foreach ($rows AS $row) {
@@ -182,6 +182,57 @@ class Helper extends AbstractHelper
     }
 
     /**
+     * @return int
+     */
+    protected function getOptimalGroupCount()
+    {
+        if (null === $this->_groupCount) {
+            $this->_groupCount = 9;
+        }
+
+        return $this->_groupCount;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getOptimalItemCountInGroup()
+    {
+        if (null === $this->_itemCount) {
+            $this->_itemCount = 30;
+        }
+
+        return $this->_itemCount;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getDistinctGroupCount()
+    {
+        $data = $this->getGroupedData();
+        $groupCount = count(array_keys($data));
+        return $groupCount;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getDistinctItemCount()
+    {
+        $allItems = array();
+        $data = $this->getGroupedData();
+        foreach ($data as $groupName => $items) {
+            /** @var \Db\Db\ActiveRecord $item */
+            foreach ($items as $item) {
+                $allItems[$groupName . $item->getIdItem()] = null;
+            }
+        }
+        $itemCount = count(array_keys($allItems));
+        return $itemCount;
+    }
+
+    /**
      * @param array $rows
      *
      * @return array
@@ -189,12 +240,14 @@ class Helper extends AbstractHelper
     private function _compactItems(array $rows)
     {
         $count = count($rows);
-        if ($count <= $this->_itemCount) {
+        $optimalItemCount = $this->getOptimalItemCountInGroup();
+
+        if ($count <= $optimalItemCount) {
             return $rows;
         }
 
         $newRows = array();
-        for ($i = 0; $i < $this->_itemCount; $i++) {
+        for ($i = 0; $i < $optimalItemCount; $i++) {
             $newRows[] = $rows[$i];
         }
 
@@ -240,8 +293,8 @@ class Helper extends AbstractHelper
 
         $data = $this->getSortedGroupsDataCache();
 
-        if ($full == self::GET_LIMITED && count($data) > $this->_groupCount) {
-            $data = array_slice($data, 0, $this->_groupCount);
+        if ($full == self::GET_LIMITED && count($data) > $this->getOptimalGroupCount()) {
+            $data = array_slice($data, 0, $this->getOptimalGroupCount());
             $data[] = array(
                 'name'  => 'Other Groups',
                 'id'    => 0,
@@ -250,7 +303,7 @@ class Helper extends AbstractHelper
         }
 
         if ($full == self::GET_LIMIT) {
-            $data = array_slice($data, $this->_groupCount * $level);
+            $data = array_slice($data, $this->getOptimalGroupCount() * $level);
         }
 
         if (null !== $selectKey) {
