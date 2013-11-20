@@ -131,6 +131,8 @@ class Helper extends AbstractHelper
     }
 
     /**
+     * Set other group items as groups
+     *
      * @param int   $i
      * @param array $sortedGroups
      * @param array $groupedData
@@ -141,7 +143,7 @@ class Helper extends AbstractHelper
         $count = count($sortedGroups);
 
         // preparing other items data total price
-        $priceDataTmp = $groupsTmp = $categoriesIds = array();
+        $priceDataTmp = $groupsTmp = $categoriesIds = $groupsTmpData = array();
         for ($i; $i < $count; $i++) {
             $groupName = $sortedGroups[$i];
 
@@ -159,12 +161,21 @@ class Helper extends AbstractHelper
             );
 
             $total = 0;
+            /** @var \Db\Db\ActiveRecord $row */
             foreach ($groupedData[$groupName] AS $row) {
                 $total += round((float)$row->getPrice(), 2);
             }
 
             $priceDataTmp[] = $total;
         }
+
+        // sort by price
+        asort($priceDataTmp);
+        foreach ($priceDataTmp as $j => $price) {
+            $groupsTmpData[] = $groupsTmp[$j];
+        }
+        $priceDataTmp = array_values($priceDataTmp);
+        $groupsTmp = $groupsTmpData;
 
         // set rest items as groups
         $priceData = $categories = array();
