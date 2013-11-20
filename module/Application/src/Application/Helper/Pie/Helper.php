@@ -170,7 +170,7 @@ class Helper extends AbstractHelper
         }
 
         // sort by price
-        asort($priceDataTmp);
+        arsort($priceDataTmp);
         foreach ($priceDataTmp as $j => $price) {
             $groupsTmpData[] = $groupsTmp[$j];
         }
