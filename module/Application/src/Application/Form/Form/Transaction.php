@@ -79,6 +79,18 @@ class Transaction extends Form
         ));
 
         $this->add(array(
+            'name' => 'id_user',
+            'attributes' => array(
+                'type' => 'Zend\Form\Element\Hidden',
+                'id'   => 'id_user',
+//                'placeholder' => date('Y-m-d'),
+            ),
+            'options' => array(
+                'label' => 'User Id',
+            ),
+        ));
+
+        $this->add(array(
             'name' => 'submit',
             'attributes' => array(
                 'type'         => 'submit',

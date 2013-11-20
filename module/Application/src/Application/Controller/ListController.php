@@ -3,6 +3,7 @@ namespace Application\Controller;
 
 use Application\Controller\AbstractActionController;
 use Application\Helper\Lister\Helper as ListHelper;
+use Application\Form\Form\Transaction as TransactionForm;
 use Zend\Paginator\Adapter\Iterator as PaginatorIterator;
 use Paginator\Paginator;
 use Zend\Db\Sql\Expression;
@@ -13,6 +14,9 @@ use Zend\Db\Sql\Select;
  */
 class ListController extends AbstractActionController
 {
+    /** @var TransactionForm */
+    protected $form;
+
     /**
      * @return void
      */
@@ -25,6 +29,7 @@ class ListController extends AbstractActionController
 
     public function indexAction()
     {
+        $form = $this->getSearchForm();
         $transactionsResults = $this->getTransactions();
         $totalItemCount = $this->getTotalCount();
 
@@ -41,6 +46,7 @@ class ListController extends AbstractActionController
             'order'        => $this->getHelper()->getOrder(),
             'page'         => $this->getHelper()->getPage(),
             'paginator'    => $paginator,
+            'form'         => $form,
         );
     }
 
@@ -101,6 +107,17 @@ class ListController extends AbstractActionController
         $row = $result2->current();
 
         return $row['total'];
+    }
+
+    /**
+     * @return TransactionForm
+     */
+    protected function getSearchForm()
+    {
+        if (null === $this->form) {
+            $this->form = new TransactionForm();
+        }
+        return $this->form;
     }
 
 }

@@ -10,8 +10,8 @@ use Zend\Mvc\Controller\Plugin\Params;
 
 /**
  * @method \Zend\Http\PhpEnvironment\Request getRequest()
- * @method Helper setParams(Params $params)
- * @method Params getParams()
+ * @method Helper setParams(\Zend\Mvc\Controller\Plugin\Params $params)
+ * @method \Zend\Mvc\Controller\Plugin\Params getParams()
  */
 class Helper extends AbstractHelper
 {

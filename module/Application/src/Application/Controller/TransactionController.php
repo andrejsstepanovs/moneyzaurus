@@ -15,7 +15,7 @@ class TransactionController extends AbstractActionController
     /** @var integer */
     protected $userId;
 
-    /** @var \Application\Form\Transaction */
+    /** @var \Application\Form\Form\Transaction */
     protected $form;
 
     /** @var \Application\Form\Validator\Transaction */
@@ -26,12 +26,13 @@ class TransactionController extends AbstractActionController
 
 
     /**
-     * @return \Application\Form\Transaction
+     * @return \Application\Form\Form\Transaction
      */
     public function getForm()
     {
         if (null === $this->form) {
             $this->form = new TransactionForm();
+            $this->form->remove('id_user');
 
             $formElements = $this->form->getElements();
 

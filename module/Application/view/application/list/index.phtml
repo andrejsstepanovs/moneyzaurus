@@ -1,17 +1,19 @@
 <?php
 $this->headTitle('List');
 
-$order_by  = $this->order_by;
-$order     = $this->order;
-$paginator = $this->paginator;
+/** @var \Application\Form\Form\Transaction $form */
+/** @var \Zend\Form\View\Helper\Form $formHelper */
+$orderBy    = $this->order_by;
+$order      = $this->order;
+$paginator  = $this->paginator;
+$formHelper = $this->form();
+$form       = $this->form;
+$form->setAttributes(array(
+    'id'     => 'list',
+    'action' => $this->url('list'),
+    'style'  => 'width:100%'
+))->prepare();
 
-
-$url_order = 'ASC';  // the following lines
-if ($order_by == 'title') {
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-} elseif ($order_by == 'artist') {
-    $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
-}
 
 $columns = array(
     //'transaction_id' => $this->translate('Id'),
@@ -23,6 +25,15 @@ $columns = array(
     //'date_created'   => $this->translate('Created'),
     'id_user'        => $this->translate('User'),
 );
+
+$urlOrder = array();
+foreach ($columns as $key => $val) {
+    if ($orderBy == $key) {
+        $urlOrder[$key] = $order == 'ASC' ? 'DESC' : 'ASC';
+    } else {
+        $urlOrder[$key] = 'ASC';
+    }
+}
 
 $i = 0;
 
@@ -37,27 +48,50 @@ function getGridVal($i)
     }
     return $i;
 }
+
+$formElements = $form->getElements();
 ?>
 
 <div class="ui-grid-d">
-    <?php foreach ($columns AS $key => $label) : ?>
-        <div class="ui-block-<?php $i = getGridVal($i); ?>">
+
+    <?php echo $formHelper->openTag($form); ?>
+        <?php foreach ($columns AS $key => $label) : ?>
             <?php
+            /** @var \Zend\Form\Element $element */
+            $element = $formElements[str_replace('_name', '', $key)];
+            //$element->setAttribute('required', '');
 
-            $icon = sprintf(
-                '<i class="icon-chevron-%s"></i>',
-                ($url_order == 'ASC' ? 'down' : 'up')
-            );
-
-            echo sprintf(
-                '<a href="%s">%s</a>',
-                $this->url('list', array('order_by' => $key, 'order' => $url_order)),
-                $icon . $label
-            );
-
+            $formElementErrors = $this->formElementErrors($element);
             ?>
-        </div>
-    <?php endforeach; ?>
+            <div class="ui-block-<?php $i = getGridVal($i); ?>"
+                <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
+
+                <?php
+                $icon = sprintf(
+                    '<i class="icon-chevron-%s"></i>',
+                    ($urlOrder[$key] == 'ASC' ? 'down' : 'up')
+                );
+
+                $label = $element->getLabel();
+                echo sprintf(
+                    '<a href="%s">%s</a>',
+                    $this->url('list', array('order_by' => $key, 'order' => $urlOrder[$key])),
+                    $icon . $label
+                );
+
+                echo $this->formElement($element);
+
+                if ($formElementErrors) {
+                    ?>
+                    <span class="help-inline">
+                        <?php echo $formElementErrors; ?>
+                    </span>
+                <?php
+                }
+                ?>
+            </div>
+        <?php endforeach; ?>
+    <?php echo $formHelper->closeTag(); ?>
 
     <?php foreach ($this->transactions AS $transaction) : ?>
         <?php foreach ($columns AS $key => $label) : ?>
@@ -73,7 +107,5 @@ function getGridVal($i)
 <?php
 
 echo $this->paginationControl(
-    $paginator, 'Sliding', 'paginator-slide', array('order_by' => $order_by, 'order' => $order)
+    $paginator, 'Sliding', 'paginator-slide', array('order_by' => $orderBy, 'order' => $order)
 );
-
-?>
