@@ -236,6 +236,17 @@ class AbstractActionController extends ZendAbstractActionController
     }
 
     /**
+     * @return array
+     */
+    protected function getParams()
+    {
+        /** @var \Zend\Http\PhpEnvironment\Request $request */
+        $request = $this->getRequest();
+        $this->paramCache = $request->getQuery()->toArray();
+        return $this->paramCache;
+    }
+
+    /**
      * @param string $key
      * @param mixed  $value
      *

@@ -122,63 +122,79 @@ class Helper extends AbstractHelper
                 $this->getPieHighchartHelper()->setChartData($priceData, $categories);
             }
 
-            // preparing other items data total price
-            $priceDataTmp = $groupsTmp = $categoriesIds = array();
-            for ($i; $i < $count; $i++) {
-                $groupName = $sortedGroups[$i];
-
-                $groupId = null;
-                foreach ($groupedData[$groupName] as $group) {
-                    $groupId = $group->getIdGroup();
-                    break;
-                }
-
-                $groupsTmp[] = array(
-                    'name'     => $groupName,
-                    'id_group' => $groupId,
-                    'id_item'  => 0,
-                    'type'     => 'group'
-                );
-
-                $total = 0;
-                foreach ($groupedData[$groupName] AS $row) {
-                    $total += round((float)$row->getPrice(), 2);
-                }
-
-                $priceDataTmp[] = $total;
-            }
-
-            // set rest items as groups
-            $priceData = $categories = array();
-
-            if (!empty($priceDataTmp)) {
-                for ($i = 0; $i < $this->_otherGroupCount; $i++) {
-                    //if (array_key_exists($i, ))
-                    $priceData[]  = $priceDataTmp[$i];
-                    $categories[] = $groupsTmp[$i];
-                }
-
-                // limit rest items as groups
-                $total = 0;
-                $count = count($priceDataTmp);
-                for ($i; $i < $count; $i++) {
-                    $total += $priceDataTmp[$i];
-                }
-
-                $priceData[] = $total;
-                $categories[] = array(
-                    'name'     => 'Other',
-                    'id_group' => 0,
-                    'id_item'  => 0,
-                    'type'     => 'group'
-                );
-                $this->getPieHighchartHelper()->setChartData($priceData, $categories);
-            }
+            $this->setOtherItemsAsGroups($i, $sortedGroups, $groupedData);
 
             $this->setChartDataCache($this->getPieHighchartHelper()->getChartData());
         }
 
         return $this->getChartDataCache();
+    }
+
+    /**
+     * @param int   $i
+     * @param array $sortedGroups
+     * @param array $groupedData
+     * @return $this
+     */
+    protected function setOtherItemsAsGroups($i, array $sortedGroups, array $groupedData)
+    {
+        $count = count($sortedGroups);
+
+        // preparing other items data total price
+        $priceDataTmp = $groupsTmp = $categoriesIds = array();
+        for ($i; $i < $count; $i++) {
+            $groupName = $sortedGroups[$i];
+
+            $groupId = null;
+            foreach ($groupedData[$groupName] as $group) {
+                $groupId = $group->getIdGroup();
+                break;
+            }
+
+            $groupsTmp[] = array(
+                'name'     => $groupName,
+                'id_group' => $groupId,
+                'id_item'  => 0,
+                'type'     => 'group'
+            );
+
+            $total = 0;
+            foreach ($groupedData[$groupName] AS $row) {
+                $total += round((float)$row->getPrice(), 2);
+            }
+
+            $priceDataTmp[] = $total;
+        }
+
+        // set rest items as groups
+        $priceData = $categories = array();
+
+        if (!empty($priceDataTmp)) {
+            for ($i = 0; $i < $this->_otherGroupCount; $i++) {
+                //if (array_key_exists($i, ))
+                $priceData[]  = $priceDataTmp[$i];
+                $categories[] = $groupsTmp[$i];
+            }
+
+            // limit rest items as groups
+            $total = 0;
+            $count = count($priceDataTmp);
+            for ($i; $i < $count; $i++) {
+                $total += $priceDataTmp[$i];
+            }
+
+            $priceData[] = $total;
+            $categories[] = array(
+                'name'     => 'Other',
+                'id_group' => 0,
+                'id_item'  => 0,
+                'type'     => 'group'
+            );
+
+            $this->getPieHighchartHelper()->setChartData($priceData, $categories);
+        }
+
+        return $this;
     }
 
     /**

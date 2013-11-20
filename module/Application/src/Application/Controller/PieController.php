@@ -192,6 +192,7 @@ class PieController extends AbstractActionController
         switch ($this->getParam('type')) {
             case 'group':
                 $groupIds = $this->getParam('id');
+                $groupIds = empty($groupIds) ? $this->getParam('id_group') : $groupIds;
                 if (!is_array($groupIds) && !empty($groupIds)) {
                     $groupIds = array($groupIds);
                 }
