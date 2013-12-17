@@ -15,7 +15,6 @@ use Zend\Mvc\Controller\Plugin\Params;
  */
 class Helper extends AbstractHelper
 {
-
     /**
      * @return string
      */
@@ -44,8 +43,6 @@ class Helper extends AbstractHelper
         $params = $this->getParams();
         $page     = $params->fromRoute('page') ? (int) $params->fromRoute('page') : 1;
         return $page;
-
-        $itemsPerPage = 20;
     }
 
     /**

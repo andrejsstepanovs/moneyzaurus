@@ -27,9 +27,45 @@ class ListController extends AbstractActionController
         $this->setHelper($helper);
     }
 
+    public function ajaxAction()
+    {
+        $transactionsResults = $this->getTransactions();
+        $totalItemCount = $this->getTotalCount();
+
+        /** @var \Db\Db\ActiveRecord $item */
+        $rows = array();
+        foreach ($transactionsResults as $item) {
+            $rows[] = $item->getData();
+        }
+
+        $script = null;
+        $data = array(
+            'success' => 1,
+            'data'    => array(
+                'count'    => $totalItemCount,
+                'order_by' => $this->getHelper()->getOrderBy(),
+                'order'    => $this->getHelper()->getOrder(),
+                'page'     => $this->getHelper()->getPage(),
+                'rows'     => $rows,
+                'columns'  => array( //http://stackoverflow.com/questions/14261115/zf2-use-translator-in-controller
+                    'item_name',
+                    'group_name',
+                    'price',
+                    'date',
+                    'id_user',
+                )
+            ),
+            'script'  => $script
+        );
+
+        $response = $this->getResponse();
+        $response->setContent(\Zend\Json\Json::encode($data));
+
+        return $response;
+    }
+
     public function indexAction()
     {
-        $form = $this->getSearchForm();
         $transactionsResults = $this->getTransactions();
         $totalItemCount = $this->getTotalCount();
 
@@ -46,7 +82,7 @@ class ListController extends AbstractActionController
             'order'        => $this->getHelper()->getOrder(),
             'page'         => $this->getHelper()->getPage(),
             'paginator'    => $paginator,
-            'form'         => $form,
+            'form'         => $this->getSearchForm(),
         );
     }
 

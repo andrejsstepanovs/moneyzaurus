@@ -16,5 +16,17 @@ $(document).bind("pageinit", function(){
             return false;
         });
     }
+
+    var listFormElement = $("form[name=list]");
+    if (listFormElement.length) {
+        var listParameters = {"targetElement":"listResults"};
+        var TransactionList = new TransactionsList(listParameters);
+        TransactionList.setFormElement(listFormElement).request();
+
+        listFormElement.submit(function(){
+            TransactionList.resetData().request();
+            return false;
+        });
+    }
 });
 
