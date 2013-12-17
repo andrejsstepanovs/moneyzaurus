@@ -255,12 +255,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "236f65cc97d6beaa8fcb8a27b19bd278f3912677"
+                "reference": "aa4789d63dc5fd8f2036e5867b94e481b201c807"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/236f65cc97d6beaa8fcb8a27b19bd278f3912677",
-                "reference": "236f65cc97d6beaa8fcb8a27b19bd278f3912677",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/aa4789d63dc5fd8f2036e5867b94e481b201c807",
+                "reference": "aa4789d63dc5fd8f2036e5867b94e481b201c807",
                 "shasum": ""
             },
             "require": {
@@ -321,7 +321,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-11-06 01:58:51"
+            "time": "2013-12-13 21:26:49"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -388,12 +388,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "1f7cabb841e62ec49615bd965ac780fd994b3f64"
+                "reference": "1481f096caead542c2dfadd67d9fd6124d97e273"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/1f7cabb841e62ec49615bd965ac780fd994b3f64",
-                "reference": "1f7cabb841e62ec49615bd965ac780fd994b3f64",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/1481f096caead542c2dfadd67d9fd6124d97e273",
+                "reference": "1481f096caead542c2dfadd67d9fd6124d97e273",
                 "shasum": ""
             },
             "require": {
@@ -402,7 +402,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -426,7 +426,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2013-10-17 11:48:11"
+            "time": "2013-11-26 16:42:52"
         },
         {
             "name": "wormhit/HighchartsPHP",
@@ -637,12 +637,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/ZendDeveloperTools.git",
-                "reference": "8e12160731336b3f1add18958beee77e6b8418dd"
+                "reference": "8c38e67884268c94426cc4c8647d064ef13d100a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/ZendDeveloperTools/zipball/8e12160731336b3f1add18958beee77e6b8418dd",
-                "reference": "8e12160731336b3f1add18958beee77e6b8418dd",
+                "url": "https://api.github.com/repos/zendframework/ZendDeveloperTools/zipball/8c38e67884268c94426cc4c8647d064ef13d100a",
+                "reference": "8c38e67884268c94426cc4c8647d064ef13d100a",
                 "shasum": ""
             },
             "require": {
@@ -690,7 +690,7 @@
                 "module",
                 "zf2"
             ],
-            "time": "2013-11-08 13:06:02"
+            "time": "2013-11-13 19:43:45"
         },
         {
             "name": "zendframework/zendframework",
@@ -698,12 +698,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zf2.git",
-                "reference": "51243078310e795719d488174503a43e00d931a5"
+                "reference": "9ff45735c699dde3d5f4b719e0b01c00c855c0e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zf2/zipball/51243078310e795719d488174503a43e00d931a5",
-                "reference": "51243078310e795719d488174503a43e00d931a5",
+                "url": "https://api.github.com/repos/zendframework/zf2/zipball/9ff45735c699dde3d5f4b719e0b01c00c855c0e9",
+                "reference": "9ff45735c699dde3d5f4b719e0b01c00c855c0e9",
                 "shasum": ""
             },
             "require": {
@@ -805,7 +805,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2013-11-07 15:26:47"
+            "time": "2013-12-16 12:03:10"
         }
     ],
     "packages-dev": [
