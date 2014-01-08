@@ -95,17 +95,7 @@ $formElements = $form->getElements();
         <?php endforeach; ?>
     <?php echo $formHelper->closeTag(); ?>
 
-    <div id="listResults" style="width:100%;">
-        <?php foreach ($this->transactions as $transaction) : ?>
-            <?php foreach ($columns as $key => $label) : ?>
-                <div class="ui-block-<?php $i = getGridVal($i); ?>">
-                    <?php
-                        echo $transaction->getData($key);
-                    ?>
-                </div>
-            <?php endforeach; ?>
-        <?php endforeach; ?>
-    </div>
+    <div id="listResults" style="width:100%;"></div>
 </div>
 
 <?php

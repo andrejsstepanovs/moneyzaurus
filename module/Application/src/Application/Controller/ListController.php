@@ -8,6 +8,7 @@ use Zend\Paginator\Adapter\Iterator as PaginatorIterator;
 use Paginator\Paginator;
 use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Where;
 
 /**
  * @method \Application\Helper\Lister\Helper getHelper()
@@ -15,7 +16,10 @@ use Zend\Db\Sql\Select;
 class ListController extends AbstractActionController
 {
     /** @var TransactionForm */
-    protected $form;
+    protected $_form;
+
+    /** @var array */
+    protected $_whereFilter;
 
     /**
      * @return void
@@ -43,6 +47,7 @@ class ListController extends AbstractActionController
             'success' => 1,
             'data'    => array(
                 'count'    => $totalItemCount,
+                'show_paginator' => (bool)count($this->_getWhereFilter()),
                 'order_by' => $this->getHelper()->getOrderBy(),
                 'order'    => $this->getHelper()->getOrder(),
                 'page'     => $this->getHelper()->getPage(),
@@ -91,10 +96,8 @@ class ListController extends AbstractActionController
      */
     protected function getTransactions()
     {
-        $order_by     = $this->getHelper()->getOrderBy();
-        $order        = $this->getHelper()->getOrder();
-        $page         = $this->getHelper()->getPage();
-        $itemsPerPage = $this->getHelper()->getItemsPerPage();
+        $orderBy = $this->getHelper()->getOrderBy();
+        $order   = $this->getHelper()->getOrder();
 
         $transactionTable = array('t' => 'transaction');
 
@@ -104,19 +107,76 @@ class ListController extends AbstractActionController
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
                ->join(array('c' => 'currency'), 't.id_currency = c.currency_id', array('currency_html' => 'html'))
                ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email'))
-               ->order($order_by . ' ' . $order)
-               ->quantifier(new Expression('SQL_CALC_FOUND_ROWS'))
-               ->limit($itemsPerPage)
-               ->offset($page * $itemsPerPage);
+               ->order($orderBy . ' ' . $order)
+               ->quantifier(new Expression('SQL_CALC_FOUND_ROWS'));
+
+        $where = $this->_getWhereFilter();
+        if (count($where)) {
+            $select->where($where);
+        } else {
+            $page         = $this->getHelper()->getPage();
+            $itemsPerPage = $this->getHelper()->getItemsPerPage();
+
+            $select->limit($itemsPerPage)
+                   ->offset($page * $itemsPerPage);
+        }
 
         $transactions = $this->getTable('transactions');
         $table = $transactions->getTable();
         $table->setTable($transactionTable);
 
-        /** @var $transactionsResuls \Zend\Db\ResultSet\HydratingResultSet */
-        $transactionsResuls = $table->fetch($select)->buffer();
+        /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
+        $transactionsResults = $table->fetch($select)->buffer();
 
-        return $transactionsResuls;
+        return $transactionsResults;
+    }
+
+    /**
+     * @return array
+     */
+    protected function _getWhereFilter()
+    {
+        if (null === $this->_whereFilter) {
+            $item   = $this->getHelper()->getItem();
+            $group  = $this->getHelper()->getGroup();
+            $date   = $this->getHelper()->getDate();
+            $idUser = $this->getHelper()->getIdUser();
+            $price  = $this->getHelper()->getPrice();
+
+            $where = array();
+
+            if (!empty($item)) {
+                $where[] = $this->getWhere()->like('i.name', $item . '%');
+            }
+
+            if (!empty($group)) {
+                $where[] = $this->getWhere()->like('g.name', $group . '%');
+            }
+
+            if (!empty($price)) {
+                $where[] = $this->getWhere()->like('t.price', $price . '%');
+            }
+
+            if (!empty($date)) {
+                $where[] = $this->getWhere()->like('t.date', $date . '%');
+            }
+
+            if (!empty($idUser)) {
+                $where[] = $this->getWhere()->equalTo('t.id_user', $idUser);
+            }
+
+            $this->_whereFilter = $where;
+        }
+
+        return $this->_whereFilter;
+    }
+
+    /**
+     * @return \Zend\Db\Sql\Where
+     */
+    private function getWhere()
+    {
+        return new Where();
     }
 
     /**
@@ -150,10 +210,10 @@ class ListController extends AbstractActionController
      */
     protected function getSearchForm()
     {
-        if (null === $this->form) {
-            $this->form = new TransactionForm();
+        if (null === $this->_form) {
+            $this->_form = new TransactionForm();
         }
-        return $this->form;
+        return $this->_form;
     }
 
 }
