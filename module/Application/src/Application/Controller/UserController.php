@@ -243,32 +243,25 @@ class UserController extends AbstractActionController
 
     public function downloadAction()
     {
-        $transactions = $this->_getTransactions();
-
-        ob_start();
-        $csv = fopen('php://output', 'w');
-        /** @var \Db\Db\ActiveRecord $record */
-        foreach ($transactions as $i => $record) {
-            if ($i == 0) {
-                fputcsv($csv, array_keys($record->toArray()));
-            }
-            fputcsv($csv, $record->toArray());
-        }
-
-        $output = ob_get_contents();
-
         $filename = 'file.csv';
 
-        /** @var \Zend\Http\PhpEnvironment\Response $response */
-        $response = $this->getResponse();
-        $headers = $response->getHeaders();
-        $headers->addHeaderLine('Content-Type', 'text/csv')
-                ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $filename . '"')
-                ->addHeaderLine('Accept-Ranges', 'bytes')
-                ->addHeaderLine('Content-Length', mb_strlen($output));
+        header('Content-Disposition: attachment; filename=' . $filename);
+        header('Content-Type: application/force-download');
+        header('Content-Type: application/octet-stream');
+        header('Content-Type: application/download');
+        header('Content-Description: File Transfer');
+        //header("Content-Length: " . filesize($filename)); // unknown
 
-        $response->setContent($csv);
-        return $response;
+
+        /** @var \Db\Db\ActiveRecord $record */
+        $csv = fopen('php://output', 'w');
+        $transactions = $this->_getTransactions();
+        foreach ($transactions as $i => $record) {
+            $data = !$i ? array_keys($record->toArray()) : $record->toArray();
+            fputcsv($csv, $data);
+        }
+
+        return false;
     }
 
     /**
