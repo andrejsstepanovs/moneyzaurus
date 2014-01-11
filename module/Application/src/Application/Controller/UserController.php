@@ -8,6 +8,8 @@ use Application\Form\Validator\Login as LoginValidator;
 use Application\Form\Validator\User as UserValidator;
 use Zend\Authentication\Storage\Session;
 use Application\Controller\AbstractActionController;
+use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Where;
 
 
 class UserController extends AbstractActionController
@@ -237,6 +239,75 @@ class UserController extends AbstractActionController
         }
 
         return $this->redirect()->toRoute('moneyzaurus');
+    }
+
+    public function downloadAction()
+    {
+        $transactions = $this->_getTransactions();
+
+        ob_start();
+        $csv = fopen('php://output', 'w');
+        /** @var \Db\Db\ActiveRecord $record */
+        foreach ($transactions as $i => $record) {
+            if ($i == 0) {
+                fputcsv($csv, array_keys($record->toArray()));
+            }
+            fputcsv($csv, $record->toArray());
+        }
+
+        $output = ob_get_contents();
+
+        $filename = 'file.csv';
+
+        /** @var \Zend\Http\PhpEnvironment\Response $response */
+        $response = $this->getResponse();
+        $headers = $response->getHeaders();
+        $headers->addHeaderLine('Content-Type', 'text/csv')
+                ->addHeaderLine('Content-Disposition', 'attachment; filename="' . $filename . '"')
+                ->addHeaderLine('Accept-Ranges', 'bytes')
+                ->addHeaderLine('Content-Length', mb_strlen($output));
+
+        $response->setContent($csv);
+        return $response;
+    }
+
+    /**
+     * @return \Zend\Db\ResultSet\HydratingResultSet
+     */
+    protected function _getTransactions()
+    {
+        $transactionTable = array('t' => 'transaction');
+
+        $select = new Select();
+        $select->from($transactionTable)
+               ->columns(array('id' => 'transaction_id', 'price', 'date', 'created' => 'date_created'))
+               ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item' => 'name'))
+               ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group' => 'name'))
+               ->join(array('c' => 'currency'), 't.id_currency = c.currency_id', array('currency' => 'currency_id'))
+               ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email'))
+               ->order('t.date ' . \Zend\Db\Sql\Select::ORDER_DESCENDING);
+
+        $where = array(
+            $this->getWhere()->equalTo('t.id_user', $this->getUserId())
+        );
+        $select->where($where);
+
+        $transactions = $this->getTable('transactions');
+        $table = $transactions->getTable();
+        $table->setTable($transactionTable);
+
+        /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
+        $transactionsResults = $table->fetch($select)->buffer();
+        return $transactionsResults;
+    }
+
+
+    /**
+     * @return \Zend\Db\Sql\Where
+     */
+    private function getWhere()
+    {
+        return new Where();
     }
 
 }

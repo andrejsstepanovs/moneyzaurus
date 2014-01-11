@@ -4,8 +4,6 @@ namespace Application\Controller;
 use Application\Controller\AbstractActionController;
 use Application\Helper\Lister\Helper as ListHelper;
 use Application\Form\Form\Transaction as TransactionForm;
-use Zend\Paginator\Adapter\Iterator as PaginatorIterator;
-use Paginator\Paginator;
 use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;

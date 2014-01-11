@@ -46,3 +46,16 @@ foreach ($form as $element) {
 }
 
 echo $this->form()->closeTag();
+
+?>
+
+<hr/>
+
+<a href="<?php echo $this->url('user', array('action' => 'download')); ?>"
+   data-role="button"
+   data-icon="arrow-d"
+   data-iconpos="right"
+   data-theme="b"
+   data-inline="true">
+    <?php echo $this->translate('Download transactions as *.csv'); ?>
+</a>

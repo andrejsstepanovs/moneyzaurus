@@ -22,7 +22,7 @@ class TransactionController extends AbstractActionController
     protected $validator;
 
     /** @var array */
-    protected $datalist;
+    protected $dataList;
 
 
     /**
@@ -63,8 +63,8 @@ class TransactionController extends AbstractActionController
      */
     public function getDatalist()
     {
-        if (null === $this->datalist) {
-            $this->datalist = array();
+        if (null === $this->dataList) {
+            $this->dataList = array();
             $datalistElements = array(
                 'item'  => 'name',
                 'group' => 'name'
@@ -88,11 +88,11 @@ class TransactionController extends AbstractActionController
                     $dataValues[] = $model->getData($column);
                 }
 
-                $this->datalist[$name] = $dataValues;
+                $this->dataList[$name] = $dataValues;
             }
         }
 
-        return $this->datalist;
+        return $this->dataList;
     }
 
     /**
