@@ -5,6 +5,7 @@ function TransactionsList(parameters)
     this.iterator = ["a", "b", "c", "d", "e"];
     this.i = 0;
     this.resetData();
+    this.rowClass = "transaction-row";
 }
 
 TransactionsList.prototype.setFormElement = function(formElement)
@@ -61,8 +62,10 @@ TransactionsList.prototype.getRowHtml = function(row, columns)
     for (var i in columns) {
         if (columns.hasOwnProperty(i)) {
             var key = columns[i];
+            var gridValue = this.getGridVal();
+            var dataId = "data-id=\"" + row["transaction_id"] + "\"";
 
-            html += "<div class=\"ui-block-" + this.getGridVal() + "\">";
+            html += "<div class=\"" + this.rowClass + " ui-block-" + gridValue + "\" " + dataId + ">";
             html += row[key];
             html += "</div>";
         }
@@ -87,6 +90,8 @@ TransactionsList.prototype.buildTable = function(data)
     }
 
     el.html(html);
+
+    this.bindRowClick(rows);
 }
 
 TransactionsList.prototype.request = function()
@@ -104,5 +109,42 @@ TransactionsList.prototype.request = function()
     .fail (function(jqxhr, textStatus, error) {
         var err = textStatus + ", " + error;
         console.log("Request Failed: " + err);
+    });
+}
+
+TransactionsList.prototype.bindRowClick = function(rows)
+{
+    $("div." + this.rowClass).each(function(){
+        $(this).click(function(){
+            var transactionId = $(this).attr("data-id");
+            console.log(transactionId);
+
+            for (var i in rows) {
+                if (rows.hasOwnProperty(i)) {
+                    var data = false;
+                    $.each(rows[i], function(key, value) {
+                        if (key == "transaction_id" && value == transactionId) {
+
+                            data = rows[i];
+                            return false; //break;
+                        }
+                    });
+
+                    if (data != false) {
+                        $("#editTransaction form :input[name=item]").val(data["item_name"]);
+                        $("#editTransaction form :input[name=group]").val(data["group_name"]);
+                        $("#editTransaction form :input[name=price]").val(data["price"]);
+                        $("#editTransaction form :input[name=date]").val(data["date"]);
+                        $("#editTransaction form :input[name=currency]").find("option[value=" + data["id_currency"] + "]").attr('selected','selected');
+                        $("#editTransaction form :input[name=transaction_id]").val(data["transaction_id"]);
+
+                        $("#editTransaction").popup("open");
+                        break;
+                    } else {
+                        console.log("Transaction not found.");
+                    }
+                }
+            }
+        });
     });
 }

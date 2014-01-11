@@ -14,7 +14,10 @@ use Zend\Db\Sql\Where;
 class ListController extends AbstractActionController
 {
     /** @var TransactionForm */
-    protected $_form;
+    protected $_transactionForm;
+
+    /** @var TransactionForm */
+    protected $_searchForm;
 
     /** @var array */
     protected $_whereFilter;
@@ -68,10 +71,31 @@ class ListController extends AbstractActionController
     public function indexAction()
     {
         return array(
-            'order_by'     => $this->getHelper()->getOrderBy(),
-            'order'        => $this->getHelper()->getOrder(),
-            'form'         => $this->getSearchForm(),
+            'form'            => $this->getSearchForm(),
+            'transactionForm' => $this->getTransactionForm()
         );
+    }
+
+    /**
+     * @return \Application\Form\Form\Transaction
+     */
+    public function getTransactionForm()
+    {
+        if (null === $this->_transactionForm) {
+            $this->_transactionForm = new TransactionForm();
+            //$this->_transactionForm->setAttribute('id', 'editTransactionForm');
+            $this->_transactionForm->remove('id_user');
+
+            $formElements = $this->_transactionForm->getElements();
+
+            $currencyElement = $formElements['currency'];
+            $dateElement     = $formElements['date'];
+
+            $currencyElement->setValueOptions($this->getCurrencyValueOptions());
+            $dateElement->setValue(date('Y-m-d'));
+        }
+
+        return $this->_transactionForm;
     }
 
     /**
@@ -188,10 +212,10 @@ class ListController extends AbstractActionController
      */
     protected function getSearchForm()
     {
-        if (null === $this->_form) {
-            $this->_form = new TransactionForm();
+        if (null === $this->_searchForm) {
+            $this->_searchForm = new TransactionForm();
         }
-        return $this->_form;
+        return $this->_searchForm;
     }
 
 }
