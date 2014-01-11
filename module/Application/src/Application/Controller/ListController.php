@@ -7,6 +7,7 @@ use Application\Form\Form\Transaction as TransactionForm;
 use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
+use Zend\Db\TableGateway\Exception\RuntimeException;
 
 /**
  * @method \Application\Helper\Lister\Helper getHelper()
@@ -295,5 +296,47 @@ class ListController extends AbstractActionController
             ->setIdGroup($group->getId())
             ->setIdCurrency($currency->getId())
             ->save();
+    }
+
+    public function deleteAction()
+    {
+        $transactionId = $this->getHelper()->getTransactionId();
+
+        $deleted = false;
+        $error = '';
+        try {
+            $deleted = $this->_deleteTransaction($transactionId);
+        } catch (\Exception $exc) {
+            $error = $exc->getMessage();
+        }
+
+        $data = array(
+            'success' => $deleted,
+            'error'   => $error
+        );
+
+        $response = $this->getResponse();
+        $response->setContent(\Zend\Json\Json::encode($data));
+
+        return $response;
+    }
+
+    /**
+     * @param int $transactionId
+     *
+     * @return bool
+     * @throws \Zend\Db\TableGateway\Exception\RuntimeException
+     */
+    protected function _deleteTransaction($transactionId)
+    {
+        $table = $this->getTable('transaction');
+        $table->setTransactionId($transactionId);
+        $table->load();
+
+        if ($table->getIdUser() != $this->getUserId()) {
+            throw new RuntimeException('It is not allowed to edit other user transactions.');
+        }
+
+        return (bool)$table->delete();
     }
 }

@@ -99,4 +99,16 @@ $formElements = $form->getElements();
         <?php endforeach; ?>
         <input type="hidden" name="transaction_id" id="transaction_id" value="">
     <?php echo $this->form()->closeTag(); ?>
+
+    <a href="javascript:void(0)"
+       data-role="button"
+       data-icon="delete"
+       data-iconpos="right"
+       data-theme="b"
+       data-inline="true"
+       data-mini="true"
+       id="deleteTransactionButton"
+       data-action="<?php echo $this->url('list', array('action' => 'delete')); ?>">
+        <?php echo $this->translate('Delete'); ?>
+    </a>
 </div>

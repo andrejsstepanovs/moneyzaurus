@@ -38,8 +38,9 @@ $(document).bind("pageinit", function(){
             }
         );
 
+        var editForm = $("#editTransaction form");
 
-        $("#editTransaction form").bind('submit', function() {
+        editForm.bind('submit', function() {
             var action = $(this).attr("action");
             var params = form_to_json($(this));
 
@@ -51,7 +52,26 @@ $(document).bind("pageinit", function(){
                 } else {
                     alert(json.error);
                 }
-            })
+            });
+
+            return false;
+        });
+
+        $("#deleteTransactionButton").bind('click', function() {
+            var action = $(this).attr("data-action");
+
+            var transactionId = $("#editTransaction form :input[name=transaction_id]").val();
+            var params = {transaction_id: transactionId};
+
+            $.getJSON(action, params)
+                .done (function(json) {
+                if (json.success) {
+                    $("#editTransaction").popup("close");
+                    listFormElement.submit();
+                } else {
+                    alert(json.error);
+                }
+            });
 
             return false;
         });
