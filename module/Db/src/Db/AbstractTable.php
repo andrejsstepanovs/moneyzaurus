@@ -245,7 +245,7 @@ class AbstractTable extends AbstractTableGateway
     {
         $where = array();
         foreach ($this->getPrimary() AS $key) {
-            if ($model->hasData($key)) {
+            if ($model->hasData($key) && $model->getData($key)) {
                 $where[$key] = $model->getData($key);
             }
         }
