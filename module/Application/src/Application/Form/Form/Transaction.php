@@ -97,7 +97,7 @@ class Transaction extends Form
                 'type'         => 'submit',
                 'id'           => 'submit',
                 'value'        => 'Save',
-                'data-icon'    => 'plus',
+                'data-icon'    => 'check',
                 'data-iconpos' => 'left'
             ),
         ));

@@ -31,7 +31,7 @@ class Month extends Form
                 'type'         => 'submit',
                 'id'           => 'submit',
                 'value'        => 'Search',
-                'data-icon'    => 'plus',
+                'data-icon'    => 'search',
                 'data-iconpos' => 'left',
                 'data-ajax'    => 'false',
                 'class' => 'disable-ajax'

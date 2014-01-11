@@ -16,7 +16,7 @@ return array(
                  'route' => 'pie',
                  'a_params' => array(
                     'data-transition' => 'slide',
-                    'data-icon'       => 'star',
+                    'data-icon'       => 'eye',
                  )
              ),
 //             array(
@@ -43,7 +43,7 @@ return array(
                  'data-transition' => 'slide',
                  'a_params' => array(
                     'data-transition' => 'slide',
-                    'data-icon'       => 'bars',
+                    'data-icon'       => 'user',
                  )
              ),
         ),
