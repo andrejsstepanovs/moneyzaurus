@@ -46,7 +46,7 @@ class Transaction extends Form
             'attributes' => array(
                 'id'          => 'price',
                 'type'        => 'text',
-                'placeholder' => '0.00',
+                'placeholder' => '0.00 Sum',
                 'required'    => 'required',
                 'alt'         => 'decimal'
             ),
@@ -81,8 +81,9 @@ class Transaction extends Form
         $this->add(array(
             'name' => 'id_user',
             'attributes' => array(
-                'type' => 'Zend\Form\Element\Hidden',
-                'id'   => 'id_user',
+                'type'        => 'Zend\Form\Element\Hidden',
+                'id'          => 'id_user',
+                'placeholder' => 'User',
 //                'placeholder' => date('Y-m-d'),
             ),
             'options' => array(

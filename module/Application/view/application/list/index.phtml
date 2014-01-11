@@ -5,14 +5,13 @@ $this->headTitle('List');
 /** @var \Zend\Form\View\Helper\Form $formHelper */
 $orderBy    = $this->order_by;
 $order      = $this->order;
-$paginator  = $this->paginator;
 $formHelper = $this->form();
 $form       = $this->form;
 $form->setAttributes(array(
-    'id'     => 'list',
-    'name'   => 'list',
-    'action' => $this->url('list'),
-    'style'  => 'width:100%',
+    'id'        => 'list',
+    'name'      => 'list',
+    'action'    => $this->url('list'),
+    'style'     => 'width:100%',
     'data-ajax' => 'false'
 ))->prepare();
 
@@ -68,38 +67,16 @@ $formElements = $form->getElements();
             <div class="ui-block-<?php $i = getGridVal($i); ?>"
                 <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
 
-                <?php
-                $icon = sprintf(
-                    '<i class="icon-chevron-%s"></i>',
-                    ($urlOrder[$key] == 'ASC' ? 'down' : 'up')
-                );
+                <?php echo $this->formElement($element); ?>
 
-                $label = $element->getLabel();
-                echo sprintf(
-                    '<a href="%s">%s</a>',
-                    $this->url('list', array('order_by' => $key, 'order' => $urlOrder[$key])),
-                    $icon . $label
-                );
-
-                echo $this->formElement($element);
-
-                if ($formElementErrors) {
-                    ?>
+                <?php if ($formElementErrors): ?>
                     <span class="help-inline">
                         <?php echo $formElementErrors; ?>
                     </span>
-                <?php
-                }
-                ?>
+                <?php endif; ?>
             </div>
         <?php endforeach; ?>
     <?php echo $formHelper->closeTag(); ?>
 
     <div id="listResults" style="width:100%;"></div>
 </div>
-
-<?php
-
-echo $this->paginationControl(
-    $paginator, 'Sliding', 'paginator-slide', array('order_by' => $orderBy, 'order' => $order)
-);

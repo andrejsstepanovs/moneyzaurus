@@ -47,10 +47,8 @@ class ListController extends AbstractActionController
             'success' => 1,
             'data'    => array(
                 'count'    => $totalItemCount,
-                'show_paginator' => (bool)count($this->_getWhereFilter()),
                 'order_by' => $this->getHelper()->getOrderBy(),
                 'order'    => $this->getHelper()->getOrder(),
-                'page'     => $this->getHelper()->getPage(),
                 'rows'     => $rows,
                 'columns'  => array( //http://stackoverflow.com/questions/14261115/zf2-use-translator-in-controller
                     'item_name',
@@ -71,22 +69,9 @@ class ListController extends AbstractActionController
 
     public function indexAction()
     {
-        $transactionsResults = $this->getTransactions();
-        $totalItemCount = $this->getTotalCount();
-
-        $transactionsResults->current();
-        $paginator = new Paginator(new PaginatorIterator($transactionsResults));
-        $paginator->setTotalItemCount($totalItemCount)
-                  ->setCurrentPageNumber($this->getHelper()->getPage())
-                  ->setItemCountPerPage($this->getHelper()->getItemsPerPage())
-                  ->setPageRange(5);
-
         return array(
-            'transactions' => $transactionsResults,
             'order_by'     => $this->getHelper()->getOrderBy(),
             'order'        => $this->getHelper()->getOrder(),
-            'page'         => $this->getHelper()->getPage(),
-            'paginator'    => $paginator,
             'form'         => $this->getSearchForm(),
         );
     }
@@ -108,17 +93,12 @@ class ListController extends AbstractActionController
                ->join(array('c' => 'currency'), 't.id_currency = c.currency_id', array('currency_html' => 'html'))
                ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email'))
                ->order($orderBy . ' ' . $order)
-               ->quantifier(new Expression('SQL_CALC_FOUND_ROWS'));
+               ->quantifier(new Expression('SQL_CALC_FOUND_ROWS'))
+               ->limit($this->getHelper()->getItemsPerPage());
 
         $where = $this->_getWhereFilter();
         if (count($where)) {
             $select->where($where);
-        } else {
-            $page         = $this->getHelper()->getPage();
-            $itemsPerPage = $this->getHelper()->getItemsPerPage();
-
-            $select->limit($itemsPerPage)
-                   ->offset($page * $itemsPerPage);
         }
 
         $transactions = $this->getTable('transactions');

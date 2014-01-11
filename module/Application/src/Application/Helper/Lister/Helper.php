@@ -21,8 +21,8 @@ class Helper extends AbstractHelper
     public function getOrderBy()
     {
         $params = $this->getParams();
-        $order_by = $params->fromRoute('order_by') ? $params->fromRoute('order_by') : 'transaction_id';
-        return $order_by;
+        $orderBy = $params->fromRoute('order_by') ? $params->fromRoute('order_by') : 'transaction_id';
+        return $orderBy;
     }
 
     /**
@@ -31,18 +31,8 @@ class Helper extends AbstractHelper
     public function getOrder()
     {
         $params = $this->getParams();
-        $order  = $params->fromRoute('order') ? $params->fromRoute('order') : \Zend\Db\Sql\Select::ORDER_ASCENDING;
+        $order  = $params->fromRoute('order') ? $params->fromRoute('order') : \Zend\Db\Sql\Select::ORDER_DESCENDING;
         return $order;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPage()
-    {
-        $params = $this->getParams();
-        $page   = $params->fromRoute('page') ? (int) $params->fromRoute('page') : 1;
-        return $page;
     }
 
     /**
@@ -50,7 +40,7 @@ class Helper extends AbstractHelper
      */
     public function getItemsPerPage()
     {
-        return 20;
+        return 100;
     }
 
     /**
