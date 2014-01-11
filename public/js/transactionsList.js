@@ -67,6 +67,9 @@ TransactionsList.prototype.getRowHtml = function(row, columns)
 
             html += "<div class=\"" + this.rowClass + " ui-block-" + gridValue + "\" " + dataId + ">";
             html += row[key];
+            if (key == "price") {
+                html += " " + row["currency_html"];
+            }
             html += "</div>";
         }
     }
