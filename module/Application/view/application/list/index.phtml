@@ -79,7 +79,9 @@ $formElements = $form->getElements();
         <?php echo $this->translate('Close'); ?>
     </a>
     <?php
-    $transactionForm->setAttribute('action', $this->url('transaction'))->prepare();
+    $transactionForm
+        ->setAttribute('action', $this->url('transaction'))
+        ->setAttribute('style', 'padding:20px')->prepare();
 
     echo $this->form()->openTag($transactionForm);
 

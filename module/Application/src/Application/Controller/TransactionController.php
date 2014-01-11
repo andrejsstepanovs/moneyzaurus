@@ -117,12 +117,14 @@ class TransactionController extends AbstractActionController
             $form->setInputFilter($this->getValidator()->getInputFilter());
             $form->setData($request->getPost());
 
+            $transactionId = $request->getPost()->get('transaction_id');
+
             if ($form->isValid()) {
 
                 $data = $form->getData();
                 try {
-
                     $transaction = $this->saveTransaction(
+                        $transactionId,
                         $data['item'],
                         $data['group'],
                         $data['price'],
@@ -155,20 +157,26 @@ class TransactionController extends AbstractActionController
     }
 
     /**
+     * @param int    $transactionId
      * @param string $item
      * @param string $group
-     * @param float $price
+     * @param float  $price
      * @param string $currency
-     * @param date $date
+     * @param date   $date
      * @return \Db\Db\ActiveRecord transaction
      */
     protected function saveTransaction(
+            $transactionId,
             $itemName,
             $groupName,
             $price,
             $currencyId,
             $date
     ) {
+        if ($transactionId == 0) {
+            $transactionId = null;
+        }
+
         $currency = $this->getTable('currency')
                          ->setId($currencyId)
                          ->load();
@@ -191,14 +199,16 @@ class TransactionController extends AbstractActionController
             $group->save();
         }
 
-        return $this->getTable('transaction')
-                    ->setPrice($price)
-                    ->setDate($date)
-                    ->setIdUser($this->getUserId())
-                    ->setIdItem($item->getId())
-                    ->setIdGroup($group->getId())
-                    ->setIdCurrency($currency->getId())
-                    ->save();
+        return $this
+            ->getTable('transaction')
+            ->setTransactionId($transactionId)
+            ->setPrice($price)
+            ->setDate($date)
+            ->setIdUser($this->getUserId())
+            ->setIdItem($item->getId())
+            ->setIdGroup($group->getId())
+            ->setIdCurrency($currency->getId())
+            ->save();
     }
 
 }
