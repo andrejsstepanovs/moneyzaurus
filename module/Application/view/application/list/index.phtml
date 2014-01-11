@@ -80,7 +80,7 @@ $formElements = $form->getElements();
     </a>
     <?php
     $transactionForm
-        ->setAttribute('action', $this->url('transaction'))
+        ->setAttribute('action', $this->url('list', array('action' => 'save')))
         ->setAttribute('style', 'padding:20px')->prepare();
 
     echo $this->form()->openTag($transactionForm);

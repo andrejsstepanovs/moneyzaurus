@@ -218,4 +218,82 @@ class ListController extends AbstractActionController
         return $this->_searchForm;
     }
 
+    public function saveAction()
+    {
+        $item   = $this->getHelper()->getItem();
+        $group  = $this->getHelper()->getGroup();
+        $date   = $this->getHelper()->getDate();
+        $currency = $this->getHelper()->getCurrencyId();
+        $price  = $this->getHelper()->getPrice();
+        $transactionId = $this->getHelper()->getTransactionId();
+
+        $transaction = $this->_saveTransaction(
+            $transactionId,
+            $item,
+            $group,
+            $price,
+            $currency,
+            $date
+        );
+
+        $data = array(
+            'success' => $transaction->getTransactionId(),
+            'error'   => ''
+        );
+
+        $response = $this->getResponse();
+        $response->setContent(\Zend\Json\Json::encode($data));
+
+        return $response;
+    }
+
+    /**
+     * @param int    $transactionId
+     * @param string $itemName
+     * @param string $groupName
+     * @param string $price
+     * @param string $currencyId
+     * @param string $date
+     *
+     * @return \Db\Db\ActiveRecord
+     */
+    protected function _saveTransaction($transactionId, $itemName, $groupName, $price, $currencyId, $date)
+    {
+        if ($transactionId == 0) {
+            $transactionId = null;
+        }
+
+        $currency = $this->getTable('currency')
+                         ->setId($currencyId)
+                         ->load();
+
+        $item = $this->getTable('item');
+        try {
+            $item->setName($itemName)
+                 ->setIdUser($this->getUserId())
+                 ->load();
+        } catch (\Db\Db\Exception\ModelNotFoundException $exc) {
+            $item->save();
+        }
+
+        $group = $this->getTable('group');
+        try {
+            $group->setName($groupName)
+                  ->setIdUser($this->getUserId())
+                  ->load();
+        } catch (\Db\Db\Exception\ModelNotFoundException $exc) {
+            $group->save();
+        }
+
+        return $this
+            ->getTable('transaction')
+            ->setTransactionId($transactionId)
+            ->setPrice($price)
+            ->setDate($date)
+            ->setIdUser($this->getUserId())
+            ->setIdItem($item->getId())
+            ->setIdGroup($group->getId())
+            ->setIdCurrency($currency->getId())
+            ->save();
+    }
 }

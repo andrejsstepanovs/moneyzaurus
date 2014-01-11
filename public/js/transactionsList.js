@@ -143,8 +143,6 @@ TransactionsList.prototype.bindRowClick = function(rows)
 
                         $("#editTransaction").popup("open");
                         break;
-                    } else {
-                        console.log("Transaction not found.");
                     }
                 }
             }

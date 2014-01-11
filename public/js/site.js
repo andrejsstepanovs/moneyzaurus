@@ -37,6 +37,30 @@ $(document).bind("pageinit", function(){
                 });
             }
         );
+
+
+        $("#editTransaction form").bind('submit', function() {
+            var action = $(this).attr("action");
+            var params = form_to_json($(this));
+
+            $.getJSON(action, params)
+                .done (function(json) {
+                if (json.success) {
+                    $("#editTransaction").popup("close");
+                    listFormElement.submit();
+                } else {
+                    alert(json.error);
+                }
+            })
+
+            return false;
+        });
     }
 });
 
+function form_to_json (selector) {
+    var ary = $(selector).serializeArray();
+    var obj = {};
+    for (var a = 0; a < ary.length; a++) obj[ary[a].name] = ary[a].value;
+    return obj;
+}

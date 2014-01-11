@@ -77,6 +77,17 @@ class Helper extends AbstractHelper
     }
 
     /**
+     * @return null|int
+     */
+    public function getTransactionId()
+    {
+        $params = $this->getParams();
+        $transactionId  = $params->fromQuery('transaction_id');
+
+        return $transactionId;
+    }
+
+    /**
      * @return null|string
      */
     public function getDate()
@@ -85,6 +96,17 @@ class Helper extends AbstractHelper
         $date   = $params->fromQuery('date');
 
         return $date;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getCurrencyId()
+    {
+        $params = $this->getParams();
+        $currency = $params->fromQuery('currency');
+
+        return $currency;
     }
 
     /**
