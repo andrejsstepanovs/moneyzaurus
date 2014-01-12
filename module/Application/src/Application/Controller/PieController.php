@@ -124,6 +124,7 @@ class PieController extends AbstractActionController
         $month = $form->get('month');
         $month->setValue($this->getMonthHelper()->getMonthRequestValue());
 
+        $form->remove('submit');
         return $form;
     }
 
@@ -161,10 +162,10 @@ class PieController extends AbstractActionController
 
         $select = new Select();
         $select->from($transactionTable)
-        ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item_name' => 'name'))
-        ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
-        ->join(array('c' => 'currency'), 't.id_currency = c.currency_id', array('currency_html' => 'html'))
-        ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email'));
+            ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item_name' => 'name'))
+            ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
+            ->join(array('c' => 'currency'), 't.id_currency = c.currency_id', array('currency_html' => 'html'))
+            ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email'));
 
         return $select;
     }
@@ -231,8 +232,6 @@ class PieController extends AbstractActionController
         $this->transactionsData = null;
         // set type = null to get all transaction data. Use this data to get other group ids.
         $transactionData = $this->setParam('type', null)->getTransactionsData();
-
-        \DEBUG::log(count($transactionData));
 
         $this->getHelper()->setTransactionsData($transactionData);
 
