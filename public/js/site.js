@@ -76,6 +76,14 @@ $(document).bind("pageinit", function(){
             return false;
         });
     }
+
+    var transactionForm = $("#transactionForm");
+    if (transactionForm.length) {
+        transaction = new Transaction();
+        transaction.setFormElement(transactionForm);
+        transaction.start();
+    }
+
 });
 
 function form_to_json (selector) {

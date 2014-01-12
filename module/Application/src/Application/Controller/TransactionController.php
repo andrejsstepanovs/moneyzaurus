@@ -33,6 +33,7 @@ class TransactionController extends AbstractActionController
         if (null === $this->form) {
             $this->form = new TransactionForm();
             $this->form->remove('id_user');
+            $this->form->setAttribute('id', 'transactionForm');
 
             $formElements = $this->form->getElements();
 
@@ -211,4 +212,32 @@ class TransactionController extends AbstractActionController
             ->save();
     }
 
+    public function predictAction()
+    {
+        $success = true;
+        $group = array(
+            'aaaa',
+            'bbbb',
+            'cccc'
+        );
+        $price= array(
+            '1.00',
+            '2.00',
+            '3.00'
+        );
+
+        $data = array(
+            'success' => $success,
+            'data'    => array(
+                'group' => $group,
+                'price' => $price
+            ),
+            'error'   => ''
+        );
+
+        $response = $this->getResponse();
+        $response->setContent(\Zend\Json\Json::encode($data));
+
+        return $response;
+    }
 }
