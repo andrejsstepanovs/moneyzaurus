@@ -23,7 +23,7 @@ $columns = array(
     //'currency_html'  => $this->translate('Currency'),
     'date'           => $this->translate('Date'),
     //'date_created'   => $this->translate('Created'),
-    'id_user'        => $this->translate('User'),
+    //'id_user'        => $this->translate('User'),
 );
 
 $i = 0;
@@ -31,7 +31,7 @@ $i = 0;
 
 function getGridVal($i)
 {
-    $iterator = array('a', 'b', 'c', 'd', 'e');
+    $iterator = array('a', 'b', 'c', 'd');
     echo $iterator[$i];
     $i++;
     if ($i >= 5) {

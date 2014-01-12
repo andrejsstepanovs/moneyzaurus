@@ -57,7 +57,7 @@ class ListController extends AbstractActionController
                     'group_name',
                     'price',
                     'date',
-                    'id_user',
+                    //'id_user',
                 )
             ),
             'script'  => $script
@@ -143,7 +143,7 @@ class ListController extends AbstractActionController
             $item   = $this->getHelper()->getItem();
             $group  = $this->getHelper()->getGroup();
             $date   = $this->getHelper()->getDate();
-            $idUser = $this->getHelper()->getIdUser();
+            $idUser = $this->getUserId();
             $price  = $this->getHelper()->getPrice();
 
             $where = array();
@@ -164,9 +164,7 @@ class ListController extends AbstractActionController
                 $where[] = $this->getWhere()->like('t.date', $date . '%');
             }
 
-            if (!empty($idUser)) {
-                $where[] = $this->getWhere()->equalTo('t.id_user', $idUser);
-            }
+            $where[] = $this->getWhere()->equalTo('t.id_user', $idUser);
 
             $this->_whereFilter = $where;
         }

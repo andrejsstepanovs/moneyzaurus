@@ -2,7 +2,7 @@ function TransactionsList(parameters)
 {
     this.parameters = parameters ? parameters : {};
     this.formElement = null;
-    this.iterator = ["a", "b", "c", "d", "e"];
+    this.iterator = ["a", "b", "c", "d"];
     this.i = 0;
     this.resetData();
     this.rowClass = "transaction-row";
@@ -49,7 +49,7 @@ TransactionsList.prototype.getGridVal = function()
     var j = this.i;
 
     this.i++;
-    if (this.i >= 5) {
+    if (this.i >= this.iterator.length) {
         this.i = 0;
     }
 
