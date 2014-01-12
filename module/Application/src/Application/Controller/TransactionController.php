@@ -6,6 +6,7 @@ use Application\Form\Form\Transaction as TransactionForm;
 use Application\Controller\AbstractActionController;
 use Application\Exception;
 use Application\Helper\Transaction\Helper as TransactionHelper;
+use Zend\Db\Sql\Predicate\Predicate;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\Db\Sql\Expression;
@@ -240,7 +241,7 @@ class TransactionController extends AbstractActionController
                 break;
             case 'price':
                 $group = array();
-                $price = array();//$this->_predictPrice();
+                $price = $this->_predictPrice();
                 break;
             default:
                 $group = array();
@@ -285,8 +286,52 @@ class TransactionController extends AbstractActionController
      */
     protected function _predictPrice()
     {
-        $prices = array();
+        $data = array('by_count' => array(), 'by_day' => array());
 
+        $transactions = $this->getPriceTransactions();
+        /** \Db\Db\ActiveRecord */
+        foreach ($transactions as $transaction) {
+            $day = $transaction->getData('day_of_the_week');
+            $price = $transaction->getData('price');
+
+            if (empty($data['by_count'][$price])) {
+                $data['by_count'][$price] = 1;
+            } else {
+                $data['by_count'][$price] = $data['by_count'][$price] + 1;
+            }
+
+            if (empty($data[$day][$price])) {
+                $data['by_day'][$day][$price] = 1;
+            } else {
+                $data['by_day'][$day][$price] = $data[$day][$price] + 1;
+            }
+        }
+
+        $allPrices = array_keys($data['by_count']);
+
+        asort($data['by_count']);
+
+        $prices = array();
+        $prices[] = end(array_keys($data['by_count'])); // most popular
+
+        $currentDay = date('w') + 1;
+        if (array_key_exists($currentDay, $data['by_day'])) {
+            $pricesInThisDay = array_keys($data['by_day'][$currentDay]);
+            $prices[] = reset($pricesInThisDay); // last used in this day
+            $prices[] = next($pricesInThisDay);  // next last used
+
+            sort($pricesInThisDay);
+            $prices[] = end($pricesInThisDay); // most popular in this day
+        }
+
+        $prices[] = next(array_keys($data['by_count'])); // next most popular
+        $prices[] = next(array_keys($data['by_count'])); // next most popular
+        $prices[] = max($allPrices);
+
+        $prices = array_filter($prices, function($val){ return empty($val) ? false : true; });
+
+        sort($prices);
+        $prices = array_unique($prices);
         return $prices;
     }
 
@@ -305,6 +350,40 @@ class TransactionController extends AbstractActionController
                ->group('g.name')
                ->order(new Expression("COUNT(*) DESC"))
                ->limit(5);
+
+        $where = $this->_getWhereFilter();
+        if (count($where)) {
+            $select->where($where);
+        }
+
+        //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
+
+        $transactions = $this->getTable('transactions');
+        $table = $transactions->getTable();
+        $table->setTable($transactionTable);
+
+        /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
+        $transactionsResults = $table->fetch($select)->buffer();
+
+        return $transactionsResults;
+    }
+
+
+    /**
+     * @return \Zend\Db\ResultSet\HydratingResultSet
+     */
+    protected function getPriceTransactions()
+    {
+        $transactionTable = array('t' => 'transaction');
+
+        $select = new Select();
+        $select->from($transactionTable)
+               ->columns(array('price', 'day_of_the_week' => new Expression('DAYOFWEEK(t.date)')))
+               ->join(array('i' => 'item'), 't.id_item = i.item_id', array())
+               ->join(array('g' => 'group'), 't.id_group = g.group_id', array())
+               ->order($this->getHelper()->getOrderBy() . ' ' . $this->getHelper()->getOrder())
+               //->limit(100)
+               ;
 
         $where = $this->_getWhereFilter();
         if (count($where)) {
@@ -343,7 +422,7 @@ class TransactionController extends AbstractActionController
                 $where[] = $this->getWhere()->equalTo('g.name', $group);
             }
 
-            $where[] = $this->getWhere()->greaterThan('t.date', date('Y-m-d H:i:s', strtotime('-1 year')));
+            //$where[] = $this->getWhere()->greaterThan('t.date', date('Y-m-d H:i:s', strtotime('-1 year')));
 
             $where[] = $this->getWhere()->equalTo('t.id_user', $idUser);
 
