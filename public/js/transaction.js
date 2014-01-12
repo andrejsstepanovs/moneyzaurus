@@ -71,20 +71,38 @@ Transaction.prototype.getDateElement = function()
     return this.dateElement;
 }
 
+Transaction.prototype.getPredictionId = function(key)
+{
+    return "predict-" + key;
+}
+
+Transaction.prototype.getPredictionElement = function(key)
+{
+    return $("#" + this.getPredictionId(key));
+}
+
 Transaction.prototype.start = function()
 {
     this.getItemElement().focus();
 
     var self = this;
-    this.getItemElement().bind("input", function() {
-        self.setData("item", $(this).val());
-        self.fetchPrediction(self.getGroupElement(), "group");
+    this.getItemElement().bind("input keyup change", function() {
+        if (self.getItemElement().val() == "") {
+            self.getPredictionElement("group").hide();
+        } else {
+            self.setData("item", $(this).val());
+            self.fetchPrediction(self.getGroupElement(), "group");
+        }
     });
 
-    this.getGroupElement().bind("input", function() {
-        self.setData("item", self.getItemElement().val());
-        self.setData("group", $(this).val());
-        self.fetchPrediction(self.getPriceElement(), "price");
+    this.getGroupElement().bind("input keyup change", function() {
+        if (self.getGroupElement().val() == "") {
+            self.getPredictionElement("price").hide();
+        } else {
+            self.setData("item", self.getItemElement().val());
+            self.setData("group", $(this).val());
+            self.fetchPrediction(self.getPriceElement(), "price");
+        }
     });
 }
 
@@ -103,7 +121,7 @@ Transaction.prototype.fetchPrediction = function(element, key)
 Transaction.prototype.buildPredictedButtons = function(data, element, key)
 {
     var html = "";
-    var predictId = "predict-" + key;
+    var predictId = this.getPredictionId(key);
     var groupData = data[key];
 
     for (i in groupData) {
