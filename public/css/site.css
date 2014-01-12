@@ -1,14 +1,22 @@
 .ui-bar-a h1 a.ui-link {
-	color: white;
+    color: white;
         text-decoration: none;
 }
 
 .ui-bar-a h1 a.ui-link:visited {
-	color: white;
+    color: white;
         text-decoration: none;
 }
 
 .ui-bar-a h1 a.ui-link:hover {
-	color: white;
+    color: white;
         text-decoration: none;
+}
+
+.transaction-row {
+    border-bottom: 1px solid rgb(233, 233, 233);
+    border-left: 1px solid rgb(233, 233, 233);
+    border-right: 1px solid rgb(233, 233, 233);
+    padding: 2px;
+    cursor: pointer;
 }
