@@ -8,6 +8,7 @@ use Application\Exception;
 use Application\Helper\Transaction\Helper as TransactionHelper;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
+use Zend\Db\Sql\Expression;
 use Zend\Db\TableGateway\Exception\RuntimeException;
 
 /**
@@ -29,6 +30,9 @@ class TransactionController extends AbstractActionController
 
     /** @var array */
     protected $dataList;
+
+    /** @var array */
+    protected $_whereFilter;
 
     /**
      * @return void
@@ -231,17 +235,12 @@ class TransactionController extends AbstractActionController
     {
         switch ($this->getHelper()->getPredict()) {
             case 'group':
-                $group = $this->_predictGroups(
-                    $this->getHelper()->getItem()
-                );
+                $group = $this->_predictGroups();
                 $price = array();
                 break;
             case 'price':
                 $group = array();
-                $price = $this->_predictPrice(
-                    $this->getHelper()->getItem(),
-                    $this->getHelper()->getGroup()
-                );
+                $price = array();//$this->_predictPrice();
                 break;
             default:
                 $group = array();
@@ -267,28 +266,91 @@ class TransactionController extends AbstractActionController
     }
 
     /**
-     * @param string $itemName
-     *
      * @return array
      */
-    protected function _predictGroups($itemName)
+    protected function _predictGroups()
     {
         $groups = array();
+        $transactions = $this->getGroupTransactions();
+        /** \Db\Db\ActiveRecord */
+        foreach ($transactions as $transaction) {
+            $groups[] = $transaction->getData('group_name');
+        }
 
         return $groups;
     }
 
     /**
-     * @param string $itemName
-     * @param string $groupName
-     *
      * @return array
      */
-    protected function _predictPrice($itemName, $groupName)
+    protected function _predictPrice()
     {
         $prices = array();
 
         return $prices;
+    }
+
+    /**
+     * @return \Zend\Db\ResultSet\HydratingResultSet
+     */
+    protected function getGroupTransactions()
+    {
+        $transactionTable = array('t' => 'transaction');
+
+        $select = new Select();
+        $select->from($transactionTable)
+               ->columns(array('times_used' => new Expression("COUNT(*)")))
+               ->join(array('i' => 'item'), 't.id_item = i.item_id', array())
+               ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
+               ->group('g.name')
+               ->order(new Expression("COUNT(*) DESC"))
+               ->limit(5);
+
+        $where = $this->_getWhereFilter();
+        if (count($where)) {
+            $select->where($where);
+        }
+
+        //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
+
+        $transactions = $this->getTable('transactions');
+        $table = $transactions->getTable();
+        $table->setTable($transactionTable);
+
+        /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
+        $transactionsResults = $table->fetch($select)->buffer();
+
+        return $transactionsResults;
+    }
+
+    /**
+     * @return array
+     */
+    protected function _getWhereFilter()
+    {
+        if (null === $this->_whereFilter) {
+            $item   = $this->getHelper()->getItem();
+            $group  = $this->getHelper()->getGroup();
+            $idUser = $this->getUserId();
+
+            $where = array();
+
+            if (!empty($item)) {
+                $where[] = $this->getWhere()->equalTo('i.name', $item);
+            }
+
+            if (!empty($group)) {
+                $where[] = $this->getWhere()->equalTo('g.name', $group);
+            }
+
+            $where[] = $this->getWhere()->greaterThan('t.date', date('Y-m-d H:i:s', strtotime('-1 year')));
+
+            $where[] = $this->getWhere()->equalTo('t.id_user', $idUser);
+
+            $this->_whereFilter = $where;
+        }
+
+        return $this->_whereFilter;
     }
 
     /**

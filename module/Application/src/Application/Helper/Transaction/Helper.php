@@ -21,7 +21,7 @@ class Helper extends AbstractHelper
     public function getPredict()
     {
         $params = $this->getParams();
-        $predict = $params->fromRoute('predict');
+        $predict = $params->fromQuery('predict');
         return $predict;
     }
 
@@ -31,7 +31,7 @@ class Helper extends AbstractHelper
     public function getItem()
     {
         $params = $this->getParams();
-        $item = $params->fromRoute('item');
+        $item = $params->fromQuery('item');
         return $item;
     }
 
@@ -41,8 +41,23 @@ class Helper extends AbstractHelper
     public function getGroup()
     {
         $params = $this->getParams();
-        $group = $params->fromRoute('group');
+        $group = $params->fromQuery('group');
         return $group;
     }
 
+    /**
+     * @return string
+     */
+    public function getOrderBy()
+    {
+        return 'transaction_id';
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrder()
+    {
+        return \Zend\Db\Sql\Select::ORDER_DESCENDING;
+    }
 }
