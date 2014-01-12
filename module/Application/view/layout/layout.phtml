@@ -1,0 +1,70 @@
+<?php
+echo $this->doctype();
+$basePath = $this->basePath();
+?>
+
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <?php
+        echo $this->headTitle($this->translate('Moneyzaurus'))->setSeparator(' - ')->setAutoEscape(false);
+
+        echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0');
+
+        echo $this->headLink(array(
+                    'rel'  => 'shortcut icon',
+                    'type' => 'image/vnd.microsoft.icon',
+                    'href' => $basePath . '/img/favicon.ico'
+                  ))
+                  ->prependStylesheet($basePath . '/css/site.css')
+                  ->prependStylesheet('http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.css');
+
+        echo $this->headScript()
+             ->prependFile('http://code.highcharts.com/modules/exporting.js')
+             ->prependFile('http://code.highcharts.com/highcharts.js')
+             ->prependFile('http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js')
+             ->prependFile($basePath . '/js/transactionsList.js')
+             ->prependFile($basePath . '/js/transaction.js')
+             ->prependFile($basePath . '/js/pieChart.js')
+             ->prependFile($basePath . '/js/pieChartData.js')
+             ->prependFile($basePath . '/js/pieChartRender.js')
+             ->prependFile($basePath . '/js/site.js')
+             ->prependFile('http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js');
+
+        ?>
+    </head>
+
+    <body>
+
+        <div data-role="page" id="page1">
+
+            <?php if ($this->identity()): ?>
+                <div data-theme="b" data-role="header" data-position="fixed" data-tap-toggle="false" >
+                    <div data-role="navbar" data-iconpos="top">
+                        <?php echo $this->navigation('navigation')->menu() ?>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div data-theme="a" data-role="header">
+                    <h1>
+                        <a class="" style="color:black" href="<?php echo $this->url('moneyzaurus'); ?>">
+                            <?php echo $this->translate('moneyzaurus'); ?>
+                        </a>
+                    </h1>
+                </div>
+            <?php endif; ?>
+
+            <div data-role="content">
+                <?php echo $this->content; ?>
+            </div>
+
+
+
+        </div>
+        <?php echo $this->inlineScript() ?>
+
+    </body>
+
+</html>

@@ -1,0 +1,47 @@
+<?php
+$this->headTitle('New');
+
+$form = $this->form;
+
+$form->setAttribute('action', $this->url('transaction'))
+     ->prepare();
+
+echo $this->form()->openTag($form);
+
+
+foreach ($form as $element) {
+
+    $formElementErrors = $this->formElementErrors($element);
+
+    ?>
+    <div  data-role="fieldcontain" <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
+        <label for="<?php echo $element->getAttribute('name'); ?>"><?php echo $element->getLabel() ?></label>
+
+        <?php
+        echo $this->formElement($element);
+
+        if ($formElementErrors) {
+            ?>
+            <span class="help-inline">
+                <?php echo $formElementErrors; ?>
+            </span>
+            <?php
+        }
+        ?>
+    </div>
+    <?php
+}
+
+
+foreach ($this->datalist as $name => $values) :
+    ?>
+    <datalist id="<?php echo $name; ?>s">
+        <?php foreach ($values as $value): ?>
+            <option value="<?php echo $value; ?>">
+        <?php endforeach; ?>
+    </datalist>
+    <?php
+endforeach;
+
+
+echo $this->form()->closeTag();
