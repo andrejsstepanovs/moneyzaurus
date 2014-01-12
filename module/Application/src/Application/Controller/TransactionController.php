@@ -5,8 +5,14 @@ use Application\Form\Validator\Transaction as TransactionValidator;
 use Application\Form\Form\Transaction as TransactionForm;
 use Application\Controller\AbstractActionController;
 use Application\Exception;
+use Application\Helper\Transaction\Helper as TransactionHelper;
+use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Where;
+use Zend\Db\TableGateway\Exception\RuntimeException;
 
-
+/**
+ * @method \Application\Helper\Transaction\Helper getHelper()
+ */
 class TransactionController extends AbstractActionController
 {
     /** @var array */
@@ -24,6 +30,15 @@ class TransactionController extends AbstractActionController
     /** @var array */
     protected $dataList;
 
+    /**
+     * @return void
+     */
+    protected function init()
+    {
+        $helper = new TransactionHelper();
+        $helper->setParams($this->params());
+        $this->setHelper($helper);
+    }
 
     /**
      * @return \Application\Form\Form\Transaction
@@ -214,20 +229,30 @@ class TransactionController extends AbstractActionController
 
     public function predictAction()
     {
-        $success = true;
-        $group = array(
-            'aaaa',
-            'bbbb',
-            'cccc'
-        );
-        $price= array(
-            '1.00',
-            '2.00',
-            '3.00'
-        );
+        switch ($this->getHelper()->getPredict()) {
+            case 'group':
+                $group = $this->_predictGroups(
+                    $this->getHelper()->getItem()
+                );
+                $price = array();
+                break;
+            case 'price':
+                $group = array();
+                $price = $this->_predictPrice(
+                    $this->getHelper()->getItem(),
+                    $this->getHelper()->getGroup()
+                );
+                break;
+            default:
+                $group = array();
+                $price = array();
+                //throw new RuntimeException('Cannot predict. Missing predict parameter.');
+                break;
+        }
+
 
         $data = array(
-            'success' => $success,
+            'success' => true,
             'data'    => array(
                 'group' => $group,
                 'price' => $price
@@ -240,4 +265,38 @@ class TransactionController extends AbstractActionController
 
         return $response;
     }
+
+    /**
+     * @param string $itemName
+     *
+     * @return array
+     */
+    protected function _predictGroups($itemName)
+    {
+        $groups = array();
+
+        return $groups;
+    }
+
+    /**
+     * @param string $itemName
+     * @param string $groupName
+     *
+     * @return array
+     */
+    protected function _predictPrice($itemName, $groupName)
+    {
+        $prices = array();
+
+        return $prices;
+    }
+
+    /**
+     * @return \Zend\Db\Sql\Where
+     */
+    private function getWhere()
+    {
+        return new Where();
+    }
+
 }
