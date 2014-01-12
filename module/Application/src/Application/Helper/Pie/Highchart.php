@@ -30,6 +30,7 @@ class Highchart extends AbstractHelper
     {
         $chart = new Highcharts();
 
+        $chart->chart->backgroundColor = 'rgba(255, 255, 255, 0.1)';
         $chart->chart->renderTo = $elementId;
         $chart->chart->type     = 'pie';
         $chart->title->text     = $title;
