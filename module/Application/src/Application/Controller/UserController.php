@@ -14,10 +14,10 @@ use Zend\Db\Sql\Where;
 
 class UserController extends AbstractActionController
 {
-    /** @var \Application\Form\Login */
+    /** @var \Application\Form\Form\Login */
     protected $loginForm;
 
-    /** @var \Application\Form\User */
+    /** @var \Application\Form\Form\User */
     protected $userForm;
 
     /** @var \Zend\Authentication\Storage\Session */
@@ -57,7 +57,7 @@ class UserController extends AbstractActionController
     }
 
     /**
-     * @return \Application\Form\Login
+     * @return \Application\Form\Form\Login
      */
     public function getLoginForm()
     {
@@ -69,7 +69,7 @@ class UserController extends AbstractActionController
     }
 
     /**
-     * @return \Application\Form\User
+     * @return \Application\Form\Form\User
      */
     public function getUserForm()
     {
@@ -129,6 +129,7 @@ class UserController extends AbstractActionController
 
         $form = $this->getUserForm();
 
+        /** @var \Zend\Http\PhpEnvironment\Request $request */
         $request = $this->getRequest();
 
         if ($request->isPost()) {
@@ -142,11 +143,15 @@ class UserController extends AbstractActionController
 
                 $user = $this->getUser()->load($this->getUserId());
 
-                foreach ($keys AS $key) {
+                foreach ($keys as $key) {
                     $user->setData($key, $request->getPost($key));
                 }
 
-                $user->save();
+                try {
+                    $user->save();
+                } catch (\Exception $exc) {
+                    //$exc->getMessage();
+                }
 
             } else {
                 $this->flashmessenger()->addMessage('Wrong data');

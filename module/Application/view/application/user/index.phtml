@@ -2,61 +2,71 @@
 $this->headTitle('User');
 ?>
 
-<a href="<?php echo $this->url('user', array('action' => 'logout')); ?>"
-   style="float:right;"
-   data-role="button"
-   data-icon="power"
-   data-mini="true"
-   data-theme="a" >
-    <?php echo $this->translate('Logout'); ?>
-</a>
+<div data-role="tabs" id="tabs">
+    <div data-role="navbar">
+        <ul>
+            <li><a href="#data" data-ajax="false"><?php echo $this->translate('Data'); ?></a></li>
+<!--            <li><a href="#config" data-ajax="false">--><?php //echo $this->translate('Config'); ?><!--</a></li>-->
+            <li><a href="#logout" data-ajax="false"><?php echo $this->translate('Logout'); ?></a></li>
+        </ul>
+    </div>
 
-<br /><br /><hr /><br />
+    <div id="logout">
+        <div style="width:200px;margin-top:50px;margin-left:auto;margin-right:auto;">
+            <a href="<?php echo $this->url('user', array('action' => 'logout')); ?>"
+               data-role="button"
+               data-icon="power"
+               data-mini="true"
+               data-theme="a" >
+                <?php echo $this->translate('Logout'); ?>
+            </a>
+        </div>
+    </div>
 
-<?php
-
-$form = $this->form;
-
-$form->setAttribute('action', $this->url('user'))
-     ->prepare();
-
-echo $this->form()->openTag($form);
-
-foreach ($form as $element) {
-
-    $formElementErrors = $this->formElementErrors($element);
-
-    ?>
-    <div  data-role="fieldcontain" <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
-        <label for="<?php echo $element->getAttribute('name'); ?>"><?php echo $element->getLabel() ?></label>
-
+    <div id="config" style="display:none;">
         <?php
-        echo $this->formElement($element);
+        $form = $this->form;
 
-        if ($formElementErrors) {
+        $form->setAttribute('action', $this->url('user'))
+             ->prepare();
+
+        echo $this->form()->openTag($form);
+
+        foreach ($form as $element) {
+
+            $formElementErrors = $this->formElementErrors($element);
+
             ?>
-            <span class="help-inline">
-                <?php echo $formElementErrors; ?>
-            </span>
+            <div  data-role="fieldcontain" <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
+                <label for="<?php echo $element->getAttribute('name'); ?>"><?php echo $element->getLabel() ?></label>
+
+                <?php
+                echo $this->formElement($element);
+
+                if ($formElementErrors) {
+                    ?>
+                    <span class="help-inline">
+                        <?php echo $formElementErrors; ?>
+                    </span>
+                    <?php
+                }
+                ?>
+            </div>
             <?php
         }
+
+        echo $this->form()->closeTag();
         ?>
     </div>
-    <?php
-}
-
-echo $this->form()->closeTag();
-
-?>
-
-<hr/>
-
-<a href="<?php echo $this->url('user', array('action' => 'download')); ?>"
-   data-role="button"
-   data-icon="arrow-d"
-   data-iconpos="right"
-   data-theme="b"
-   data-inline="true"
-   data-ajax="false">
-    <?php echo $this->translate('Download transactions as *.csv'); ?>
-</a>
+    <div id="data">
+        <a href="<?php echo $this->url('user', array('action' => 'download')); ?>"
+           data-role="button"
+           data-icon="arrow-d"
+           data-iconpos="right"
+           data-theme="b"
+           data-inline="true"
+           data-ajax="false">
+            <?php echo $this->translate('Download transactions as *.csv'); ?>
+        </a>
+    </div>
+</div>
