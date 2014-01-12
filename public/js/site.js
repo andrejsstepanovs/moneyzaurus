@@ -79,8 +79,7 @@ $(document).bind("pageinit", function(){
 
     var transactionForm = $("#transactionForm");
     if (transactionForm.length) {
-        transaction = new Transaction();
-        transaction.setFormElement(transactionForm);
+        transaction = new Transaction(transactionForm);
         transaction.start();
     }
 
