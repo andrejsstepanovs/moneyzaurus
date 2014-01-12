@@ -31,7 +31,7 @@ class Transactions extends Script
      */
     public function MoveDatabase()
     {
-        $transactions = $this->getTable('transactions', 'budget');
+        $transactions = $this->_getTable('transactions', 'budget');
 
         $data = $transactions->getTable()->fetchAll();
 
@@ -40,7 +40,7 @@ class Transactions extends Script
 
             if($row->getData('user_id') == 1 || $row->getData('user_id') == 86) {
 
-                $this->saveTransaction(
+                $this->_saveTransaction(
                         $row['item'],
                         $row['group'],
                         $row['price'],
@@ -65,7 +65,7 @@ class Transactions extends Script
      * @param date $date
      * @return \Db\Db\ActiveRecord transaction
      */
-    protected function saveTransaction(
+    protected function _saveTransaction(
             $itemName,
             $groupName,
             $price,
@@ -74,11 +74,11 @@ class Transactions extends Script
             $date_created,
             $userId
     ) {
-        $currency = $this->getTable('currency')
+        $currency = $this->_getTable('currency')
                          ->setId($currencyId)
                          ->load();
 
-        $item = $this->getTable('item');
+        $item = $this->_getTable('item');
         try {
             $item->setName($itemName)
                  ->setIdUser($userId)
@@ -87,7 +87,7 @@ class Transactions extends Script
             $item->save();
         }
 
-        $group = $this->getTable('group');
+        $group = $this->_getTable('group');
         try {
             $group->setName($groupName)
                   ->setIdUser($userId)
@@ -96,7 +96,7 @@ class Transactions extends Script
             $group->save();
         }
 
-        return $this->getTable('transaction')
+        return $this->_getTable('transaction')
                     ->setPrice($price)
                     ->setDate($date)
                     ->setDateCreated($date_created)
@@ -112,7 +112,7 @@ class Transactions extends Script
      * @param string $table
      * @return \Db\Db\ActiveRecord
      */
-    protected function getTable($table = null, $schema = 'moneyzaurus', $clear = true)
+    protected function _getTable($table = null, $schema = 'moneyzaurus', $clear = true)
     {
         $key = !$table ? 'null'.$schema : $table.$schema;
         if (!isset($this->activeRecords[$key])) {
