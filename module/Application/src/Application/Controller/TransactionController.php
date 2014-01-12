@@ -53,14 +53,17 @@ class TransactionController extends AbstractActionController
         if (null === $this->form) {
             $this->form = new TransactionForm();
             $this->form->remove('id_user');
+            $this->form->remove('currency');
             $this->form->setAttribute('id', 'transactionForm');
 
             $formElements = $this->form->getElements();
 
-            $currencyElement = $formElements['currency'];
-            $dateElement     = $formElements['date'];
+            if (array_key_exists('currency', $formElements)) {
+                $currencyElement = $formElements['currency'];
+                $currencyElement->setValueOptions($this->getCurrencyValueOptions());
+            }
 
-            $currencyElement->setValueOptions($this->getCurrencyValueOptions());
+            $dateElement     = $formElements['date'];
             $dateElement->setValue(date('Y-m-d'));
         }
 
@@ -143,6 +146,7 @@ class TransactionController extends AbstractActionController
             if ($form->isValid()) {
 
                 $data = $form->getData();
+                $data['currency'] = $this->getDefaultUserCurrency();
                 try {
                     $transaction = $this->saveTransaction(
                         $transactionId,

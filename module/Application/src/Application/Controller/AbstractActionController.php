@@ -157,6 +157,14 @@ class AbstractActionController extends ZendAbstractActionController
     }
 
     /**
+     * @return string
+     */
+    public function getDefaultUserCurrency()
+    {
+        return 'EUR';
+    }
+
+    /**
      * @return \Zend\Authentication\AuthenticationService
      */
     public function getAuthService()

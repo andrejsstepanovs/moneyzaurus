@@ -46,7 +46,7 @@ class Transaction extends Form
             'attributes' => array(
                 'id'          => 'price',
                 'type'        => 'text',
-                'placeholder' => '0.00 Sum',
+                'placeholder' => '0.00 €',
                 'required'    => 'required',
                 'alt'         => 'decimal'
             ),
