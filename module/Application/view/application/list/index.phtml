@@ -103,13 +103,25 @@ $formElements = $form->getElements();
     <a href="javascript:void(0)"
        style="margin:20px;"
        data-role="button"
-       data-icon="delete"
-       data-iconpos="right"
-       data-theme="b"
+       data-icon="alert"
+       data-iconpos="left"
+       data-theme="a"
        data-inline="true"
        data-mini="true"
        id="deleteTransactionButton"
        data-action="<?php echo $this->url('list', array('action' => 'delete')); ?>">
         <?php echo $this->translate('Delete'); ?>
+    </a>
+
+    <a href="javascript:void(0)"
+       style="margin:20px;margin-left:80px;"
+       data-rel="back"
+       data-role="button"
+       data-icon="back"
+       data-iconpos="right"
+       data-theme="d"
+       data-inline="true"
+       data-mini="true">
+        <?php echo $this->translate('Cancel'); ?>
     </a>
 </div>
