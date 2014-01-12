@@ -80,6 +80,12 @@ Transaction.prototype.start = function()
         self.setData("item", $(this).val());
         self.fetchPrediction(self.getGroupElement(), "group");
     });
+
+    this.getGroupElement().bind("input", function() {
+        self.setData("item", self.getItemElement().val());
+        self.setData("group", $(this).val());
+        self.fetchPrediction(self.getPriceElement(), "price");
+    });
 }
 
 Transaction.prototype.fetchPrediction = function(element, key)

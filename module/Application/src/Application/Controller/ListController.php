@@ -110,7 +110,7 @@ class ListController extends AbstractActionController
         $transactionTable = array('t' => 'transaction');
 
         $select = new Select();
-        $select->from($transactionTable, array('*', 'total' => new Expression("FOUND_ROWS()")))
+        $select->from($transactionTable)
                ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item_name' => 'name'))
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
                ->join(array('c' => 'currency'), 't.id_currency = c.currency_id', array('currency_html' => 'html'))
