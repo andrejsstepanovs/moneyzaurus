@@ -1,0 +1,6 @@
+/composer.phar
+/vendor/
+/nbproject/
+/data/
+/config/autoload/*.local.php
+/.idea*
