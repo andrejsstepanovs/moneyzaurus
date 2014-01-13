@@ -2,18 +2,19 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+echo __DIR__;
+echo "<br />";
+
 //chdir(dirname(__DIR__));
 
 //echo phpinfo();
 
 //include 'public/index.php';
 
-
-
 chdir(dirname(__DIR__));
 
-// Setup autoloading
-require 'init_autoloader.php';
+include 'vendor/autoload.php';
+
 
 // Run the application!
 Zend\Mvc\Application::init(require 'config/application.config.php')->run();
