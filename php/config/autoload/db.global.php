@@ -3,9 +3,9 @@
 return array(
     'db' => array(
         'driver'         => 'Pdo',
-        'dsn'            => 'mysql:dbname=moneyzaurus;host=localhost',
-        'username'       => 'root',
-        'password'       => 'root',
+        'dsn'            => 'mysql://$OPENSHIFT_MYSQL_DB_HOST:$OPENSHIFT_MYSQL_DB_PORT/',
+        'username'       => 'adminGW1dnEU',
+        'password'       => 'TiIF8Y6C88Dx',
         'driver_options' => array(
             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
         )
