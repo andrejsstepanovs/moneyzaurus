@@ -1,0 +1,127 @@
+<?php
+$this->headTitle('List');
+
+/** @var \Application\Form\Form\Transaction $form */
+/** @var \Zend\Form\View\Helper\Form $formHelper */
+$formHelper = $this->form();
+$form       = $this->form;
+$transactionForm = $this->transactionForm;
+$form->setAttributes(array(
+    'id'        => 'list',
+    'name'      => 'list',
+    'action'    => $this->url('list'),
+    'style'     => 'width:100%',
+    'data-ajax' => 'false'
+))->prepare();
+
+
+$columns = array(
+    //'transaction_id' => $this->translate('Id'),
+    'item_name'      => $this->translate('Item'),
+    'group_name'     => $this->translate('Group'),
+    'price'          => $this->translate('Price'),
+    //'currency_html'  => $this->translate('Currency'),
+    'date'           => $this->translate('Date'),
+    //'date_created'   => $this->translate('Created'),
+    //'id_user'        => $this->translate('User'),
+);
+
+$i = 0;
+
+
+function getGridVal($i)
+{
+    $iterator = array('a', 'b', 'c', 'd');
+    echo $iterator[$i];
+    $i++;
+    if ($i >= 5) {
+        $i = 0;
+    }
+    return $i;
+}
+
+$formElements = $form->getElements();
+?>
+
+<div class="ui-grid-d" >
+
+    <?php echo $formHelper->openTag($form); ?>
+        <?php foreach ($columns AS $key => $label) : ?>
+            <?php
+            /** @var \Zend\Form\Element $element */
+            $element = $formElements[str_replace('_name', '', $key)];
+            //$element->setAttribute('required', '');
+
+            $formElementErrors = $this->formElementErrors($element);
+            ?>
+            <div class="ui-block-<?php $i = getGridVal($i); ?>"
+                <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
+
+                <?php echo $this->formElement($element); ?>
+
+                <?php if ($formElementErrors): ?>
+                    <span class="help-inline">
+                        <?php echo $formElementErrors; ?>
+                    </span>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    <?php echo $formHelper->closeTag(); ?>
+
+    <div id="listResults"  class="ui-grid-d" style="width:100%;"></div>
+</div>
+
+
+
+
+<div data-role="popup" id="editTransaction">
+    <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">
+        <?php echo $this->translate('Close'); ?>
+    </a>
+    <?php
+    $transactionForm
+        ->setAttribute('action', $this->url('list', array('action' => 'save')))
+        ->setAttribute('style', 'padding:20px')->prepare();
+
+    echo $this->form()->openTag($transactionForm);
+
+        foreach ($transactionForm as $element) : ?>
+            <?php $formElementErrors = $this->formElementErrors($element); ?>
+            <div data-role="fieldcontain" <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
+                <label for="<?php echo $element->getAttribute('name'); ?>"><?php echo $element->getLabel() ?></label>
+                <?php echo $this->formElement($element); ?>
+                <?php if ($formElementErrors) : ?>
+                    <span class="help-inline">
+                        <?php echo $formElementErrors; ?>
+                    </span>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+        <input type="hidden" name="transaction_id" id="transaction_id" value="">
+    <?php echo $this->form()->closeTag(); ?>
+
+    <a href="javascript:void(0)"
+       style="margin:20px;"
+       data-role="button"
+       data-icon="alert"
+       data-iconpos="left"
+       data-theme="a"
+       data-inline="true"
+       data-mini="true"
+       id="deleteTransactionButton"
+       data-action="<?php echo $this->url('list', array('action' => 'delete')); ?>">
+        <?php echo $this->translate('Delete'); ?>
+    </a>
+
+    <a href="javascript:void(0)"
+       style="margin:20px;margin-left:80px;"
+       data-rel="back"
+       data-role="button"
+       data-icon="back"
+       data-iconpos="right"
+       data-theme="d"
+       data-inline="true"
+       data-mini="true">
+        <?php echo $this->translate('Cancel'); ?>
+    </a>
+</div>

@@ -1,0 +1,53 @@
+<?php
+/**
+ * @var $form Application\Form\Form\Month
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$form = $this->form;
+
+$form->setAttributes(
+    array(
+         'action' => $this->url('pie', array('action' => 'index')),
+         'class'  => 'pie'
+    )
+);
+$form->prepare();
+
+
+foreach ($this->pieChartElements as $id): ?>
+    <div id="<?php echo $id; ?>" style="width:100%;height:100%;" ></div>
+<?php endforeach; ?>
+
+
+<?php echo $this->form()->openTag($form); ?>
+<div data-theme="a" data-role="footer" data-position="fixed" data-tap-toggle="false" >
+    <div data-role="navbar">
+        <ul>
+            <li></li>
+                <?php
+                $i = 0;
+                foreach ($form as $element) {
+                    $formElementErrors = $this->formElementErrors($element);
+                    ?>
+                    <li style="margin-bottom:30px;" class="ui-btn-active" <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
+                        <?php
+                        echo $this->formElement($element);
+
+                        if ($formElementErrors) {
+                            ?>
+                            <span class="help-inline">
+                                <?php echo $formElementErrors; ?>
+                            </span>
+                        <?php
+                        }
+                        ?>
+                    </li>
+                    <?php
+                }
+            ?>
+            <li></li>
+        </ul>
+    </div>
+</div>
+
+<?php echo $this->form()->closeTag(); ?>
