@@ -273,3 +273,7 @@ $ git push</pre>
 
 </body>
 </html>
+
+
+<?php
+echo phpinfo();
