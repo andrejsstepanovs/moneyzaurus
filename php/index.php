@@ -10,7 +10,7 @@ ini_set('display_errors', 1);
 
 
 
-//chdir(dirname(__DIR__));
+chdir(dirname(__DIR__));
 
 // Setup autoloading
 require 'init_autoloader.php';
