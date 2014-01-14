@@ -11,7 +11,8 @@ $(document).bind("pageinit", function(){
         var primaryChart = new PieChart(parameters);
         primaryChart.setFormElement(formElement).request();
 
-        formElement.submit(function(){
+        var monthElement = formElement.find("input[name=month]");
+        monthElement.bind("input keyup change", function() {
             primaryChart.resetData().request();
             return false;
         });
