@@ -43,7 +43,7 @@ class Transaction extends Form
 
         $this->add(array(
             'name' => 'price',
-            'type' => 'Zend\Form\Element\Number',
+            //'type' => 'Zend\Form\Element\Number', // php-intl module needed
             'attributes' => array(
                 'id'          => 'price',
                 'type'        => 'text',
