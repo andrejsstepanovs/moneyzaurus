@@ -43,12 +43,14 @@ class Transaction extends Form
 
         $this->add(array(
             'name' => 'price',
+            'type' => 'Zend\Form\Element\Number',
             'attributes' => array(
                 'id'          => 'price',
                 'type'        => 'text',
                 'placeholder' => '0.00 €',
                 'required'    => 'required',
-                'alt'         => 'decimal'
+                'alt'         => 'decimal',
+                'step'        => '0.01',
             ),
             'options' => array(
                 'label' => 'Price',
