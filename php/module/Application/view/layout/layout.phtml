@@ -11,7 +11,7 @@ $basePath = $this->basePath();
         <?php
         echo $this->headTitle($this->translate('Moneyzaurus'))->setSeparator(' - ')->setAutoEscape(false);
 
-        echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0');
+        echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0, user-scalable=no');
 
         echo $this->headLink(array(
                     'rel'  => 'shortcut icon',
