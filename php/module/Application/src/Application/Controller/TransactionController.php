@@ -63,7 +63,7 @@ class TransactionController extends AbstractActionController
                 $currencyElement->setValueOptions($this->getCurrencyValueOptions());
             }
 
-            $dateElement     = $formElements['date'];
+            $dateElement = $formElements['date'];
             $dateElement->setValue(date('Y-m-d'));
         }
 
@@ -126,6 +126,7 @@ class TransactionController extends AbstractActionController
     {
         if (null === $this->validator) {
             $this->validator = new TransactionValidator();
+            $this->validator->getInputFilter()->remove('currency');
         }
 
         return $this->validator;
