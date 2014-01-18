@@ -7,6 +7,7 @@ return array(
         ),
         'user'  => array(
             'Application\Controller\User',
+            'Application\Controller\Logout',
             'Application\Controller\Transaction',
             'Application\Controller\List',
             'Application\Controller\Pie',

@@ -130,21 +130,6 @@ class UserController extends AbstractActionController
         );
     }
 
-    /**
-     * Clear user identity.
-     *
-     * @return \Zend\Http\PhpEnvironment\Response
-     */
-    public function logoutAction()
-    {
-        if ($this->getAuthService()->hasIdentity()) {
-            $this->getAuthService()->clearIdentity();
-            $this->flashmessenger()->addMessage('Logged out');
-        }
-
-        return $this->redirect()->toRoute('moneyzaurus');
-    }
-
     public function downloadAction()
     {
         $filename = 'file.csv';
