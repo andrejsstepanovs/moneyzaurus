@@ -2,6 +2,8 @@
 
 namespace Db\Db;
 
+use \Zend\Db\Sql\Expression AS Expression;
+
 /**
  * Abstract Db Model class.
  *
@@ -135,7 +137,7 @@ class AbstractModel implements \ArrayAccess
         }
 
         array_walk($array, function($val, $key) use (&$array) {
-            if (is_object($val)) {
+            if (is_object($val) && !$val instanceof Expression) {
                 unset($array[$key]);
             }
         });
@@ -205,5 +207,3 @@ class AbstractModel implements \ArrayAccess
     }
 
 }
-
-?>
