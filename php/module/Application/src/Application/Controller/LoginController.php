@@ -60,6 +60,7 @@ class LoginController extends AbstractActionController
     {
         if (null === $this->loginForm) {
             $this->loginForm = new LoginForm();
+            $this->loginForm->setAttribute('data-ajax', 'false');
         }
 
         return $this->loginForm;

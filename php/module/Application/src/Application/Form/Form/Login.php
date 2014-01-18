@@ -9,7 +9,7 @@ class Login extends Form
 {
     public function __construct()
     {
-        parent::__construct('login');
+        parent::__construct('login-form');
 
         $this->setAttribute('method', 'post');
 
@@ -17,7 +17,7 @@ class Login extends Form
             'name' => 'email',
             'type' => 'Zend\Form\Element\Email',
             'attributes' => array(
-                'id'          => 'email',
+                'id'          => 'login-username',
                 'placeholder' => 'Email',
                 'required'    => 'required',
             ),
@@ -29,7 +29,7 @@ class Login extends Form
         $this->add(array(
             'name' => 'password',
             'attributes' => array(
-                'id'          => 'password',
+                'id'          => 'login-password',
                 'type'        => 'password',
                 'placeholder' => 'Password',
                 'required'    => 'required',
