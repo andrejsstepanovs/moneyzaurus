@@ -141,6 +141,8 @@ TransactionsList.prototype.bindRowClick = function(rows)
                         $("#editTransaction form :input[name=currency]").find("option[value=" + data["id_currency"] + "]").attr('selected','selected');
                         $("#editTransaction form :input[name=transaction_id]").val(data["transaction_id"]);
 
+                        $("#editTransaction form :input[name=submit]").parent().addClass('ui-btn-active');
+
                         $("#editTransaction").popup("open");
                         break;
                     }

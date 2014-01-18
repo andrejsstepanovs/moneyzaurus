@@ -100,28 +100,32 @@ $formElements = $form->getElements();
         <input type="hidden" name="transaction_id" id="transaction_id" value="">
     <?php echo $this->form()->closeTag(); ?>
 
-    <a href="javascript:void(0)"
-       style="margin:20px;"
-       data-role="button"
-       data-icon="alert"
-       data-iconpos="left"
-       data-theme="a"
-       data-inline="true"
-       data-mini="true"
-       id="deleteTransactionButton"
-       data-action="<?php echo $this->url('list', array('action' => 'delete')); ?>">
-        <?php echo $this->translate('Delete'); ?>
-    </a>
+    <div class="ui-grid-a ui-responsive" style="text-align:center;">
+        <div class="ui-block-a">
+            <a href="javascript:void(0)"
+               data-role="button"
+               data-icon="alert"
+               data-iconpos="left"
+               data-theme="a"
+               data-inline="true"
+               data-mini="true"
+               id="deleteTransactionButton"
+               data-action="<?php echo $this->url('list', array('action' => 'delete')); ?>">
+                <?php echo $this->translate('Delete'); ?>
+            </a>
+        </div>
+        <div class="ui-block-b">
+            <a href="javascript:void(0)"
+               data-rel="back"
+               data-role="button"
+               data-icon="back"
+               data-iconpos="right"
+               data-theme="d"
+               data-inline="true"
+               data-mini="true">
+                <?php echo $this->translate('Cancel'); ?>
+            </a>
+        </div>
+    </div>
 
-    <a href="javascript:void(0)"
-       style="margin:20px;margin-left:80px;"
-       data-rel="back"
-       data-role="button"
-       data-icon="back"
-       data-iconpos="right"
-       data-theme="d"
-       data-inline="true"
-       data-mini="true">
-        <?php echo $this->translate('Cancel'); ?>
-    </a>
 </div>
