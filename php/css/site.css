@@ -32,3 +32,25 @@ input[type='text'],input[type='number'],textarea {font-size:16px;}
     margin-left: auto;
     margin-right: auto;
 }
+
+.ui-field-contain{
+    margin: 0.1em 0;
+}
+
+#dino {
+    width: 400px;
+    height: 300px;
+    background-image: url('/img/dinosaur.jpg');
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#login-block {
+    width: 25em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.ui-overlay-a, .ui-page-theme-a, .ui-page-theme-a .ui-panel-wrapper {
+    background: #FFF;
+}

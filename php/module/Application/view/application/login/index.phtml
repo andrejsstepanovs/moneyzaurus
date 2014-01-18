@@ -15,7 +15,6 @@ foreach ($form as $element) {
 
     ?>
     <div  data-role="fieldcontain" <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
-        <label for="<?php echo $element->getAttribute('name'); ?>"><?php echo $element->getLabel() ?></label>
 
         <?php
         echo $this->formElement($element);

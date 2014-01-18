@@ -1,2 +1,18 @@
+<div class="ui-grid-a">
+    <div class="ui-block-a">
+        <div id="dino"></div>
+    </div>
+    <div class="ui-block-b">
+        <div id="login-block">
+            <?php
+            echo $this->partial(
+                'application/login/index.phtml',
+                array('form' => $this->form)
+            );
+            ?>
+        </div>
+        <div>
 
-<a data-ajax="false" href="<?php echo $this->url('login'); ?>" ><?php echo $this->translate('Login'); ?></a>
+        </div>
+    </div>
+</div>

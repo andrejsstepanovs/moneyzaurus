@@ -3,13 +3,9 @@ namespace Application\Controller;
 
 use Db\Db\ActiveRecord;
 use Application\Form\Form\Login as LoginForm;
-use Application\Form\Form\User as UserForm;
 use Application\Form\Validator\Login as LoginValidator;
-use Application\Form\Validator\User as UserValidator;
 use Zend\Authentication\Storage\Session;
 use Application\Controller\AbstractActionController;
-use Zend\Db\Sql\Select;
-use Zend\Db\Sql\Where;
 
 
 class LoginController extends AbstractActionController
@@ -56,7 +52,7 @@ class LoginController extends AbstractActionController
     /**
      * @return \Application\Form\Form\Login
      */
-    public function getLoginForm()
+    protected function getLoginForm()
     {
         if (null === $this->loginForm) {
             $this->loginForm = new LoginForm();
