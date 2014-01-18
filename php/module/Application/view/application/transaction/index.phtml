@@ -15,7 +15,6 @@ foreach ($form as $element) {
 
     ?>
     <div  data-role="fieldcontain" <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
-        <label for="<?php echo $element->getAttribute('name'); ?>"><?php echo $element->getLabel() ?></label>
 
         <?php
         echo $this->formElement($element);
@@ -45,3 +44,4 @@ endforeach;
 
 
 echo $this->form()->closeTag();
+//http://raymondcamden.com/index.cfm/2012/3/27/Example-of-Autocomplete-in-jQuery-Mobile

@@ -43,7 +43,7 @@ $(document).bind("pageinit", function(){
 
         editForm.bind('submit', function() {
             var action = $(this).attr("action");
-            var params = form_to_json($(this));
+            var params = formToJson($(this));
 
             $.getJSON(action, params)
                 .done (function(json) {
@@ -83,10 +83,16 @@ $(document).bind("pageinit", function(){
         transaction = new Transaction(transactionForm);
         transaction.start();
     }
-
 });
 
-function form_to_json (selector) {
+$(document).on('pageshow', function(event){
+    var transactionForm = $("#transactionForm");
+    if (transactionForm.length) {
+        transactionForm.find("input[name=item]").focus();
+    }
+});
+
+function formToJson (selector) {
     var ary = $(selector).serializeArray();
     var obj = {};
     for (var a = 0; a < ary.length; a++) obj[ary[a].name] = ary[a].value;
