@@ -86,7 +86,7 @@ Transaction.prototype.start = function()
     this.getItemElement().focus();
 
     var self = this;
-    this.getItemElement().bind("input keyup change", function() {
+    this.getItemElement().bind("input keyup", function() {
         if (self.getItemElement().val() == "") {
             self.getPredictionElement("group").hide();
         } else {
@@ -138,12 +138,12 @@ Transaction.prototype.buildPredictedButtons = function(data, element, key)
     if (html.length) {
         var predictEl = $("#" + predictId);
         if (predictEl.length) {
-            predictEl.remove();
+            predictEl.innerHTML = html;
+        } else {
+            var htmlFull = "<div style=\"margin-left:10px;display:none;\" id=\"" + predictId + "\" >";
+            htmlFull += html;
+            htmlFull += "</div>";
         }
-
-        var htmlFull = "<div style=\"margin-left:10px;display:none;\" id=\"" + predictId + "\" >";
-        htmlFull += html;
-        htmlFull += "</div>";
 
         element.parent().prepend(htmlFull);
     }
@@ -151,8 +151,7 @@ Transaction.prototype.buildPredictedButtons = function(data, element, key)
     var self = this;
     element.parent().find("a.predict").bind('click', function() {
         var predictElement = $("#" + predictId);
-        predictElement.val("");
-        predictElement.hide();
+        predictElement.remove();
 
         if (key == "group") {
             self.getGroupElement().val($(this)[0].innerHTML);
