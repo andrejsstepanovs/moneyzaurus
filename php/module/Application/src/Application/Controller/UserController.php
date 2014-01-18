@@ -2,9 +2,7 @@
 namespace Application\Controller;
 
 use Db\Db\ActiveRecord;
-use Application\Form\Form\Login as LoginForm;
 use Application\Form\Form\User as UserForm;
-use Application\Form\Validator\Login as LoginValidator;
 use Application\Form\Validator\User as UserValidator;
 use Zend\Authentication\Storage\Session;
 use Application\Controller\AbstractActionController;
@@ -14,9 +12,6 @@ use Zend\Db\Sql\Where;
 
 class UserController extends AbstractActionController
 {
-    /** @var \Application\Form\Form\Login */
-    protected $loginForm;
-
     /** @var \Application\Form\Form\User */
     protected $userForm;
 
@@ -57,18 +52,6 @@ class UserController extends AbstractActionController
     }
 
     /**
-     * @return \Application\Form\Form\Login
-     */
-    public function getLoginForm()
-    {
-        if (null === $this->loginForm) {
-            $this->loginForm = new LoginForm();
-        }
-
-        return $this->loginForm;
-    }
-
-    /**
      * @return \Application\Form\Form\User
      */
     public function getUserForm()
@@ -93,18 +76,6 @@ class UserController extends AbstractActionController
     }
 
     /**
-     * @return \Application\Form\Validator\Login
-     */
-    public function getLoginValidator()
-    {
-        if (null === $this->loginValidator) {
-            $this->loginValidator = new LoginValidator();
-        }
-
-        return $this->loginValidator;
-    }
-
-    /**
      * @return \Application\Form\Validator\User
      */
     public function getUserValidator()
@@ -123,10 +94,6 @@ class UserController extends AbstractActionController
      */
     public function indexAction()
     {
-        if (!$this->getAuthService()->hasIdentity()) {
-            return $this->redirect()->toRoute('user', array('action' => 'login'));
-        }
-
         $form = $this->getUserForm();
 
         /** @var \Zend\Http\PhpEnvironment\Request $request */
@@ -161,74 +128,6 @@ class UserController extends AbstractActionController
         return array(
             'form'     => $this->getUserForm()
         );
-    }
-
-    /**
-     * Shows login form.
-     *
-     * @return array
-     */
-    public function loginAction()
-    {
-        if ($this->getAuthService()->hasIdentity()){
-            $this->flashmessenger()->addMessage('Already logged in');
-            return $this->redirect()->toRoute('moneyzaurus');
-        }
-
-        $response = $this->authenticate();
-        if ($response) {
-            return $response;
-        }
-
-        return array(
-            'form' => $this->getLoginForm()
-        );
-    }
-
-    /**
-     * @return null|\Zend\Http\PhpEnvironment\Response
-     */
-    protected function authenticate()
-    {
-        $request = $this->getRequest();
-
-        if (!$request->isPost()) {
-            return null;
-        }
-
-        $form = $this->getLoginForm();
-        $form->setInputFilter($this->getLoginValidator()->getInputFilter());
-        $form->setData($request->getPost());
-
-        if (!$form->isValid()) {
-            return null;
-        }
-
-        /** @var $authService \Zend\Authentication\AuthenticationService */
-        $authService = $this->getAuthService();
-        $authService->getAdapter()
-                    ->setIdentity($request->getPost('email'))
-                    ->setCredential($request->getPost('password'));
-
-        $result = $authService->authenticate();
-        if (!$result->isValid()) {
-            foreach ($result->getMessages() as $message) {
-                $this->flashmessenger()->addMessage($message);
-            }
-
-            return null;
-        }
-
-        $user = $this->getUser()
-                     ->setEmail($request->getPost('email'))
-                     ->load()
-                     ->unsPassword()
-                     ->toArray();
-
-        $authService->setStorage($this->getSessionStorage());
-        $authService->getStorage()->write($user);
-
-        return $this->redirect()->toRoute('moneyzaurus');
     }
 
     /**

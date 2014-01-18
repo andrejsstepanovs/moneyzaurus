@@ -1,15 +1,14 @@
 <?php
 
+/** @var \Application\Form\Form\Login $form */
 $form = $this->form;
 
-$form->setAttribute('action', $this->url('user', array(
-    'action' => 'login',
-)));
+$form->setAttribute('action', $this->url('login'));
 $form->prepare();
 
 echo $this->form()->openTag($form);
 
-
+/** @var \Zend\Form\Element|\Zend\Form\Element\Email $element */
 foreach ($form as $element) {
 
     $formElementErrors = $this->formElementErrors($element);

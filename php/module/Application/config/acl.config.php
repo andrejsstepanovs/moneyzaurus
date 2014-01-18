@@ -3,9 +3,10 @@ return array(
     'acl' => array(
         'guest' => array(
             'Application\Controller\Index',
-            'Application\Controller\User',
+            'Application\Controller\Login',
         ),
         'user'  => array(
+            'Application\Controller\User',
             'Application\Controller\Transaction',
             'Application\Controller\List',
             'Application\Controller\Pie',

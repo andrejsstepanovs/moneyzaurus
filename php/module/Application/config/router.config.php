@@ -13,6 +13,16 @@ return array(
                     ),
                 ),
             ),
+            'login' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/login',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Login',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
             'transaction' => array(
                 'type'    => 'segment',
                 'options' => array(
