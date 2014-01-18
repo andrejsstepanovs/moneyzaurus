@@ -3,24 +3,31 @@
         <div id="dino"></div>
     </div>
     <div class="ui-block-b">
-        <ul data-role="listview" id="right-block">
-            <li>
+        <div id="right-block">
+            <div class="ui-body ui-body-a ui-corner-all">
                 <?php
                 echo $this->partial(
-                    'application/login/index.phtml',
-                    array('form' => $this->loginForm)
+                          'application/login/index.phtml',
+                          array('form' => $this->loginForm)
                 );
                 ?>
-            </li>
-            <li id="register-block">
-                <h2><strong>New to Twitter?</strong> Sign up</h2>
-                <?php
-                echo $this->partial(
-                    'application/register/index.phtml',
-                    array('form' => $this->registerForm)
-                );
-                ?>
-            </li>
-        </ul>
+            </div>
+            <div class="ui-bar ui-bar-a ui-corner-all" style="margin-top:1.5em;">
+                <h2>
+                    <?php echo $this->translate('New to moneyzaurus?'); ?>
+                    <a href="#" onclick="$('#register-form-block').toggle();">
+                        <?php echo $this->translate('Sign up'); ?>
+                    </a>
+                </h2>
+                <div id="register-form-block" style="display:none;">
+                    <?php
+                    echo $this->partial(
+                              'application/register/index.phtml',
+                              array('form' => $this->registerForm)
+                    );
+                    ?>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
