@@ -83,6 +83,9 @@ $(document).bind("pageinit", function(){
         transaction = new Transaction(transactionForm);
         transaction.start();
     }
+
+    var loginSubmitInputElement = $("#login-submit");
+    loginSubmitInputElement.parent().addClass('ui-btn-active');
 });
 
 $(document).on('pageshow', function(event){

@@ -44,7 +44,7 @@ class Register extends Form
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(
-                'id'    => 'submit',
+                'id'    => 'register-submit',
                 'type'  => 'submit',
                 'value' => 'Sign up',
             ),

@@ -42,7 +42,7 @@ class Login extends Form
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(
-                'id'    => 'submit',
+                'id'    => 'login-submit',
                 'type'  => 'submit',
                 'value' => 'Sign in',
             ),
