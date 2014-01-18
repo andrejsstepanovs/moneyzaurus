@@ -136,11 +136,16 @@ Transaction.prototype.buildPredictedButtons = function(data, element, key)
     }
 
     if (html.length) {
+        var predictEl = $("#" + predictId);
+        if (predictEl.length) {
+            predictEl.remove();
+        }
+
         var htmlFull = "<div style=\"margin-left:10px;display:none;\" id=\"" + predictId + "\" >";
         htmlFull += html;
         htmlFull += "</div>";
 
-        element.parent().append(htmlFull);
+        element.parent().prepend(htmlFull);
     }
 
     var self = this;
