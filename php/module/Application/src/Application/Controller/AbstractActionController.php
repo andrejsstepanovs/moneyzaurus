@@ -12,6 +12,8 @@ use Zend\Escaper\Escaper;
 
 class AbstractActionController extends ZendAbstractActionController
 {
+    const CREDENTIAL_TREATMENT = 'MD5(?)';
+
     /** @var \Zend\Authentication\AuthenticationService */
     protected $authService;
 
@@ -170,8 +172,14 @@ class AbstractActionController extends ZendAbstractActionController
     public function getAuthService()
     {
         if (null === $this->authService) {
-            $this->authService = $this->getServiceLocator()
-                                      ->get('AuthService');
+            /** @var \Zend\Authentication\AuthenticationService $authService */
+            $authService = $this->getServiceLocator()->get('AuthService');
+
+            /** @var \Zend\Authentication\Adapter\DbTable $adapter */
+            $adapter = $authService->getAdapter();
+            $adapter->setCredentialTreatment(self::CREDENTIAL_TREATMENT);
+
+            $this->authService = $authService;
         }
 
         return $this->authService;

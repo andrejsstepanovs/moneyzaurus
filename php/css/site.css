@@ -45,10 +45,11 @@ input[type='text'],input[type='number'],textarea {font-size:16px;}
     margin-right: auto;
 }
 
-#login-block {
+#right-block {
     width: 25em;
     margin-left: auto;
     margin-right: auto;
+    border-left: 1px solid #ddd;
 }
 
 .ui-overlay-a, .ui-page-theme-a, .ui-page-theme-a .ui-panel-wrapper {

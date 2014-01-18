@@ -3,12 +3,16 @@ namespace Application\Controller;
 
 use Application\Controller\AbstractActionController;
 use Application\Form\Form\Login as LoginForm;
+use Application\Form\Form\Register as RegisterForm;
 
 
 class IndexController extends AbstractActionController
 {
     /** @var \Application\Form\Form\Login */
     protected $loginForm;
+
+    /** @var \Application\Form\Form\Register */
+    protected $registerForm;
 
     /**
      * @return \Application\Form\Form\Login
@@ -21,6 +25,19 @@ class IndexController extends AbstractActionController
         }
 
         return $this->loginForm;
+    }
+
+    /**
+     * @return \Application\Form\Form\Register
+     */
+    protected function getRegisterForm()
+    {
+        if (null === $this->registerForm) {
+            $this->registerForm = new RegisterForm();
+            $this->registerForm->setAttribute('data-ajax', 'false');
+        }
+
+        return $this->registerForm;
     }
 
     public function indexAction()
@@ -36,7 +53,8 @@ class IndexController extends AbstractActionController
         ');
 
         return array(
-            'form' => $this->getLoginForm()
+            'loginForm'    => $this->getLoginForm(),
+            'registerForm' => $this->getRegisterForm()
         );
     }
 

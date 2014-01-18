@@ -33,6 +33,16 @@ return array(
                     ),
                 ),
             ),
+            'register' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/register',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Register',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
             'transaction' => array(
                 'type'    => 'segment',
                 'options' => array(

@@ -92,11 +92,6 @@ class LoginController extends AbstractActionController
 
         if ($request->isPost()) {
 
-            if ($this->getAuthService()->hasIdentity()){
-                $this->flashmessenger()->addMessage('Already logged in');
-                return $this->redirect()->toRoute('moneyzaurus');
-            }
-
             $form->setInputFilter($this->getLoginValidator()->getInputFilter());
             $form->setData($request->getPost());
 

@@ -5,11 +5,11 @@ namespace Application\Form\Form;
 use Zend\Form\Form;
 
 
-class Login extends Form
+class Register extends Form
 {
     public function __construct()
     {
-        parent::__construct('login-form');
+        parent::__construct('register-form');
 
         $this->setAttribute('method', 'post');
 
@@ -17,9 +17,10 @@ class Login extends Form
             'name' => 'email',
             'type' => 'Zend\Form\Element\Email',
             'attributes' => array(
-                'id'          => 'login-username',
-                'placeholder' => 'Email',
-                'required'    => 'required',
+                'id'           => 'register-username',
+                'placeholder'  => 'Email',
+                'required'     => 'required',
+                'autocomplete' => 'off'
             ),
             'options' => array(
                 'label' => 'Email',
@@ -29,10 +30,11 @@ class Login extends Form
         $this->add(array(
             'name' => 'password',
             'attributes' => array(
-                'id'          => 'login-password',
+                'id'          => 'register-password',
                 'type'        => 'password',
                 'placeholder' => 'Password',
                 'required'    => 'required',
+                'autocomplete' => 'off'
             ),
             'options' => array(
                 'label' => 'Password',
@@ -44,7 +46,7 @@ class Login extends Form
             'attributes' => array(
                 'id'    => 'submit',
                 'type'  => 'submit',
-                'value' => 'Sign in',
+                'value' => 'Sign up',
             ),
         ));
     }
