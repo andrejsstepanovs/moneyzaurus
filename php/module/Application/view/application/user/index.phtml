@@ -12,7 +12,7 @@ $this->headTitle('User');
     </div>
 
     <div id="logout">
-        <div style="width:200px;margin-top:50px;margin-left:auto;margin-right:auto;">
+        <div style="width:18em;margin-top:2em;margin-left:auto;margin-right:auto;">
             <a href="<?php echo $this->url('logout'); ?>"
                data-ajax="false"
                data-role="button"
@@ -60,14 +60,17 @@ $this->headTitle('User');
         ?>
     </div>
     <div id="data">
-        <a href="<?php echo $this->url('user', array('action' => 'download')); ?>"
-           data-role="button"
-           data-icon="arrow-d"
-           data-iconpos="right"
-           data-theme="b"
-           data-inline="true"
-           data-ajax="false">
-            <?php echo $this->translate('Download transactions as *.csv'); ?>
-        </a>
+        <div style="width:18em;margin-top:2em;margin-left:auto;margin-right:auto;">
+            <a href="<?php echo $this->url('user', array('action' => 'download')); ?>"
+               style="width:15em;"
+               data-role="button"
+               data-icon="arrow-d"
+               data-iconpos="right"
+               data-theme="b"
+               data-inline="true"
+               data-ajax="false">
+                <?php echo $this->translate('Download transactions as *.csv'); ?>
+            </a>
+        </div>
     </div>
 </div>

@@ -132,7 +132,7 @@ class UserController extends AbstractActionController
 
     public function downloadAction()
     {
-        $filename = 'file.csv';
+        $filename = 'moneyzaurus_' . date('Y-m-d') . '.csv';
 
         header('Content-Disposition: attachment; filename=' . $filename);
         header('Content-Type: application/force-download');

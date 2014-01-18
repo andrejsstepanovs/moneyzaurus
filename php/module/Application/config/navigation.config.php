@@ -44,6 +44,7 @@ return array(
                  'a_params' => array(
                     'data-transition' => 'slide',
                     'data-icon'       => 'user',
+                    'data-ajax'       => 'false'
                  )
              ),
         ),
