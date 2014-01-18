@@ -89,6 +89,7 @@ Transaction.prototype.start = function()
     this.getItemElement().bind("input keyup", function() {
         if (self.getItemElement().val() == "") {
             self.getPredictionElement("group").hide();
+            self.getPredictionElement("price").hide();
         } else {
             self.setData("item", $(this).val());
             self.fetchPrediction(self.getGroupElement(), "group");
