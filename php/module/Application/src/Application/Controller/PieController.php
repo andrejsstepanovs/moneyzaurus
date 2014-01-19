@@ -184,7 +184,8 @@ class PieController extends AbstractActionController
         $monthDateTimeTill = date('Y-m-d', strtotime($month . '-' . date('t', $timestamp))) . ' 23:59:59';
 
         $where = array(
-            $this->getWhere()->between('date', $monthDateTimeFrom, $monthDateTimeTill),
+            $this->getWhere()->equalTo('t.id_user', $this->getUserId()),
+            $this->getWhere()->between('t.date', $monthDateTimeFrom, $monthDateTimeTill),
             $this->getWhere()->expression('t.price > ?', 0)
         );
 
