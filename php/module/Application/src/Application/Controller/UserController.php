@@ -8,6 +8,7 @@ use Zend\Authentication\Storage\Session;
 use Application\Controller\AbstractActionController;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
+use Zend\View\Model\ViewModel;
 
 
 class UserController extends AbstractActionController
@@ -141,16 +142,14 @@ class UserController extends AbstractActionController
         header('Content-Description: File Transfer');
         //header("Content-Length: " . filesize($filename)); // unknown
 
-
-        /** @var \Db\Db\ActiveRecord $record */
-        $csv = fopen('php://output', 'w');
+        $columns = array('id', 'price', 'date', 'created', 'item', 'group', 'currency', 'email');
         $transactions = $this->_getTransactions();
-        foreach ($transactions as $i => $record) {
-            $data = !$i ? array_keys($record->toArray()) : $record->toArray();
-            fputcsv($csv, $data);
-        }
 
-        return false;
+        $viewModel = new ViewModel();
+        $viewModel->setTerminal(true);
+        $viewModel->setVariable('columns', $columns);
+        $viewModel->setVariable('transactions', $transactions);
+        return $viewModel;
     }
 
     /**

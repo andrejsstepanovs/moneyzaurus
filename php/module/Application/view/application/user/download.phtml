@@ -1,0 +1,14 @@
+<?php
+
+/** @var \Db\Db\ActiveRecord $record */
+/** @var \Zend\Db\ResultSet\HydratingResultSet $transactions */
+$csv = fopen('php://output', 'w');
+$transactions = $this->transactions;
+
+fputcsv($csv, $this->columns);
+if ($transactions->count()) {
+    foreach ($transactions as $i => $record) {
+        $data = $record->toArray();
+        fputcsv($csv, $data);
+    }
+}
