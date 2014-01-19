@@ -6,29 +6,51 @@ $form = $this->form;
 $form->setAttribute('action', $this->url('login'));
 $form->prepare();
 
-echo $this->form()->openTag($form);
 
-/** @var \Zend\Form\Element|\Zend\Form\Element\Email $element */
-foreach ($form as $element) {
+/** @var \Zend\Form\Element|\Zend\Form\Element\Email    $emailElement    */
+/** @var \Zend\Form\Element|\Zend\Form\Element\Password $passwordElement */
+/** @var \Zend\Form\Element|\Zend\Form\Element\Submit   $submitElement   */
+$emailElement    = $form->get('email');
+$passwordElement = $form->get('password');
+$submitElement   = $form->get('submit');
 
-    $formElementErrors = $this->formElementErrors($element);
 
-    ?>
-    <div  data-role="fieldcontain" <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
+$emailElementErrors    = $this->formElementErrors($emailElement);
+$passwordElementErrors = $this->formElementErrors($passwordElement);
+$submitElementErrors   = $this->formElementErrors($submitElement);
 
-        <?php
-        echo $this->formElement($element);
+?>
 
-        if ($formElementErrors) {
-            ?>
+<?php echo $this->form()->openTag($form); ?>
+
+    <div  data-role="fieldcontain" <?php if($emailElementErrors) { echo 'class="error"'; } ?> >
+        <?php echo $this->formElement($emailElement); ?>
+        <?php if ($emailElementErrors) : ?>
             <span class="help-inline">
-                <?php echo $formElementErrors; ?>
+                <?php echo $emailElementErrors; ?>
             </span>
-            <?php
-        }
-        ?>
+        <?php endif; ?>
     </div>
-    <?php
-}
 
-echo $this->form()->closeTag();
+    <div  data-role="fieldcontain" <?php if($passwordElementErrors) { echo 'class="error"'; } ?> >
+        <div class="ui-grid-a ui-responsive">
+            <div class="ui-block-a">
+                <?php echo $this->formElement($passwordElement); ?>
+                <?php if ($passwordElementErrors) : ?>
+                    <span class="help-inline">
+                        <?php echo $passwordElementErrors; ?>
+                    </span>
+                <?php endif; ?>
+            </div>
+            <div class="ui-block-b">
+                <?php echo $this->formElement($submitElement); ?>
+                <?php if ($submitElementErrors) : ?>
+                    <span class="help-inline">
+                        <?php echo $submitElementErrors; ?>
+                    </span>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+<?php echo $this->form()->closeTag();

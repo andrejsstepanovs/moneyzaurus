@@ -29,6 +29,10 @@ input[type='text'],input[type='number'],textarea {
     font-size:18px!important
 }
 
+.ui-input-text input, .ui-input-search input {
+    font-size:18px!important
+}
+
 #transactionForm {
     width: 50%;
     margin-left: auto;
