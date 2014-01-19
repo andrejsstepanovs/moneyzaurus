@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "cf88ce9cfbbc6b3edb77f0f73f4e6119",
+    "hash": "97c98415dea8afead77c2369f14ae9b1",
     "packages": [
         {
             "name": "phpunit/php-code-coverage",
@@ -255,12 +255,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "5b150a8229d645aeea49546284bf74cc561a1182"
+                "reference": "0a32f059e6e66cdfdd0d7c757646fdcbf822b0ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/5b150a8229d645aeea49546284bf74cc561a1182",
-                "reference": "5b150a8229d645aeea49546284bf74cc561a1182",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0a32f059e6e66cdfdd0d7c757646fdcbf822b0ca",
+                "reference": "0a32f059e6e66cdfdd0d7c757646fdcbf822b0ca",
                 "shasum": ""
             },
             "require": {
@@ -321,7 +321,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-01-11 08:28:18"
+            "time": "2014-01-15 07:18:27"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -547,50 +547,6 @@
             "time": "2013-06-08 19:59:37"
         },
         {
-            "name": "wormhit/Paginator",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/wormhit/Paginator.git",
-                "reference": "b63fc9a95a9334a8b15a817a6e237bff7bba2b8b"
-            },
-            "require": {
-                "php": ">=5.3",
-                "zendframework/zendframework": "2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Paginator": "src/"
-                },
-                "classmap": [
-                    "./Module.php"
-                ]
-            },
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Andrejs Stepanovs",
-                    "email": "andrejsstepanovs@gmail.com"
-                }
-            ],
-            "description": "zf2 module overrides Zend\\Paginator\\Paginator to allow to use setTotalItemCount()",
-            "homepage": "https://github.com/wormhit/Paginator",
-            "keywords": [
-                "FOUND_ROWS",
-                "FOUND_ROWS()",
-                "Paginator",
-                "SQL_CALC_FOUND_ROWS",
-                "setTotalItemCount",
-                "totalItemCount",
-                "zend framework 2",
-                "zf2"
-            ],
-            "time": "2013-06-23 18:50:51"
-        },
-        {
             "name": "wormhit/jQueryMobileMenu",
             "version": "dev-master",
             "source": {
@@ -698,12 +654,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zf2.git",
-                "reference": "5b510228f58539348daae42730cd8137606bb4b6"
+                "reference": "4fe2829353077239aafc9ffe39a15c07bba5b660"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zf2/zipball/5b510228f58539348daae42730cd8137606bb4b6",
-                "reference": "5b510228f58539348daae42730cd8137606bb4b6",
+                "url": "https://api.github.com/repos/zendframework/zf2/zipball/4fe2829353077239aafc9ffe39a15c07bba5b660",
+                "reference": "4fe2829353077239aafc9ffe39a15c07bba5b660",
                 "shasum": ""
             },
             "require": {
@@ -805,7 +761,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2014-01-08 15:23:20"
+            "time": "2014-01-17 10:38:18"
         }
     ],
     "packages-dev": [
