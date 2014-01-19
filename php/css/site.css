@@ -22,15 +22,15 @@
 }
 
 input:focus {
-    font-size: 18px!important
+    font-size:1.2em !important
 }
 
 input[type='text'],input[type='number'],textarea {
-    font-size:18px!important
+    font-size:1.2em !important
 }
 
 .ui-input-text input, .ui-input-search input {
-    font-size:18px!important
+    font-size:1.2em !important
 }
 
 #transactionForm {
