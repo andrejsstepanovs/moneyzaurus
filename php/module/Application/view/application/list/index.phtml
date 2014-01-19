@@ -36,6 +36,7 @@ $formElements = $form->getElements();
             <?php
             /** @var \Zend\Form\Element $element */
             $element = $formElements[str_replace('_name', '', $key)];
+            $element->setAttribute('autocomplete', 'off');
             //$element->setAttribute('required', '');
 
             $formElementErrors = $this->formElementErrors($element);
