@@ -6,8 +6,7 @@ return array(
         'Db',
         'PHPConfig',
         'HighchartsPHP',
-        'InstallScripts',
-        'Paginator'
+        'InstallScripts'
     ),
 
     'module_listener_options' => array(
