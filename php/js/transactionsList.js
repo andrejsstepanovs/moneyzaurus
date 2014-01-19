@@ -2,7 +2,6 @@ function TransactionsList(parameters)
 {
     this.parameters = parameters ? parameters : {};
     this.formElement = null;
-    this.iterator = ["a", "b", "c", "d"];
     this.i = 0;
     this.resetData();
     this.rowClass = "transaction-row";
@@ -44,35 +43,23 @@ TransactionsList.prototype.getData = function()
     return this.data;
 }
 
-TransactionsList.prototype.getGridVal = function()
-{
-    var j = this.i;
-
-    this.i++;
-    if (this.i >= this.iterator.length) {
-        this.i = 0;
-    }
-
-    return this.iterator[j];
-}
-
 TransactionsList.prototype.getRowHtml = function(row, columns)
 {
-    var html = "";
+    var dataId = "data-id=\"" + row["transaction_id"] + "\"";
+    var html = "<tr class=\"" + this.rowClass + "\" " + dataId + ">";
     for (var i in columns) {
         if (columns.hasOwnProperty(i)) {
             var key = columns[i];
-            var gridValue = this.getGridVal();
-            var dataId = "data-id=\"" + row["transaction_id"] + "\"";
 
-            html += "<div class=\"" + this.rowClass + " ui-block-" + gridValue + "\" " + dataId + ">";
+            html += "<td>";
             html += row[key];
             if (key == "price") {
                 html += " " + row["currency_html"];
             }
-            html += "</div>";
+            html += "</td>";
         }
     }
+    html += "</tr>";
 
     return html;
 }
@@ -117,10 +104,9 @@ TransactionsList.prototype.request = function()
 
 TransactionsList.prototype.bindRowClick = function(rows)
 {
-    $("div." + this.rowClass).each(function(){
+    $("tr." + this.rowClass).each(function(){
         $(this).click(function(){
             var transactionId = $(this).attr("data-id");
-            console.log(transactionId);
 
             for (var i in rows) {
                 if (rows.hasOwnProperty(i)) {

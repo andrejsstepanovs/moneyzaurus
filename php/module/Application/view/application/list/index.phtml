@@ -26,27 +26,14 @@ $columns = array(
     //'id_user'        => $this->translate('User'),
 );
 
-$i = 0;
-
-
-function getGridVal($i)
-{
-    $iterator = array('a', 'b', 'c', 'd');
-    echo $iterator[$i];
-    $i++;
-    if ($i >= 5) {
-        $i = 0;
-    }
-    return $i;
-}
 
 $formElements = $form->getElements();
 ?>
 
-<div class="ui-grid-d" >
-
-    <?php echo $formHelper->openTag($form); ?>
-        <?php foreach ($columns AS $key => $label) : ?>
+<?php echo $formHelper->openTag($form); ?>
+<table data-role="table" id="table-column-toggle" data-mode="columntoggle" class="ui-responsive table-stroke">
+    <thead>
+        <?php foreach ($columns as $key => $label) : ?>
             <?php
             /** @var \Zend\Form\Element $element */
             $element = $formElements[str_replace('_name', '', $key)];
@@ -54,24 +41,21 @@ $formElements = $form->getElements();
 
             $formElementErrors = $this->formElementErrors($element);
             ?>
-            <div class="ui-block-<?php $i = getGridVal($i); ?>"
-                <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
-
+            <th <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
                 <?php echo $this->formElement($element); ?>
-
                 <?php if ($formElementErrors): ?>
                     <span class="help-inline">
                         <?php echo $formElementErrors; ?>
                     </span>
                 <?php endif; ?>
-            </div>
+            </th>
         <?php endforeach; ?>
-    <?php echo $formHelper->closeTag(); ?>
+    </thead>
+    <tbody id="listResults">
+    </tbody>
+</table>
 
-    <div id="listResults"  class="ui-grid-d" style="width:100%;"></div>
-</div>
-
-
+<?php echo $formHelper->closeTag(); ?>
 
 
 <div data-role="popup" id="editTransaction">
