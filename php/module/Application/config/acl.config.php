@@ -8,6 +8,7 @@ return array(
         ),
         'user'  => array(
             'Application\Controller\User',
+            'Application\Controller\Data',
             'Application\Controller\Logout',
             'Application\Controller\Transaction',
             'Application\Controller\List',

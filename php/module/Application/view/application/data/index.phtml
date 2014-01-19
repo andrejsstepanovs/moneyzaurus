@@ -1,0 +1,31 @@
+<?php
+$this->headTitle('Data');
+?>
+
+<div data-role="tabs" id="data-tabs">
+    <div data-role="navbar">
+        <ul>
+            <li><a href="#download" data-ajax="false"><?php echo $this->translate('Download'); ?></a></li>
+            <li><a href="#upload" data-ajax="false"><?php echo $this->translate('Upload'); ?></a></li>
+        </ul>
+    </div>
+
+    <div id="download">
+        <div style="width:18em;margin-top:2em;margin-left:auto;margin-right:auto;">
+            <a href="<?php echo $this->url('data', array('action' => 'download')); ?>"
+               style="width:15em;"
+               data-role="button"
+               data-icon="arrow-d"
+               data-iconpos="right"
+               data-theme="b"
+               data-inline="true"
+               data-ajax="false">
+                <?php echo $this->translate('Download transactions as *.csv'); ?>
+            </a>
+        </div>
+    </div>
+
+    <div id="upload">
+        <?php echo $this->translate('Sorry, not possible yet.'); ?>
+    </div>
+</div>

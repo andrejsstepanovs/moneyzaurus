@@ -9,6 +9,7 @@ return array(
             'Application\Controller\Register'    => 'Application\Controller\RegisterController',
             'Application\Controller\Transaction' => 'Application\Controller\TransactionController',
             'Application\Controller\User'        => 'Application\Controller\UserController',
+            'Application\Controller\Data'        => 'Application\Controller\DataController',
             'Application\Controller\List'        => 'Application\Controller\ListController',
             'Application\Controller\Pie'         => 'Application\Controller\PieController',
         )

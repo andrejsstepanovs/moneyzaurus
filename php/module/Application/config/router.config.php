@@ -69,6 +69,19 @@ return array(
                     ),
                 ),
             ),
+            'data' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/data[/:action]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Data',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
             'pie' => array(
                 'type'    => 'segment',
                 'options' => array(

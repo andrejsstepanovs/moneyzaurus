@@ -5,9 +5,9 @@ $this->headTitle('User');
 <div data-role="tabs" id="tabs">
     <div data-role="navbar">
         <ul>
+            <li><a href="#logout" data-ajax="false"><?php echo $this->translate('Logout'); ?></a></li>
             <li><a href="#data" data-ajax="false"><?php echo $this->translate('Data'); ?></a></li>
 <!--            <li><a href="#config" data-ajax="false">--><?php //echo $this->translate('Config'); ?><!--</a></li>-->
-            <li><a href="#logout" data-ajax="false"><?php echo $this->translate('Logout'); ?></a></li>
         </ul>
     </div>
 
@@ -60,17 +60,11 @@ $this->headTitle('User');
         ?>
     </div>
     <div id="data">
-        <div style="width:18em;margin-top:2em;margin-left:auto;margin-right:auto;">
-            <a href="<?php echo $this->url('user', array('action' => 'download')); ?>"
-               style="width:15em;"
-               data-role="button"
-               data-icon="arrow-d"
-               data-iconpos="right"
-               data-theme="b"
-               data-inline="true"
-               data-ajax="false">
-                <?php echo $this->translate('Download transactions as *.csv'); ?>
-            </a>
-        </div>
+        <?php
+        echo $this->partial(
+            'application/data/index.phtml',
+            array()
+        );
+        ?>
     </div>
 </div>
