@@ -86,7 +86,7 @@ $(document).bind("pageinit", function(){
 
     var loginSubmitInputElement = $("#login-submit");
     loginSubmitInputElement.parent().addClass('ui-btn-active');
-    loginSubmitInputElement.parent().css({'padding':'.669em 1em','margin-right':'0'});
+    loginSubmitInputElement.parent().css({'padding':'.785em 1em','margin-right':'0'});
 });
 
 $(document).on('pageshow', function(event){
