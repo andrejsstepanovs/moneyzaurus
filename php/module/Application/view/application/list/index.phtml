@@ -26,12 +26,11 @@ $columns = array(
     //'id_user'        => $this->translate('User'),
 );
 
-
 $formElements = $form->getElements();
 ?>
 
 <?php echo $formHelper->openTag($form); ?>
-<table data-role="table" id="table-column-toggle" data-mode="columntoggle" class="ui-responsive table-stroke">
+<table data-role="table" id="transactions-list-table" class="ui-responsive table-stripe">
     <thead>
         <?php foreach ($columns as $key => $label) : ?>
             <?php
