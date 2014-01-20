@@ -31,14 +31,14 @@ class Transactions extends Script
      */
     public function MoveDatabase()
     {
-        $transactions = $this->_getTable('transactions', 'budget');
+        $transactions = $this->_getTable('transactions');
 
         $data = $transactions->getTable()->fetchAll();
 
 
-        foreach ($data AS $row) {
+        foreach ($data as $row) {
 
-            if($row->getData('user_id') == 1 || $row->getData('user_id') == 86) {
+            if($row->getData('user_id') == 1 || $row->getData('user_id') == 86 || $row->getData('user_id') == 160) {
 
                 $this->_saveTransaction(
                         $row['item'],
@@ -53,6 +53,7 @@ class Transactions extends Script
             }
         }
 
+        return true;
     }
 
 
@@ -75,7 +76,7 @@ class Transactions extends Script
             $userId
     ) {
         $currency = $this->_getTable('currency')
-                         ->setId($currencyId)
+                         ->setCurrencyId($currencyId)
                          ->load();
 
         $item = $this->_getTable('item');
@@ -112,9 +113,9 @@ class Transactions extends Script
      * @param string $table
      * @return \Db\Db\ActiveRecord
      */
-    protected function _getTable($table = null, $schema = 'moneyzaurus', $clear = true)
+    protected function _getTable($table = null, $schema = null, $clear = true)
     {
-        $key = !$table ? 'null'.$schema : $table.$schema;
+        $key = !$table ? 'null' . $schema : $table . $schema;
         if (!isset($this->activeRecords[$key])) {
             $this->activeRecords[$key] = new ActiveRecord($table, null, $schema);
         }
@@ -124,7 +125,6 @@ class Transactions extends Script
         }
 
         return $this->activeRecords[$key];
-
     }
 
 }
