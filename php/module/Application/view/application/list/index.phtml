@@ -6,13 +6,15 @@ $this->headTitle('List');
 $formHelper = $this->form();
 $form       = $this->form;
 $transactionForm = $this->transactionForm;
-$form->setAttributes(array(
-    'id'        => 'list',
-    'name'      => 'list',
-    'action'    => $this->url('list'),
-    'style'     => 'width:100%',
-    'data-ajax' => 'false'
-))->prepare();
+$form->setAttributes(
+    array(
+        'id'        => 'list',
+        'name'      => 'list',
+        'action'    => $this->url('list'),
+        'style'     => 'width:100%',
+        'data-ajax' => 'false'
+    )
+)->prepare();
 
 
 $columns = array(

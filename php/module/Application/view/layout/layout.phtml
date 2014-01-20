@@ -13,13 +13,15 @@ $basePath = $this->basePath();
 
         echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0, user-scalable=no');
 
-        echo $this->headLink(array(
-                    'rel'  => 'shortcut icon',
-                    'type' => 'image/vnd.microsoft.icon',
-                    'href' => $basePath . '/img/favicon.ico'
-                  ))
-                  ->prependStylesheet($basePath . '/css/site.css')
-                  ->prependStylesheet('http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.css');
+        echo $this->headLink(
+            array(
+                'rel'  => 'shortcut icon',
+                'type' => 'image/vnd.microsoft.icon',
+                'href' => $basePath . '/img/favicon.ico'
+            )
+        )
+        ->prependStylesheet($basePath . '/css/site.css')
+        ->prependStylesheet('http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.css');
 
         echo $this->headScript()
              ->prependFile('http://code.highcharts.com/modules/exporting.js')

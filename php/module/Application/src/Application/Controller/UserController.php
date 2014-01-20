@@ -7,7 +7,11 @@ use Application\Form\Validator\User as UserValidator;
 use Zend\Authentication\Storage\Session;
 use Application\Controller\AbstractActionController;
 
-
+/**
+ * Class UserController
+ *
+ * @package Application\Controller
+ */
 class UserController extends AbstractActionController
 {
     /** @var \Application\Form\Form\User */

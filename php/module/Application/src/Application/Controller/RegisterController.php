@@ -8,7 +8,11 @@ use Application\Controller\AbstractActionController;
 use Zend\Db\TableGateway\Exception\RuntimeException;
 use \Zend\Db\Sql\Expression as Expression;
 
-
+/**
+ * Class RegisterController
+ *
+ * @package Application\Controller
+ */
 class RegisterController extends AbstractActionController
 {
     /** @var \Application\Form\Form\Register */
@@ -123,5 +127,4 @@ class RegisterController extends AbstractActionController
 
         return $this->redirect()->toRoute('moneyzaurus');
     }
-
 }

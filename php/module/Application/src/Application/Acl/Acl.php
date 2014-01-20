@@ -10,7 +10,11 @@ use Zend\Permissions\Acl\Resource\GenericResource as ZendResource;
 use Application\Exception;
 use Zend\Console\Request as ConsoleRequest;
 
-
+/**
+ * Class Acl
+ *
+ * @package Application\Acl
+ */
 class Acl
 {
     /** @var \Zend\ServiceManager\ServiceManager */

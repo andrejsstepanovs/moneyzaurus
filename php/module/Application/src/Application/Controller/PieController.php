@@ -53,7 +53,7 @@ class PieController extends AbstractActionController
      *
      * @return array
      */
-    protected function _getPieChartElements($key = null)
+    protected function getPieChartElements($key = null)
     {
         if (null === $this->pieChartElements) {
             $this->pieChartElements = array(
@@ -77,7 +77,7 @@ class PieController extends AbstractActionController
     {
         return array(
             'form'             => $this->getForm(),
-            'pieChartElements' => $this->_getPieChartElements()
+            'pieChartElements' => $this->getPieChartElements()
         );
     }
 
@@ -86,21 +86,21 @@ class PieController extends AbstractActionController
      */
     public function ajaxAction()
     {
-        $requestedTargetElement = $this->getParam('targetElement');
+        $targetElement = $this->getParam('targetElement');
 
-        $targetElementCount = count($this->_getPieChartElements()) - 1;
-        $id = array_search($requestedTargetElement, $this->_getPieChartElements());
-        $id = $id + 1 >= $targetElementCount ? $targetElementCount : $id + 1;
+        $targetElementCount = count($this->getPieChartElements()) - 1;
+        $level = array_search($targetElement, $this->getPieChartElements());
+        $level = $level + 1 >= $targetElementCount ? $targetElementCount : $level + 1;
 
         $parameters = array(
             'month'         => $this->getMonthHelper()->getMonthRequestValue(),
-            'targetElement' => $this->_getPieChartElements($id),
-            'level'         => $id
+            'targetElement' => $this->getPieChartElements($level),
+            'level'         => $level
         );
 
         $script = $this->getHelper()->renderChart(
             $this->getPieChartTitle(),
-            $requestedTargetElement,
+            $targetElement,
             $parameters
         );
 
@@ -144,7 +144,7 @@ class PieController extends AbstractActionController
             /** @var $resultSet \Zend\Db\ResultSet\HydratingResultSet */
             $resultSet = $this->fetchTransactions($select);
             if ($resultSet->count()) {
-                foreach ($resultSet AS $row) {
+                foreach ($resultSet as $row) {
                     $this->transactionsData[] =  $row;
                 }
             }

@@ -15,6 +15,7 @@ chdir(__DIR__);
  */
 class Bootstrap
 {
+    /** @var ServiceManager */
     protected static $serviceManager;
 
     public static function init()
@@ -45,6 +46,9 @@ class Bootstrap
         static::$serviceManager = $serviceManager;
     }
 
+    /**
+     * @return ServiceManager
+     */
     public static function getServiceManager()
     {
         return static::$serviceManager;
@@ -70,23 +74,32 @@ class Bootstrap
         }
 
         include $zf2Path . '/Zend/Loader/AutoloaderFactory.php';
-        AutoloaderFactory::factory(array(
-            'Zend\Loader\StandardAutoloader' => array(
-                'autoregister_zf' => true,
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/' . __NAMESPACE__,
-                ),
-            ),
-        ));
+        AutoloaderFactory::factory(
+            array(
+                'Zend\Loader\StandardAutoloader' => array(
+                    'autoregister_zf' => true,
+                    'namespaces' => array(
+                        __NAMESPACE__ => __DIR__ . '/' . __NAMESPACE__,
+                    )
+                )
+            )
+        );
     }
 
+    /**
+     * @param string $path
+     *
+     * @return bool|string
+     */
     protected static function findParentPath($path)
     {
         $dir = __DIR__;
         $previousDir = '.';
         while (!is_dir($dir . '/' . $path)) {
             $dir = dirname($dir);
-            if ($previousDir === $dir) return false;
+            if ($previousDir === $dir) {
+                return false;
+            }
             $previousDir = $dir;
         }
         return $dir . '/' . $path;

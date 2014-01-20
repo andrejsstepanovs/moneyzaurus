@@ -10,7 +10,6 @@ use Zend\Stdlib\Hydrator\HydratorInterface;
 use Db\Db\AbstractTable;
 use Db\Db\AbstractModel;
 
-
 /**
  * Active Record
  */
@@ -36,9 +35,9 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
 
 
     /**
-     * @param strings|null $tableName
+     * @param string|null $tableName
      * @param \Zend\Db\Adapter\Adapter|null $adapter
-     * @param strings|null $shema
+     * @param string|null $shema
      */
     public function __construct($tableName = null, $adapter = null, $schema = null)
     {
@@ -160,7 +159,7 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     public function getTable()
     {
         if (null === $this->table) {
-            if ( $this->getTableName()) {
+            if ($this->getTableName()) {
                 $tableIdentifier = new TableIdentifier(
                     $this->getTableName(),
                     $this->getSchema()
@@ -169,24 +168,26 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
                 $tableIdentifier = null;
             }
 
-            $this->setTable(new AbstractTable(
-                $this->getAdapter(),
-                new HydratingResultSet($this->getHydrator(), $this->getModel()),
-                $tableIdentifier
-            ));
+            $this->setTable(
+                new AbstractTable(
+                    $this->getAdapter(),
+                    new HydratingResultSet($this->getHydrator(), $this->getModel()),
+                    $tableIdentifier
+                )
+            );
         }
 
         return $this->table;
     }
 
     /**
-     * @param mixed $id
+     * @param mixed $idValue
      */
-    public function setId($id)
+    public function setId($idValue)
     {
         $primaries = $this->getTable()->getPrimary();
-        foreach ($primaries AS $primary) {
-            $this->setData($primary, $id);
+        foreach ($primaries as $primary) {
+            $this->setData($primary, $idValue);
         }
 
         return $this;
@@ -198,7 +199,7 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     public function getId()
     {
         $primaries = $this->getTable()->getPrimary();
-        foreach ($primaries AS $primary) {
+        foreach ($primaries as $primary) {
             return $this->getData($primary);
         }
 
@@ -206,14 +207,15 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     }
 
     /**
-     * @param mixed $id
+     * @param mixed $idValue
+     *
      * @return \Db\Db\ActiveRecord
      * @throws \Db\Db\Exception\ModelNotFoundException
      */
-    public function load($id = null)
+    public function load($idValue = null)
     {
-        if ($id) {
-            $this->setId($id);
+        if ($idValue) {
+            $this->setId($idValue);
         }
 
         $results = $this->getTable()->fetchByModel($this);
@@ -236,9 +238,9 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
         $this->getTable()->saveEntity($this);
 
         if (!$this->getId()) {
-            $id = $this->getTable()->getLastInsertValue();
-            if ($id) {
-                $this->clear()->setId($id);
+            $idValue = $this->getTable()->getLastInsertValue();
+            if ($idValue) {
+                $this->clear()->setId($idValue);
             }
         }
 
@@ -252,5 +254,4 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     {
         return $this->getTable()->deleteEntity($this);
     }
-
 }

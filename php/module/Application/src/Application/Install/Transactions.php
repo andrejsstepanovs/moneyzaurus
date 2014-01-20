@@ -5,12 +5,19 @@ namespace Application\Install;
 use InstallScripts\Script;
 use Db\Db\ActiveRecord;
 
-
+/**
+ * Class Transactions
+ *
+ * @package Application\Install
+ */
 class Transactions extends Script
 {
+    /** @var array */
     protected $activeRecords = array();
 
-
+    /**
+     * init
+     */
     public function __construct()
     {
         set_time_limit(0);
@@ -31,23 +38,23 @@ class Transactions extends Script
      */
     public function MoveDatabase()
     {
-        $transactions = $this->_getTable('transactions');
+        $transactions = $this->getTable('transactions');
 
         $data = $transactions->getTable()->fetchAll();
 
 
         foreach ($data as $row) {
 
-            if($row->getData('user_id') == 1 || $row->getData('user_id') == 86 || $row->getData('user_id') == 160) {
+            if ($row->getData('user_id') == 1 || $row->getData('user_id') == 86 || $row->getData('user_id') == 160) {
 
-                $this->_saveTransaction(
-                        $row['item'],
-                        $row['group'],
-                        $row['price'],
-                        $row['currency'],
-                        $row['date_transaction'],
-                        $row['date_created'],
-                        $row['user_id']
+                $this->saveTransaction(
+                    $row['item'],
+                    $row['group'],
+                    $row['price'],
+                    $row['currency'],
+                    $row['date_transaction'],
+                    $row['date_created'],
+                    $row['user_id']
                 );
 
             }
@@ -61,25 +68,26 @@ class Transactions extends Script
     /**
      * @param string $item
      * @param string $group
-     * @param float $price
+     * @param float  $price
      * @param string $currency
-     * @param date $date
+     * @param string $date
+     *
      * @return \Db\Db\ActiveRecord transaction
      */
-    protected function _saveTransaction(
-            $itemName,
-            $groupName,
-            $price,
-            $currencyId,
-            $date,
-            $date_created,
-            $userId
+    protected function saveTransaction(
+        $itemName,
+        $groupName,
+        $price,
+        $currencyId,
+        $date,
+        $dateCreated,
+        $userId
     ) {
-        $currency = $this->_getTable('currency')
+        $currency = $this->getTable('currency')
                          ->setCurrencyId($currencyId)
                          ->load();
 
-        $item = $this->_getTable('item');
+        $item = $this->getTable('item');
         try {
             $item->setName($itemName)
                  ->setIdUser($userId)
@@ -88,7 +96,7 @@ class Transactions extends Script
             $item->save();
         }
 
-        $group = $this->_getTable('group');
+        $group = $this->getTable('group');
         try {
             $group->setName($groupName)
                   ->setIdUser($userId)
@@ -97,10 +105,10 @@ class Transactions extends Script
             $group->save();
         }
 
-        return $this->_getTable('transaction')
+        return $this->getTable('transaction')
                     ->setPrice($price)
                     ->setDate($date)
-                    ->setDateCreated($date_created)
+                    ->setDateCreated($dateCreated)
                     ->setIdUser($userId)
                     ->setIdItem($item->getId())
                     ->setIdGroup($group->getId())
@@ -113,7 +121,7 @@ class Transactions extends Script
      * @param string $table
      * @return \Db\Db\ActiveRecord
      */
-    protected function _getTable($table = null, $schema = null, $clear = true)
+    protected function getTable($table = null, $schema = null, $clear = true)
     {
         $key = !$table ? 'null' . $schema : $table . $schema;
         if (!isset($this->activeRecords[$key])) {
@@ -126,5 +134,4 @@ class Transactions extends Script
 
         return $this->activeRecords[$key];
     }
-
 }

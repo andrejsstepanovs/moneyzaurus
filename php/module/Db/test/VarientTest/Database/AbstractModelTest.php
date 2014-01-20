@@ -5,8 +5,14 @@ namespace VarientTest\Controller;
 use PHPUnit_Framework_TestCase;
 use Db\Db\AbstractModel;
 
+/**
+ * Class AbstractModelTest
+ *
+ * @package VarientTest\Controller
+ */
 class AbstractModelTest extends PHPUnit_Framework_TestCase
 {
+    /** @var \Db\Db\AbstractModel */
     protected $model;
 
     /**
@@ -20,6 +26,9 @@ class AbstractModelTest extends PHPUnit_Framework_TestCase
         return $this->model;
     }
 
+    /**
+     * @return array
+     */
     public function providerArrayData()
     {
         $data = array();
@@ -35,6 +44,9 @@ class AbstractModelTest extends PHPUnit_Framework_TestCase
         return $data;
     }
 
+    /**
+     * @return array
+     */
     public function providerKeyValData()
     {
         $data = array();
@@ -240,7 +252,7 @@ class AbstractModelTest extends PHPUnit_Framework_TestCase
     {
         $model = $this->getModel()->setData($data);
 
-        foreach ($data AS $key => $val) {
+        foreach ($data as $key => $val) {
             $this->assertEquals($val, $model[$key]);
         }
     }
@@ -283,7 +295,7 @@ class AbstractModelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Db\Db\Exception\UnknownCallableException
+     * @expectedException \Db\Db\Exception\UnknownCallableException
      */
     public function testUnknownCallable()
     {
@@ -291,7 +303,7 @@ class AbstractModelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Db\Db\Exception\UnknownCallableException
+     * @expectedException \Db\Db\Exception\UnknownCallableException
      */
     public function testUnknownCallableWithParams()
     {
@@ -306,5 +318,4 @@ class AbstractModelTest extends PHPUnit_Framework_TestCase
         $this->getModel()->exchangeArray($data);
         $this->assertEmpty(array_diff($data, $this->getModel()->getData()));
     }
-
 }

@@ -3,9 +3,7 @@
 namespace Application\Helper\Pie;
 
 use Application\Helper\AbstractHelper;
-use Zend\Db\Sql\Select;
 use Zend\Http\PhpEnvironment\Request;
-
 
 /**
  * Class Helper
@@ -27,18 +25,23 @@ use Zend\Http\PhpEnvironment\Request;
  */
 class Helper extends AbstractHelper
 {
+    /** get all */
     const GET_ALL     = 1;
+
+    /** get limited */
     const GET_LIMITED = 2;
+
+    /** get limit */
     const GET_LIMIT   = 3;
 
     /** @var int */
-    protected $_groupCount;
+    protected $groupCount;
 
     /** @var int */
-    protected $_itemCount;
+    protected $itemCount;
 
     /** @var int */
-    protected $_otherGroupCount = 4;
+    protected $otherGroupCount = 4;
 
     /**
      * @return array
@@ -102,14 +105,14 @@ class Helper extends AbstractHelper
             $count = count($sortedGroups);
 
             if ($this->getOptimalGroupCount() > $count) {
-                $this->_groupCount = $count;
+                $this->groupCount = $count;
             }
 
             // initial limited data
             for ($i = 0; $i < $this->getOptimalGroupCount(); $i++) {
                 $priceData = $categories = array();
-                $rows = $this->_compactItems($groupedData[$sortedGroups[$i]]);
-                foreach ($rows AS $row) {
+                $rows = $this->compactItems($groupedData[$sortedGroups[$i]]);
+                foreach ($rows as $row) {
                     $priceData[]  = round((float)$row->getPrice(), 2);
 
                     $categories[] = array(
@@ -133,19 +136,23 @@ class Helper extends AbstractHelper
     /**
      * Set other group items as groups
      *
-     * @param int   $i
+     * @param int   $iterator
      * @param array $sortedGroups
      * @param array $groupedData
+     *
      * @return $this
      */
-    protected function setOtherItemsAsGroups($i, array $sortedGroups, array $groupedData)
+    protected function setOtherItemsAsGroups($iterator, array $sortedGroups, array $groupedData)
     {
         $count = count($sortedGroups);
 
         // preparing other items data total price
-        $priceDataTmp = $groupsTmp = $categoriesIds = $groupsTmpData = array();
-        for ($i; $i < $count; $i++) {
-            $groupName = $sortedGroups[$i];
+        $priceDataTmp = array();
+        $groupsTmp =  array();
+        $groupsTmpData = array();
+
+        for ($iterator; $iterator < $count; $iterator++) {
+            $groupName = $sortedGroups[$iterator];
 
             $groupId = null;
             foreach ($groupedData[$groupName] as $group) {
@@ -162,7 +169,7 @@ class Helper extends AbstractHelper
 
             $total = 0;
             /** @var \Db\Db\ActiveRecord $row */
-            foreach ($groupedData[$groupName] AS $row) {
+            foreach ($groupedData[$groupName] as $row) {
                 $total += round((float)$row->getPrice(), 2);
             }
 
@@ -171,9 +178,10 @@ class Helper extends AbstractHelper
 
         // sort by price
         arsort($priceDataTmp);
-        foreach ($priceDataTmp as $j => $price) {
+        foreach (array_keys($priceDataTmp) as $j) {
             $groupsTmpData[] = $groupsTmp[$j];
         }
+
         $priceDataTmp = array_values($priceDataTmp);
         $groupsTmp = $groupsTmpData;
 
@@ -181,17 +189,17 @@ class Helper extends AbstractHelper
         $priceData = $categories = array();
 
         if (!empty($priceDataTmp)) {
-            for ($i = 0; $i < $this->_otherGroupCount; $i++) {
+            for ($iterator = 0; $iterator < $this->otherGroupCount; $iterator++) {
                 //if (array_key_exists($i, ))
-                $priceData[]  = $priceDataTmp[$i];
-                $categories[] = $groupsTmp[$i];
+                $priceData[]  = $priceDataTmp[$iterator];
+                $categories[] = $groupsTmp[$iterator];
             }
 
             // limit rest items as groups
             $total = 0;
             $count = count($priceDataTmp);
-            for ($i; $i < $count; $i++) {
-                $total += $priceDataTmp[$i];
+            for ($iterator; $iterator < $count; $iterator++) {
+                $total += $priceDataTmp[$iterator];
             }
 
             $priceData[] = $total;
@@ -213,11 +221,11 @@ class Helper extends AbstractHelper
      */
     protected function getOptimalGroupCount()
     {
-        if (null === $this->_groupCount) {
-            $this->_groupCount = 9;
+        if (null === $this->groupCount) {
+            $this->groupCount = 9;
         }
 
-        return $this->_groupCount;
+        return $this->groupCount;
     }
 
     /**
@@ -225,11 +233,11 @@ class Helper extends AbstractHelper
      */
     protected function getOptimalItemCountInGroup()
     {
-        if (null === $this->_itemCount) {
-            $this->_itemCount = 30;
+        if (null === $this->itemCount) {
+            $this->itemCount = 30;
         }
 
-        return $this->_itemCount;
+        return $this->itemCount;
     }
 
     /**
@@ -264,7 +272,7 @@ class Helper extends AbstractHelper
      *
      * @return array
      */
-    private function _compactItems(array $rows)
+    private function compactItems(array $rows)
     {
         $count = count($rows);
         $optimalItemCount = $this->getOptimalItemCountInGroup();
@@ -347,7 +355,7 @@ class Helper extends AbstractHelper
     {
         $groups = array();
         /** @var \Db\Db\ActiveRecord $row */
-        foreach ($this->getTransactionsData() AS $row) {
+        foreach ($this->getTransactionsData() as $row) {
             $groupName = $row->getGroupName();
             if (!array_key_exists($groupName, $groups)) {
                 $groups[$groupName] = array(
@@ -360,7 +368,12 @@ class Helper extends AbstractHelper
             }
         }
 
-        uasort($groups, function($a, $b){return intval($b['price'] - $a['price']);});
+        uasort(
+            $groups,
+            function ($arrayA, $arrayB) {
+                return intval($arrayB['price'] - $arrayA['price']);
+            }
+        );
 
         return $groups;
     }
@@ -399,5 +412,4 @@ class Helper extends AbstractHelper
     {
         return $this->setTransactionsDataCache($transactionsData);
     }
-
 }

@@ -5,7 +5,11 @@ use Application\Controller\AbstractActionController;
 use Application\Form\Form\Login as LoginForm;
 use Application\Form\Form\Register as RegisterForm;
 
-
+/**
+ * Class IndexController
+ *
+ * @package Application\Controller
+ */
 class IndexController extends AbstractActionController
 {
     /** @var \Application\Form\Form\Login */
@@ -46,11 +50,11 @@ class IndexController extends AbstractActionController
             return $this->redirect()->toRoute('transaction');
         }
 
-        $this->getViewHelperPlugin('inlineScript')->appendScript('
-            $(document).ready(function() {
+        $this->getViewHelperPlugin('inlineScript')->appendScript(
+            '$(document).ready(function() {
                 $("#login-username").focus();
-            });
-        ');
+            });'
+        );
 
         return array(
             'loginForm'    => $this->getLoginForm(),

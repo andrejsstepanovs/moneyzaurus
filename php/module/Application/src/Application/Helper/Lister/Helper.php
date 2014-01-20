@@ -3,10 +3,6 @@
 namespace Application\Helper\Lister;
 
 use Application\Helper\AbstractHelper;
-use Zend\Db\Sql\Select;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\Mvc\Controller\Plugin\Params;
-
 
 /**
  * @method \Zend\Http\PhpEnvironment\Request getRequest()
@@ -119,5 +115,4 @@ class Helper extends AbstractHelper
 
         return (int)$idUser;
     }
-
 }

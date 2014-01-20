@@ -7,7 +7,11 @@ use Application\Form\Validator\Login as LoginValidator;
 use Zend\Authentication\Storage\Session;
 use Application\Controller\AbstractActionController;
 
-
+/**
+ * Class LoginController
+ *
+ * @package Application\Controller
+ */
 class LoginController extends AbstractActionController
 {
     /** @var \Application\Form\Form\Login */
@@ -145,5 +149,4 @@ class LoginController extends AbstractActionController
 
         return $this->redirect()->toRoute('moneyzaurus');
     }
-
 }

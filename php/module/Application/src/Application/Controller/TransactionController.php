@@ -33,7 +33,7 @@ class TransactionController extends AbstractActionController
     protected $dataList;
 
     /** @var array */
-    protected $_whereFilter;
+    protected $whereFilter;
 
     /**
      * @return void
@@ -94,7 +94,7 @@ class TransactionController extends AbstractActionController
                 'group' => 'name'
             );
             $elements = $this->getForm()->getElements();
-            foreach ($elements as $name => $element) {
+            foreach (array_keys($elements) as $name) {
                 if (!array_key_exists($name, $datalistElements)) {
                     continue;
                 }
@@ -103,9 +103,10 @@ class TransactionController extends AbstractActionController
                 /** @var $table \Db\Db\AbstractTable */
                 /** @var $results \Zend\Db\ResultSet\HydratingResultSet */
                 $table = $this->getTable($name)->getTable();
-                $results = $table->fetchUniqeColum($column, array(
-                    'id_user' => $this->getUserId()
-                ));
+                $results = $table->fetchUniqeColum(
+                    $column,
+                    array('id_user' => $this->getUserId())
+                );
 
                 $dataValues = array();
                 foreach ($results as $model) {
@@ -132,6 +133,9 @@ class TransactionController extends AbstractActionController
         return $this->validator;
     }
 
+    /**
+     * @return array
+     */
     public function indexAction()
     {
         $form = $this->getForm();
@@ -188,16 +192,16 @@ class TransactionController extends AbstractActionController
      * @param string $group
      * @param float  $price
      * @param string $currency
-     * @param date   $date
+     * @param string $date
      * @return \Db\Db\ActiveRecord transaction
      */
     protected function saveTransaction(
-            $transactionId,
-            $itemName,
-            $groupName,
-            $price,
-            $currencyId,
-            $date
+        $transactionId,
+        $itemName,
+        $groupName,
+        $price,
+        $currencyId,
+        $date
     ) {
         if ($transactionId == 0) {
             $transactionId = null;
@@ -241,12 +245,12 @@ class TransactionController extends AbstractActionController
     {
         switch ($this->getHelper()->getPredict()) {
             case 'group':
-                $group = $this->_predictGroups();
+                $group = $this->predictGroups();
                 $price = array();
                 break;
             case 'price':
                 $group = array();
-                $price = $this->_predictPrice();
+                $price = $this->predictPrice();
                 break;
             default:
                 $group = array();
@@ -274,7 +278,7 @@ class TransactionController extends AbstractActionController
     /**
      * @return array
      */
-    protected function _predictGroups()
+    protected function predictGroups()
     {
         $groups = array();
         $transactions = $this->getGroupTransactions();
@@ -289,7 +293,7 @@ class TransactionController extends AbstractActionController
     /**
      * @return array
      */
-    protected function _predictPrice()
+    protected function predictPrice()
     {
         $data = array('by_count' => array(), 'by_day' => array());
 
@@ -333,7 +337,12 @@ class TransactionController extends AbstractActionController
         $prices[] = next(array_keys($data['by_count'])); // next most popular
         $prices[] = max($allPrices);
 
-        $prices = array_filter($prices, function($val){ return empty($val) ? false : true; });
+        $prices = array_filter(
+            $prices,
+            function ($val) {
+                return empty($val) ? false : true;
+            }
+        );
 
         sort($prices);
         $prices = array_unique($prices);
@@ -356,7 +365,7 @@ class TransactionController extends AbstractActionController
                ->order(new Expression("COUNT(*) DESC"))
                ->limit(5);
 
-        $where = $this->_getWhereFilter();
+        $where = $this->getWhereFilter();
         if (count($where)) {
             $select->where($where);
         }
@@ -390,7 +399,7 @@ class TransactionController extends AbstractActionController
                //->limit(100)
                ;
 
-        $where = $this->_getWhereFilter();
+        $where = $this->getWhereFilter();
         if (count($where)) {
             $select->where($where);
         }
@@ -410,9 +419,9 @@ class TransactionController extends AbstractActionController
     /**
      * @return array
      */
-    protected function _getWhereFilter()
+    protected function getWhereFilter()
     {
-        if (null === $this->_whereFilter) {
+        if (null === $this->whereFilter) {
             $item   = $this->getHelper()->getItem();
             $group  = $this->getHelper()->getGroup();
             $idUser = $this->getUserId();
@@ -431,10 +440,10 @@ class TransactionController extends AbstractActionController
 
             $where[] = $this->getWhere()->equalTo('t.id_user', $idUser);
 
-            $this->_whereFilter = $where;
+            $this->whereFilter = $where;
         }
 
-        return $this->_whereFilter;
+        return $this->whereFilter;
     }
 
     /**
@@ -444,5 +453,4 @@ class TransactionController extends AbstractActionController
     {
         return new Where();
     }
-
 }

@@ -1,6 +1,11 @@
 <?php
 namespace Db;
 
+/**
+ * Class Module
+ *
+ * @package Db
+ */
 class Module
 {
     /**

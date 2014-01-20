@@ -5,7 +5,11 @@ namespace Db\Db\Helper;
 use Zend\Db\ResultSet\HydratingResultSet;
 use Zend\Db\Adapter\Adapter;
 
-
+/**
+ * Class TableLoader
+ *
+ * @package Db\Db\Helper
+ */
 class TableLoader
 {
     /** @var string */
@@ -41,7 +45,7 @@ class TableLoader
     /**
      * @param string $tableName
      * @param string $modelName
-     * @return Db\Db\AbstractTable
+     * @return \Db\Db\AbstractTable
      */
     public function getTable($tableName, $modelName = null)
     {

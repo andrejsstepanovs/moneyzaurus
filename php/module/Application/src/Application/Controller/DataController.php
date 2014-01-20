@@ -6,26 +6,30 @@ use Application\Controller\AbstractActionController;
 use Zend\Db\Sql\Where;
 use Zend\View\Model\ViewModel;
 
-
+/**
+ * Class DataController
+ *
+ * @package Application\Controller
+ */
 class DataController extends AbstractActionController
 {
     /** @var string */
-    protected $_filename;
+    protected $fileName;
 
     /**
      * @return string
      */
-    protected function _getFileName()
+    protected function getFileName()
     {
-        if (null === $this->_filename) {
-            $this->_filename = 'moneyzaurus_' . date('Y-m-d') . '.csv';
+        if (null === $this->fileName) {
+            $this->fileName = 'moneyzaurus_' . date('Y-m-d') . '.csv';
         }
-        return $this->_filename;
+        return $this->fileName;
     }
 
-    protected function _setHeader()
+    protected function setHeader()
     {
-        header('Content-Disposition: attachment; filename=' . $this->_getFileName());
+        header('Content-Disposition: attachment; filename=' . $this->getFileName());
         header('Content-Type: application/force-download');
         header('Content-Type: application/octet-stream');
         header('Content-Type: application/download');
@@ -43,12 +47,15 @@ class DataController extends AbstractActionController
 
     }
 
+    /**
+     * @return ViewModel
+     */
     public function downloadAction()
     {
-        $this->_setHeader();
+        $this->setHeader();
 
         $columns = array('id', 'price', 'date', 'created', 'item', 'group', 'currency', 'email');
-        $transactions = $this->_getTransactions();
+        $transactions = $this->getTransactions();
 
         $viewModel = new ViewModel();
         $viewModel->setTerminal(true);
@@ -60,7 +67,7 @@ class DataController extends AbstractActionController
     /**
      * @return \Zend\Db\ResultSet\HydratingResultSet
      */
-    protected function _getTransactions()
+    protected function getTransactions()
     {
         $transactionTable = array('t' => 'transaction');
 

@@ -5,6 +5,11 @@ namespace Application\Helper;
 use Db\Db\AbstractModel;
 use Db\Db\ActiveRecord;
 
+/**
+ * Class AbstractHelper
+ *
+ * @package Application\Helper
+ */
 class AbstractHelper extends AbstractModel
 {
     /**

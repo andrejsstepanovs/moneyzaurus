@@ -2,7 +2,7 @@
 
 namespace Db\Db;
 
-use \Zend\Db\Sql\Expression AS Expression;
+use \Zend\Db\Sql\Expression as Expression;
 
 /**
  * Abstract Db Model class.
@@ -35,7 +35,7 @@ class AbstractModel implements \ArrayAccess
      */
     public function exchangeArray(array $data)
     {
-        foreach ($data AS $name => $value) {
+        foreach ($data as $name => $value) {
             $this->setData($name, $value);
         }
     }
@@ -58,26 +58,26 @@ class AbstractModel implements \ArrayAccess
     public function __call($method, $args)
     {
         switch (substr($method, 0, 3)) {
-            case 'get' :
+            case 'get':
                 $key = $this->underscore(substr($method, 3));
                 return $this->getData($key);
 
-            case 'set' :
-                $key = $this->underscore(substr($method,3));
+            case 'set':
+                $key = $this->underscore(substr($method, 3));
                 $value = isset($args[0]) ? $args[0] : null;
                 return $this->setData($key, $value);
 
-            case 'uns' :
-                $key = $this->underscore(substr($method,3));
+            case 'uns':
+                $key = $this->underscore(substr($method, 3));
                 return $this->unsetData($key);
 
-            case 'has' :
-                $key = $this->underscore(substr($method,3));
+            case 'has':
+                $key = $this->underscore(substr($method, 3));
                 return $this->hasData($key);
         }
 
         throw new \Db\Db\Exception\UnknownCallableException(
-                'Method "'.$method.'" dose not exist'
+            'Method "'.$method.'" dose not exist'
         );
     }
 
@@ -136,11 +136,14 @@ class AbstractModel implements \ArrayAccess
             return $array;
         }
 
-        array_walk($array, function($val, $key) use (&$array) {
-            if (is_object($val) && !$val instanceof Expression) {
-                unset($array[$key]);
+        array_walk(
+            $array,
+            function ($val, $key) use (&$array) {
+                if (is_object($val) && !$val instanceof Expression) {
+                    unset($array[$key]);
+                }
             }
-        });
+        );
 
         return $array;
     }
@@ -205,5 +208,4 @@ class AbstractModel implements \ArrayAccess
     {
         return $this->unsetData($offset);
     }
-
 }

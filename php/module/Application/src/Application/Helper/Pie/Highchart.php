@@ -13,10 +13,10 @@ use HighchartsPHP\HighchartsJsExpr as HighchartJsExpr;
 class Highchart extends AbstractHelper
 {
     /** @var Highcharts */
-    protected $_chart;
+    protected $chart;
 
     /** @var int */
-    protected $_charDataIterator = 0;
+    protected $charDataIterator = 0;
 
     /**
      * @param string     $title
@@ -44,9 +44,9 @@ class Highchart extends AbstractHelper
         $chart->series[0]->name                 = 'EUR';
         $chart->series[0]->data                 = new HighchartJsExpr($jsChartClass . '.getPrimaryData()');
         $chart->series[0]->size                 = '80%';
-        $chart->series[0]->point->events->click = new HighchartJsExpr($this->_getSubPieChartJs($parameters));
+        $chart->series[0]->point->events->click = new HighchartJsExpr($this->getSubPieChartJs($parameters));
 
-        $chart->series[1]->point->events->click = new HighchartJsExpr($this->_getSubPieChartJs($parameters));
+        $chart->series[1]->point->events->click = new HighchartJsExpr($this->getSubPieChartJs($parameters));
         $chart->series[1]->dataLabels->enabled = false;
         $chart->series[1]->name                = 'EUR';
         $chart->series[1]->data                = new HighchartJsExpr($jsChartClass . '.getSecondaryData()');
@@ -60,7 +60,7 @@ class Highchart extends AbstractHelper
      *
      * @return string
      */
-    protected function _getSubPieChartJs(array $parameters = null)
+    protected function getSubPieChartJs(array $parameters = null)
     {
         $defaultParameters = array(
             'id'       => '*this.id*',
@@ -90,7 +90,7 @@ class Highchart extends AbstractHelper
      */
     public function setChartData(array $priceData, array $data)
     {
-        $i = $this->_charDataIterator++;
+        $iterator = $this->charDataIterator++;
 
         $itemNames = $groupIds = $itemIds = $types = array();
         foreach ($data as $itemData) {
@@ -101,15 +101,15 @@ class Highchart extends AbstractHelper
         }
 
         $chart = $this->getChartData();
-        $chart[$i]->color                = new HighchartJsExpr('new PieChartData().getColors()[' . $i . ']');
+        $chart[$iterator]->color           = new HighchartJsExpr('new PieChartData().getColors()[' . $iterator . ']');
         //$chart[$i]->drilldown->color     = new HighchartJsExpr('new PieChartData().getColors()');
-        $chart[$i]->y                    = array_sum($priceData);
-        $chart[$i]->z                    = 'EUR';
-        $chart[$i]->drilldown->data      = $priceData;
-        $chart[$i]->drilldown->items     = $itemNames;
-        $chart[$i]->drilldown->id_groups = $groupIds;
-        $chart[$i]->drilldown->id_items  = $itemIds;
-        $chart[$i]->drilldown->types     = $types;
+        $chart[$iterator]->y                    = array_sum($priceData);
+        $chart[$iterator]->z                    = 'EUR';
+        $chart[$iterator]->drilldown->data      = $priceData;
+        $chart[$iterator]->drilldown->items     = $itemNames;
+        $chart[$iterator]->drilldown->id_groups = $groupIds;
+        $chart[$iterator]->drilldown->id_items  = $itemIds;
+        $chart[$iterator]->drilldown->types     = $types;
 
         return $this;
     }
@@ -119,9 +119,9 @@ class Highchart extends AbstractHelper
      */
     public function getChartData()
     {
-        if (null === $this->_chart) {
-            $this->_chart = new Highcharts();
+        if (null === $this->chart) {
+            $this->chart = new Highcharts();
         }
-        return $this->_chart;
+        return $this->chart;
     }
 }

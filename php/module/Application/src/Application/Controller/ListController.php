@@ -15,13 +15,13 @@ use Zend\Db\TableGateway\Exception\RuntimeException;
 class ListController extends AbstractActionController
 {
     /** @var TransactionForm */
-    protected $_transactionForm;
+    protected $transactionForm;
 
     /** @var TransactionForm */
-    protected $_searchForm;
+    protected $searchForm;
 
     /** @var array */
-    protected $_whereFilter;
+    protected $whereFilter;
 
     /**
      * @return void
@@ -82,12 +82,12 @@ class ListController extends AbstractActionController
      */
     public function getTransactionForm()
     {
-        if (null === $this->_transactionForm) {
-            $this->_transactionForm = new TransactionForm();
+        if (null === $this->transactionForm) {
+            $this->transactionForm = new TransactionForm();
             //$this->_transactionForm->setAttribute('id', 'editTransactionForm');
-            $this->_transactionForm->remove('id_user');
+            $this->transactionForm->remove('id_user');
 
-            $formElements = $this->_transactionForm->getElements();
+            $formElements = $this->transactionForm->getElements();
 
             $currencyElement = $formElements['currency'];
             $dateElement     = $formElements['date'];
@@ -96,7 +96,7 @@ class ListController extends AbstractActionController
             $dateElement->setValue(date('Y-m-d'));
         }
 
-        return $this->_transactionForm;
+        return $this->transactionForm;
     }
 
     /**
@@ -119,7 +119,7 @@ class ListController extends AbstractActionController
                ->quantifier(new Expression('SQL_CALC_FOUND_ROWS'))
                ->limit($this->getHelper()->getItemsPerPage());
 
-        $where = $this->_getWhereFilter();
+        $where = $this->getWhereFilter();
         if (count($where)) {
             $select->where($where);
         }
@@ -137,9 +137,9 @@ class ListController extends AbstractActionController
     /**
      * @return array
      */
-    protected function _getWhereFilter()
+    protected function getWhereFilter()
     {
-        if (null === $this->_whereFilter) {
+        if (null === $this->whereFilter) {
             $item   = $this->getHelper()->getItem();
             $group  = $this->getHelper()->getGroup();
             $date   = $this->getHelper()->getDate();
@@ -166,10 +166,10 @@ class ListController extends AbstractActionController
 
             $where[] = $this->getWhere()->equalTo('t.id_user', $idUser);
 
-            $this->_whereFilter = $where;
+            $this->whereFilter = $where;
         }
 
-        return $this->_whereFilter;
+        return $this->whereFilter;
     }
 
     /**
@@ -186,16 +186,19 @@ class ListController extends AbstractActionController
     protected function getTotalCount()
     {
         $selectTotal = new Select(' ');
-        $selectTotal->setSpecification(Select::SELECT, array(
-            'SELECT %1$s' => array(
-                array(1 => '%1$s', 2 => '%1$s AS %2$s', 'combinedby' => ', '),
-                null
+        $selectTotal->setSpecification(
+            Select::SELECT,
+            array(
+                'SELECT %1$s' => array(
+                    array(1 => '%1$s', 2 => '%1$s AS %2$s', 'combinedby' => ', '),
+                    null
+                )
             )
-        ));
+        );
 
-        $selectTotal->columns(array(
-            'total' => new Expression('FOUND_ROWS()')
-        ));
+        $selectTotal->columns(
+            array('total' => new Expression('FOUND_ROWS()'))
+        );
 
         $sql = $this->getTable('transactions')->getTable()->getSql();
         $statement = $sql->prepareStatementForSqlObject($selectTotal);
@@ -211,10 +214,10 @@ class ListController extends AbstractActionController
      */
     protected function getSearchForm()
     {
-        if (null === $this->_searchForm) {
-            $this->_searchForm = new TransactionForm();
+        if (null === $this->searchForm) {
+            $this->searchForm = new TransactionForm();
         }
-        return $this->_searchForm;
+        return $this->searchForm;
     }
 
     public function saveAction()
@@ -226,7 +229,7 @@ class ListController extends AbstractActionController
         $price  = $this->getHelper()->getPrice();
         $transactionId = $this->getHelper()->getTransactionId();
 
-        $transaction = $this->_saveTransaction(
+        $transaction = $this->saveTransaction(
             $transactionId,
             $item,
             $group,
@@ -256,7 +259,7 @@ class ListController extends AbstractActionController
      *
      * @return \Db\Db\ActiveRecord
      */
-    protected function _saveTransaction($transactionId, $itemName, $groupName, $price, $currencyId, $date)
+    protected function saveTransaction($transactionId, $itemName, $groupName, $price, $currencyId, $date)
     {
         if ($transactionId == 0) {
             $transactionId = null;
@@ -303,7 +306,7 @@ class ListController extends AbstractActionController
         $deleted = false;
         $error = '';
         try {
-            $deleted = $this->_deleteTransaction($transactionId);
+            $deleted = $this->deleteTransaction($transactionId);
         } catch (\Exception $exc) {
             $error = $exc->getMessage();
         }
@@ -325,7 +328,7 @@ class ListController extends AbstractActionController
      * @return bool
      * @throws \Zend\Db\TableGateway\Exception\RuntimeException
      */
-    protected function _deleteTransaction($transactionId)
+    protected function deleteTransaction($transactionId)
     {
         $table = $this->getTable('transaction');
         $table->setTransactionId($transactionId);

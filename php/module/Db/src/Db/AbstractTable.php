@@ -68,7 +68,7 @@ class AbstractTable extends AbstractTableGateway
     }
 
     /**
-     * @param string|array|Zend\Db\Sql\TableIdentifier $table
+     * @param string|array|Zend\Db\\Sql\TableIdentifier $table
      */
     public function setTable($table)
     {
@@ -88,7 +88,7 @@ class AbstractTable extends AbstractTableGateway
     }
 
     /**
-     * @return Zend\Db\Metadata\Metadata
+     * @return \Zend\Db\Metadata\Metadata
      */
     protected function getMetadata()
     {
@@ -100,7 +100,7 @@ class AbstractTable extends AbstractTableGateway
     }
 
     /**
-     * @return Zend\Db\Metadata\Object\TableObject
+     * @return \Zend\Db\Metadata\Object\TableObject
      */
     protected function getMetadataTableObject()
     {
@@ -118,12 +118,12 @@ class AbstractTable extends AbstractTableGateway
     public function getPrimary()
     {
         if (null === $this->primary) {
-            /** @var $constraint Zend\Db\Metadata\Object\ConstraintObject */
+            /** @var $constraint \Zend\Db\Metadata\Object\ConstraintObject */
             $constraints = $this->getMetadataTableObject()->getConstraints();
-            foreach ($constraints AS $constraint) {
+            foreach ($constraints as $constraint) {
                 if ($constraint->isPrimaryKey()) {
                     $primaries = $constraint->getColumns();
-                    foreach ($primaries AS $primary) {
+                    foreach ($primaries as $primary) {
                         $this->primary[] = $primary;
                     }
                 }
@@ -131,12 +131,12 @@ class AbstractTable extends AbstractTableGateway
             if (empty($this->primary)) {
                 $uniqe = $this->getUniqe();
                 if (!empty($uniqe)) {
-                    foreach ($uniqe AS $column) {
+                    foreach ($uniqe as $column) {
                         $this->primary[] = $column;
                     }
                 } else {
                     throw new Exception\TablePrimaryNotFoundException(
-                            'Primary not found in table "'.$this->getTableName().'"'
+                        'Primary not found in table "' . $this->getTableName() . '"'
                     );
                 }
             }
@@ -152,12 +152,12 @@ class AbstractTable extends AbstractTableGateway
     public function getUniqe()
     {
         if (null === $this->uniqe) {
-            /** @var $constraint Zend\Db\Metadata\Object\ConstraintObject */
+            /** @var $constraint \Zend\Db\Metadata\Object\ConstraintObject */
             $constraints = $this->getMetadataTableObject()->getConstraints();
-            foreach ($constraints AS $constraint) {
+            foreach ($constraints as $constraint) {
                 if ($constraint->isPrimaryKey() || $constraint->isUnique()) {
                     $primaries = $constraint->getColumns();
-                    foreach ($primaries AS $primary) {
+                    foreach ($primaries as $primary) {
                         $this->uniqe[] = $primary;
                     }
                 }
@@ -174,9 +174,9 @@ class AbstractTable extends AbstractTableGateway
     public function getColumns()
     {
         if (empty($this->columns)) {
-            /** @var $column Zend\Db\Metadata\Object\ColumnObject */
+            /** @var $column \Zend\Db\Metadata\Object\ColumnObject */
             $columnObjects = $this->getMetadataTableObject()->getColumns();
-            foreach ($columnObjects AS $column) {
+            foreach ($columnObjects as $column) {
                 $columns[] = $column->getName();
             }
             $this->columns = $columns;
@@ -200,22 +200,26 @@ class AbstractTable extends AbstractTableGateway
      */
     public function fetchUniqeColum($column, $where = null)
     {
-        return $this->select(function (Select $select) use ($column, $where) {
-            $select->quantifier(Select::QUANTIFIER_DISTINCT);
-            $select->columns(array($column));
-            if ($where) {
-                $select->where($where);
+        return $this->select(
+            function (Select $select) use ($column, $where) {
+                $select->quantifier(Select::QUANTIFIER_DISTINCT);
+                $select->columns(array($column));
+                if ($where) {
+                    $select->where($where);
+                }
             }
-        });
+        );
     }
 
+    /**
+     * @param Select $select
+     *
+     * @return \Zend\Db\ResultSet\ResultSet
+     */
     public function fetch(Select $select)
     {
         $resultSet = $this->executeSelect($select);
         return $resultSet;
-        return $this->select(function () use ($select) {
-            $this->select = $select;
-        });
     }
 
     /**
@@ -225,14 +229,14 @@ class AbstractTable extends AbstractTableGateway
     public function fetchByModel(AbstractModel $model)
     {
         $where = array();
-        foreach ($model->getData() AS $key => $val) {
+        foreach ($model->getData() as $key => $val) {
             $where[$key] = $val;
         }
 
-        /** @var $select Zend\Db\Sql\Select */
+        /** @var $select \Zend\Db\Sql\Select */
         $select = $this->getSql()->select()->where($where);
 
-        /** @var $resultSet Zend\Db\ResultSet\HydratingResultSet */
+        /** @var $resultSet \Zend\Db\ResultSet\HydratingResultSet */
         $resultSet = $this->executeSelect($select);
         return $resultSet;
     }
@@ -244,7 +248,7 @@ class AbstractTable extends AbstractTableGateway
     protected function getPrimaryValue(AbstractModel $model)
     {
         $where = array();
-        foreach ($this->getPrimary() AS $key) {
+        foreach ($this->getPrimary() as $key) {
             if ($model->hasData($key) && $model->getData($key)) {
                 $where[$key] = $model->getData($key);
             }
@@ -260,7 +264,7 @@ class AbstractTable extends AbstractTableGateway
     protected function getUniqeValue(AbstractModel $model)
     {
         $where = array();
-        foreach ($this->getUniqe() AS $key) {
+        foreach ($this->getUniqe() as $key) {
             if ($model->hasData($key)) {
                 $where[$key] = $model->getData($key);
             }
@@ -309,5 +313,4 @@ class AbstractTable extends AbstractTableGateway
         }
         return $this->updateEntity($model);
     }
-
 }

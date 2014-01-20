@@ -2,14 +2,17 @@
 
 namespace Application\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController AS ZendAbstractActionController;
-use Db\Db\ActiveRecord;
+use Zend\Mvc\Controller\AbstractActionController as ZendAbstractActionController;
 use Application\Helper\AbstractHelper;
 use Zend\Mvc\Exception;
 use Zend\Mvc\MvcEvent;
 use Zend\Escaper\Escaper;
 
-
+/**
+ * Class AbstractActionController
+ *
+ * @package Application\Controller
+ */
 class AbstractActionController extends ZendAbstractActionController
 {
     const CREDENTIAL_TREATMENT = 'MD5(?)';
@@ -42,15 +45,15 @@ class AbstractActionController extends ZendAbstractActionController
     /**
      * Execute the request
      *
-     * @param  MvcEvent $e
+     * @param  MvcEvent $mvcEvent
      * @return mixed
      * @throws Exception\DomainException
      */
-    public function onDispatch(\Zend\Mvc\MvcEvent $e)
+    public function onDispatch(\Zend\Mvc\MvcEvent $mvcEvent)
     {
         $this->init();
 
-        $actionResponse = parent::onDispatch($e);
+        $actionResponse = parent::onDispatch($mvcEvent);
 
         $messages = $this->flashmessenger()->getMessages();
         if (!empty($messages)) {
@@ -81,16 +84,16 @@ class AbstractActionController extends ZendAbstractActionController
     public function showMessages($messages)
     {
         if (!empty($messages)) {
-            foreach ($messages AS $message) {
-                $this->getViewHelperPlugin('inlineScript')->appendScript('
-                    $(document).ready(function() {
+            foreach ($messages as $message) {
+                $this->getViewHelperPlugin('inlineScript')->appendScript(
+                    '$(document).ready(function() {
                         var message = "'.str_replace('"', "'", $message).'";
                         $.mobile.showPageLoadingMsg("b", message, true);
                         setTimeout(function() {
                             $.mobile.hidePageLoadingMsg();
                         }, 1500);
-                    });
-                ');
+                    });'
+                );
             }
         }
         return $this;
@@ -151,7 +154,7 @@ class AbstractActionController extends ZendAbstractActionController
         $currencies = $currency->getTable()->fetchAll();
 
         $valueOptions = array();
-        foreach ($currencies AS $currency) {
+        foreach ($currencies as $currency) {
             $valueOptions[$currency->getId()] = $currency->getName();
         }
 
@@ -273,5 +276,4 @@ class AbstractActionController extends ZendAbstractActionController
         $this->paramCache[$key] = $value;
         return $this;
     }
-
 }

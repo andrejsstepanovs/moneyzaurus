@@ -1,7 +1,11 @@
 <?php
 namespace Application\Controller;
 
-
+/**
+ * Class LogoutController
+ *
+ * @package Application\Controller
+ */
 class LogoutController extends AbstractActionController
 {
     /**
