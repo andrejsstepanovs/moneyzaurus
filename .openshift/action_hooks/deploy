@@ -1,6 +1,8 @@
 #!/bin/bash
 # Run composer install
 
+echo "composer install"
+
 cd app-root/runtime/repo/php
 
 export HOME_ORIGIN=$HOME
@@ -9,3 +11,9 @@ export HOME=$HOME/app-root/runtime/repo/php
 /usr/bin/php composer.phar install
 
 export HOME=$HOME_ORIGIN
+
+
+
+echo "install-scripts update"
+
+/usr/bin/php php/index.php install-scripts update
