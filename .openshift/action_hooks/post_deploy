@@ -1,0 +1,6 @@
+#!/bin/bash
+# Run install script update
+
+echo "install-scripts update"
+
+/usr/bin/php php/index.php install-scripts update
