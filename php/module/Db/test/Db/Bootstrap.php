@@ -1,6 +1,6 @@
 <?php
 
-namespace Varienttest;
+namespace Db;
 
 use Zend\Loader\AutoloaderFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;

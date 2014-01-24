@@ -1,9 +1,9 @@
 <?php
 
-namespace VarientTest\Controller;
+namespace Db;
 
 use PHPUnit_Framework_TestCase;
-use Db\Db\AbstractModel;
+use Db\AbstractModel;
 
 /**
  * Class AbstractModelTest
@@ -12,11 +12,11 @@ use Db\Db\AbstractModel;
  */
 class AbstractModelTest extends PHPUnit_Framework_TestCase
 {
-    /** @var \Db\Db\AbstractModel */
+    /** @var \Db\AbstractModel */
     protected $model;
 
     /**
-     * @return \Db\Db\AbstractModel
+     * @return \Db\AbstractModel
      */
     public function getModel()
     {
@@ -34,8 +34,8 @@ class AbstractModelTest extends PHPUnit_Framework_TestCase
         $data = array();
         for ($i = 0; $i < 100; $i++) {
             $val = array();
-            $k = rand(5,10);
-            for ($j = 0; $j < $k; $j++) {
+            $random = rand(5, 10);
+            for ($j = 0; $j < $random; $j++) {
                 $val[uniqid()] = uniqid();
             }
             $data[] = array($val);
@@ -51,8 +51,8 @@ class AbstractModelTest extends PHPUnit_Framework_TestCase
     {
         $data = array();
         for ($i = 0; $i < 10; $i++) {
-            $k = rand(5,10);
-            for ($j = 0; $j < $k; $j++) {
+            $random = rand(5, 10);
+            for ($j = 0; $j < $random; $j++) {
                 $data[] = array(uniqid(), uniqid());
             }
         }
@@ -238,7 +238,7 @@ class AbstractModelTest extends PHPUnit_Framework_TestCase
     public function testArrayAccessSet($data)
     {
         $model = $this->getModel();
-        foreach ($data AS $key => $val) {
+        foreach ($data as $key => $val) {
             $model[$key] = $val;
         }
 
@@ -295,7 +295,7 @@ class AbstractModelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Db\Db\Exception\UnknownCallableException
+     * @expectedException \Db\Exception\UnknownCallableException
      */
     public function testUnknownCallable()
     {
@@ -303,7 +303,7 @@ class AbstractModelTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Db\Db\Exception\UnknownCallableException
+     * @expectedException \Db\Exception\UnknownCallableException
      */
     public function testUnknownCallableWithParams()
     {
