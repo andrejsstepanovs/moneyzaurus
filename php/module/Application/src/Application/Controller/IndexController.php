@@ -51,7 +51,7 @@ class IndexController extends AbstractActionController
         }
 
         $this->getViewHelperPlugin('inlineScript')->appendScript(
-            '$(document).ready(function() {
+            '$(document).ready(function () {
                 $("#login-username").focus();
             });'
         );

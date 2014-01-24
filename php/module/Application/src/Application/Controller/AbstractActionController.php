@@ -86,10 +86,10 @@ class AbstractActionController extends ZendAbstractActionController
         if (!empty($messages)) {
             foreach ($messages as $message) {
                 $this->getViewHelperPlugin('inlineScript')->appendScript(
-                    '$(document).ready(function() {
+                    '$(document).ready(function () {
                         var message = "'.str_replace('"', "'", $message).'";
                         $.mobile.showPageLoadingMsg("b", message, true);
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $.mobile.hidePageLoadingMsg();
                         }, 1500);
                     });'
