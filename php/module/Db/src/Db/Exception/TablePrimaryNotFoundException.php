@@ -1,11 +1,11 @@
 <?php
 
-namespace Db\Db\Exception;
+namespace Db\Exception;
 
 /**
  * Class TablePrimaryNotFoundException
  *
- * @package Db\Db\Exception
+ * @package Db\Exception
  */
 class TablePrimaryNotFoundException extends \RuntimeException implements ExceptionInterface
 {

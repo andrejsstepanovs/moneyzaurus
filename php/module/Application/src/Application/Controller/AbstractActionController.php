@@ -190,7 +190,7 @@ class AbstractActionController extends ZendAbstractActionController
 
     /**
      * @param string $table
-     * @return \Db\Db\ActiveRecord
+     * @return \Db\ActiveRecord
      */
     protected function getTable($table = null)
     {

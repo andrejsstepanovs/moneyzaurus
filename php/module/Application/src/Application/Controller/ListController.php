@@ -38,7 +38,7 @@ class ListController extends AbstractActionController
         $transactionsResults = $this->getTransactions();
         $totalItemCount = $this->getTotalCount();
 
-        /** @var \Db\Db\ActiveRecord $item */
+        /** @var \Db\ActiveRecord $item */
         $rows = array();
         foreach ($transactionsResults as $item) {
             $rows[] = $item->getData();
@@ -257,7 +257,7 @@ class ListController extends AbstractActionController
      * @param string $currencyId
      * @param string $date
      *
-     * @return \Db\Db\ActiveRecord
+     * @return \Db\ActiveRecord
      */
     protected function saveTransaction($transactionId, $itemName, $groupName, $price, $currencyId, $date)
     {
@@ -274,7 +274,7 @@ class ListController extends AbstractActionController
             $item->setName($itemName)
                  ->setIdUser($this->getUserId())
                  ->load();
-        } catch (\Db\Db\Exception\ModelNotFoundException $exc) {
+        } catch (\Db\Exception\ModelNotFoundException $exc) {
             $item->save();
         }
 
@@ -283,7 +283,7 @@ class ListController extends AbstractActionController
             $group->setName($groupName)
                   ->setIdUser($this->getUserId())
                   ->load();
-        } catch (\Db\Db\Exception\ModelNotFoundException $exc) {
+        } catch (\Db\Exception\ModelNotFoundException $exc) {
             $group->save();
         }
 

@@ -3,7 +3,7 @@
 namespace Application\Install;
 
 use InstallScripts\Script;
-use Db\Db\ActiveRecord;
+use Db\ActiveRecord;
 
 /**
  * Class Transactions
@@ -72,7 +72,7 @@ class Transactions extends Script
      * @param string $currency
      * @param string $date
      *
-     * @return \Db\Db\ActiveRecord transaction
+     * @return \Db\ActiveRecord transaction
      */
     protected function saveTransaction(
         $itemName,
@@ -92,7 +92,7 @@ class Transactions extends Script
             $item->setName($itemName)
                  ->setIdUser($userId)
                  ->load();
-        } catch (\Db\Db\Exception\ModelNotFoundException $exc) {
+        } catch (\Db\Exception\ModelNotFoundException $exc) {
             $item->save();
         }
 
@@ -101,7 +101,7 @@ class Transactions extends Script
             $group->setName($groupName)
                   ->setIdUser($userId)
                   ->load();
-        } catch (\Db\Db\Exception\ModelNotFoundException $exc) {
+        } catch (\Db\Exception\ModelNotFoundException $exc) {
             $group->save();
         }
 
@@ -119,7 +119,7 @@ class Transactions extends Script
 
     /**
      * @param string $table
-     * @return \Db\Db\ActiveRecord
+     * @return \Db\ActiveRecord
      */
     protected function getTable($table = null, $schema = null, $clear = true)
     {

@@ -2,8 +2,8 @@
 
 namespace Application\Helper;
 
-use Db\Db\AbstractModel;
-use Db\Db\ActiveRecord;
+use Db\AbstractModel;
+use Db\ActiveRecord;
 
 /**
  * Class AbstractHelper
@@ -19,7 +19,7 @@ class AbstractHelper extends AbstractModel
 
     /**
      * @param string $table
-     * @return \Db\Db\ActiveRecord
+     * @return \Db\ActiveRecord
      */
     public function getTable($table = null)
     {

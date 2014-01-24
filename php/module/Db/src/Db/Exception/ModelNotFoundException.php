@@ -1,11 +1,11 @@
 <?php
 
-namespace Db\Db\Exception;
+namespace Db\Exception;
 
 /**
  * Class ModelNotFoundException
  *
- * @package Db\Db\Exception
+ * @package Db\Exception
  */
 class ModelNotFoundException extends \RuntimeException implements ExceptionInterface
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Db\Db;
+namespace Db;
 
-use Db\Db\Exception;
-use Db\Db\AbstractModel;
+use Db\Exception;
+use Db\AbstractModel;
 use Zend\Db\Metadata\Metadata;
 use Zend\Db\Sql\TableIdentifier;
 use Zend\Db\TableGateway\Feature;
@@ -34,7 +34,7 @@ class AbstractTable extends AbstractTableGateway
     /**
      *
      * @param \Zend\Db\Adapter\Adapter|null $adapter
-     * @param |Zend\Db\ResultSet\HydratingResultSet|\Db\Db\AbstractModel $resultSetPrototype
+     * @param |Zend\Db\ResultSet\HydratingResultSet|\Db\AbstractModel $resultSetPrototype
      * @param \Zend\Db\Sql\TableIdentifier $table
      */
     public function __construct($adapter, $resultSetPrototype, TableIdentifier $table = null)
@@ -223,7 +223,7 @@ class AbstractTable extends AbstractTableGateway
     }
 
     /**
-     * @param \Db\Db\AbstractModel $model
+     * @param \Db\AbstractModel $model
      * @return \Zend\Db\ResultSet\HydratingResultSet
      */
     public function fetchByModel(AbstractModel $model)
@@ -242,7 +242,7 @@ class AbstractTable extends AbstractTableGateway
     }
 
     /**
-     * @param \Db\Db\AbstractModel $model
+     * @param \Db\AbstractModel $model
      * @return array
      */
     protected function getPrimaryValue(AbstractModel $model)
@@ -258,7 +258,7 @@ class AbstractTable extends AbstractTableGateway
     }
 
     /**
-     * @param \Db\Db\AbstractModel $model
+     * @param \Db\AbstractModel $model
      * @return array
      */
     protected function getUniqeValue(AbstractModel $model)
@@ -274,7 +274,7 @@ class AbstractTable extends AbstractTableGateway
     }
 
     /**
-     * @param \Db\Db\AbstractModel $model
+     * @param \Db\AbstractModel $model
      * @return integer
      */
     public function deleteEntity(AbstractModel $model)
@@ -283,7 +283,7 @@ class AbstractTable extends AbstractTableGateway
     }
 
     /**
-     * @param \Db\Db\AbstractModel $model
+     * @param \Db\AbstractModel $model
      * @return integer
      */
     public function insertEntity(AbstractModel $model)
@@ -292,7 +292,7 @@ class AbstractTable extends AbstractTableGateway
     }
 
     /**
-     * @param \Db\Db\AbstractModel $model
+     * @param \Db\AbstractModel $model
      * @return integer
      */
     public function updateEntity(AbstractModel $model)
@@ -302,7 +302,7 @@ class AbstractTable extends AbstractTableGateway
     }
 
     /**
-     * @param \Db\Db\AbstractModel $model
+     * @param \Db\AbstractModel $model
      * @return integer
      */
     public function saveEntity(AbstractModel $model)

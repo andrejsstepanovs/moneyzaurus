@@ -1,7 +1,7 @@
 <?php
 namespace Application\Controller;
 
-use Db\Db\ActiveRecord;
+use Db\ActiveRecord;
 use Application\Form\Form\User as UserForm;
 use Application\Form\Validator\User as UserValidator;
 use Zend\Authentication\Storage\Session;
@@ -20,7 +20,7 @@ class UserController extends AbstractActionController
     /** @var \Zend\Authentication\Storage\Session */
     protected $storage;
 
-    /** @var \Db\Db\ActiveRecord */
+    /** @var \Db\ActiveRecord */
     protected $user;
 
     /** @var \Application\Form\Validator\Login */
@@ -31,7 +31,7 @@ class UserController extends AbstractActionController
 
 
     /**
-     * @return \Db\Db\ActiveRecord
+     * @return \Db\ActiveRecord
      */
     public function getUser()
     {

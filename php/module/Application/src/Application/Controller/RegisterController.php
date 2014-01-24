@@ -1,7 +1,7 @@
 <?php
 namespace Application\Controller;
 
-use Db\Db\ActiveRecord;
+use Db\ActiveRecord;
 use Application\Form\Form\Register as RegisterForm;
 use Application\Form\Validator\Register as RegisterValidator;
 use Application\Controller\AbstractActionController;
@@ -21,12 +21,12 @@ class RegisterController extends AbstractActionController
     /** @var \Application\Form\Validator\Register */
     protected $registerValidator;
 
-    /** @var \Db\Db\ActiveRecord */
+    /** @var \Db\ActiveRecord */
     protected $user;
 
 
     /**
-     * @return \Db\Db\ActiveRecord
+     * @return \Db\ActiveRecord
      */
     public function getUser()
     {
@@ -113,7 +113,7 @@ class RegisterController extends AbstractActionController
                 throw new RuntimeException('User already exists.');
             }
 
-        } catch (\Db\Db\Exception\ModelNotFoundException $exc) {
+        } catch (\Db\Exception\ModelNotFoundException $exc) {
             $passwordExpression = new Expression(
                 AbstractActionController::CREDENTIAL_TREATMENT,
                 $request->getPost('password')

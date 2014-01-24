@@ -100,7 +100,7 @@ class TransactionController extends AbstractActionController
                 }
                 $column = $datalistElements[$name];
 
-                /** @var $table \Db\Db\AbstractTable */
+                /** @var $table \Db\AbstractTable */
                 /** @var $results \Zend\Db\ResultSet\HydratingResultSet */
                 $table = $this->getTable($name)->getTable();
                 $results = $table->fetchUniqeColum(
@@ -169,7 +169,7 @@ class TransactionController extends AbstractActionController
                         $this->showMessage('Failed to save');
                     }
 
-                } catch (\Db\Db\Exception\ModelNotFoundException $exc) {
+                } catch (\Db\Exception\ModelNotFoundException $exc) {
                     $this->showMessage('Data missing');
                 } catch (Exception $exc) {
                     $this->showMessage($exc->getMessage());
@@ -193,7 +193,7 @@ class TransactionController extends AbstractActionController
      * @param float  $price
      * @param string $currency
      * @param string $date
-     * @return \Db\Db\ActiveRecord transaction
+     * @return \Db\ActiveRecord transaction
      */
     protected function saveTransaction(
         $transactionId,
@@ -216,7 +216,7 @@ class TransactionController extends AbstractActionController
             $item->setName($itemName)
                  ->setIdUser($this->getUserId())
                  ->load();
-        } catch (\Db\Db\Exception\ModelNotFoundException $exc) {
+        } catch (\Db\Exception\ModelNotFoundException $exc) {
             $item->save();
         }
 
@@ -225,7 +225,7 @@ class TransactionController extends AbstractActionController
             $group->setName($groupName)
                   ->setIdUser($this->getUserId())
                   ->load();
-        } catch (\Db\Db\Exception\ModelNotFoundException $exc) {
+        } catch (\Db\Exception\ModelNotFoundException $exc) {
             $group->save();
         }
 
@@ -282,7 +282,7 @@ class TransactionController extends AbstractActionController
     {
         $groups = array();
         $transactions = $this->getGroupTransactions();
-        /** \Db\Db\ActiveRecord */
+        /** \Db\ActiveRecord */
         foreach ($transactions as $transaction) {
             $groups[] = $transaction->getData('group_name');
         }
@@ -298,7 +298,7 @@ class TransactionController extends AbstractActionController
         $data = array('by_count' => array(), 'by_day' => array());
 
         $transactions = $this->getPriceTransactions();
-        /** \Db\Db\ActiveRecord */
+        /** \Db\ActiveRecord */
         foreach ($transactions as $transaction) {
             $day = $transaction->getData('day_of_the_week');
             $price = $transaction->getData('price');

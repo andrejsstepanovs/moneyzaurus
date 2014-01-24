@@ -1,6 +1,6 @@
 <?php
 
-namespace Db\Db\Helper;
+namespace Db\Helper;
 
 use Zend\Db\ResultSet\HydratingResultSet;
 use Zend\Db\Adapter\Adapter;
@@ -8,7 +8,7 @@ use Zend\Db\Adapter\Adapter;
 /**
  * Class TableLoader
  *
- * @package Db\Db\Helper
+ * @package Db\Helper
  */
 class TableLoader
 {
@@ -45,7 +45,7 @@ class TableLoader
     /**
      * @param string $tableName
      * @param string $modelName
-     * @return \Db\Db\AbstractTable
+     * @return \Db\AbstractTable
      */
     public function getTable($tableName, $modelName = null)
     {
@@ -64,7 +64,7 @@ class TableLoader
 
     /**
      * @param string $modelName
-     * @return \Db\Db\AbstractModel
+     * @return \Db\AbstractModel
      */
     protected function getModel($modelName)
     {
@@ -74,7 +74,7 @@ class TableLoader
 
     /**
      * @param string $tableNamespace
-     * @return \Db\Db\Helper\TableLoader
+     * @return \Db\Helper\TableLoader
      */
     public function setTableNamespace($tableNamespace)
     {
@@ -84,7 +84,7 @@ class TableLoader
 
     /**
      * @param string $modelNamespace
-     * @return \Db\Db\Helper\TableLoader
+     * @return \Db\Helper\TableLoader
      */
     public function setModelNamespace($modelNamespace)
     {
@@ -94,7 +94,7 @@ class TableLoader
 
     /**
      * @param \Zend\Db\Adapter\Adapter $dbAdapter
-     * @return \Db\Db\Helper\TableLoader
+     * @return \Db\Helper\TableLoader
      */
     public function setDbAdapter(Adapter $dbAdapter)
     {

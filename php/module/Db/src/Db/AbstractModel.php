@@ -1,6 +1,6 @@
 <?php
 
-namespace Db\Db;
+namespace Db;
 
 use \Zend\Db\Sql\Expression as Expression;
 
@@ -76,13 +76,13 @@ class AbstractModel implements \ArrayAccess
                 return $this->hasData($key);
         }
 
-        throw new \Db\Db\Exception\UnknownCallableException(
+        throw new \Db\Exception\UnknownCallableException(
             'Method "'.$method.'" dose not exist'
         );
     }
 
     /**
-     * @return \Db\Db\AbstractModel
+     * @return \Db\AbstractModel
      */
     public function clear()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace VarientTest;
+namespace Varienttest;
 
 use Zend\Loader\AutoloaderFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;

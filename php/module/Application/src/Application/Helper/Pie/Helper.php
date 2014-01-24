@@ -168,7 +168,7 @@ class Helper extends AbstractHelper
             );
 
             $total = 0;
-            /** @var \Db\Db\ActiveRecord $row */
+            /** @var \Db\ActiveRecord $row */
             foreach ($groupedData[$groupName] as $row) {
                 $total += round((float)$row->getPrice(), 2);
             }
@@ -258,7 +258,7 @@ class Helper extends AbstractHelper
         $allItems = array();
         $data = $this->getGroupedData();
         foreach ($data as $groupName => $items) {
-            /** @var \Db\Db\ActiveRecord $item */
+            /** @var \Db\ActiveRecord $item */
             foreach ($items as $item) {
                 $allItems[$groupName . $item->getIdItem()] = null;
             }
@@ -354,7 +354,7 @@ class Helper extends AbstractHelper
     protected function fetchSortedGroupsData()
     {
         $groups = array();
-        /** @var \Db\Db\ActiveRecord $row */
+        /** @var \Db\ActiveRecord $row */
         foreach ($this->getTransactionsData() as $row) {
             $groupName = $row->getGroupName();
             if (!array_key_exists($groupName, $groups)) {

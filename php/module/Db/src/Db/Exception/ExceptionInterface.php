@@ -1,11 +1,11 @@
 <?php
 
-namespace Db\Db\Exception;
+namespace Db\Exception;
 
 /**
  * Interface ExceptionInterface
  *
- * @package Db\Db\Exception
+ * @package Db\Exception
  */
 interface ExceptionInterface
 {

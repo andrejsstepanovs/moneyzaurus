@@ -1,11 +1,11 @@
 <?php
 
-namespace Db\Db\Exception;
+namespace Db\Exception;
 
 /**
  * Class UnknownCallableException
  *
- * @package Db\Db\Exception
+ * @package Db\Exception
  */
 class UnknownCallableException extends \RuntimeException implements ExceptionInterface
 {
