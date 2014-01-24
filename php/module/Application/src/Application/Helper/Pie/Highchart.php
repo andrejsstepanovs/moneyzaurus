@@ -20,7 +20,7 @@ class Highchart extends AbstractHelper
 
     /**
      * @param string     $title
-     * @param string     $elementId  html element id
+     * @param string     $elementId    html element id
      * @param string     $jsChartClass
      * @param null|array $parameters
      *
@@ -122,6 +122,7 @@ class Highchart extends AbstractHelper
         if (null === $this->chart) {
             $this->chart = new Highcharts();
         }
+
         return $this->chart;
     }
 }

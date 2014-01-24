@@ -18,6 +18,7 @@ class Helper extends AbstractHelper
     {
         $params = $this->getParams();
         $predict = $params->fromQuery('predict');
+
         return $predict;
     }
 
@@ -28,6 +29,7 @@ class Helper extends AbstractHelper
     {
         $params = $this->getParams();
         $item = $params->fromQuery('item');
+
         return $item;
     }
 
@@ -38,6 +40,7 @@ class Helper extends AbstractHelper
     {
         $params = $this->getParams();
         $group = $params->fromQuery('group');
+
         return $group;
     }
 

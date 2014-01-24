@@ -41,11 +41,10 @@ class AbstractActionController extends ZendAbstractActionController
     /** @var array */
     protected $paramCache = array();
 
-
     /**
      * Execute the request
      *
-     * @param  MvcEvent $mvcEvent
+     * @param  MvcEvent                  $mvcEvent
      * @return mixed
      * @throws Exception\DomainException
      */
@@ -69,7 +68,7 @@ class AbstractActionController extends ZendAbstractActionController
     }
 
     /**
-     * @param string $message
+     * @param  string                   $message
      * @return AbstractActionController
      */
     public function showMessage($message)
@@ -78,7 +77,7 @@ class AbstractActionController extends ZendAbstractActionController
     }
 
     /**
-     * @param array $messages
+     * @param  array                    $messages
      * @return AbstractActionController
      */
     public function showMessages($messages)
@@ -96,6 +95,7 @@ class AbstractActionController extends ZendAbstractActionController
                 );
             }
         }
+
         return $this;
     }
 
@@ -189,7 +189,7 @@ class AbstractActionController extends ZendAbstractActionController
     }
 
     /**
-     * @param string $table
+     * @param  string           $table
      * @return \Db\ActiveRecord
      */
     protected function getTable($table = null)
@@ -262,6 +262,7 @@ class AbstractActionController extends ZendAbstractActionController
         /** @var \Zend\Http\PhpEnvironment\Request $request */
         $request = $this->getRequest();
         $this->paramCache = $request->getQuery()->toArray();
+
         return $this->paramCache;
     }
 
@@ -274,6 +275,7 @@ class AbstractActionController extends ZendAbstractActionController
     protected function setParam($key, $value)
     {
         $this->paramCache[$key] = $value;
+
         return $this;
     }
 }

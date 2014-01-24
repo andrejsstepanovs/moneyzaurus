@@ -30,11 +30,10 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     /** @var \Zend\Stdlib\Hydrator\HydratorInterface|null */
     protected $hydrator;
 
-
     /**
-     * @param string|null $tableName
+     * @param string|null                   $tableName
      * @param \Zend\Db\Adapter\Adapter|null $adapter
-     * @param string|null $shema
+     * @param string|null                   $shema
      */
     public function __construct($tableName = null, $adapter = null, $schema = null)
     {
@@ -57,6 +56,7 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     public function setTableName($tableName)
     {
         $this->tableName = $tableName;
+
         return $this;
     }
 
@@ -66,16 +66,18 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     public function setShema($schema)
     {
         $this->schema = $schema;
+
         return $this;
     }
 
     /**
-     * @param \Zend\Db\Adapter\Adapter $adapter
+     * @param  \Zend\Db\Adapter\Adapter $adapter
      * @return \Db\ActiveRecord
      */
     public function setDbAdapter(Adapter $adapter)
     {
         $this->adapter = $adapter;
+
         return $this;
     }
 
@@ -104,12 +106,13 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     }
 
     /**
-     * @param \Db\AbstractTable $table
+     * @param  \Db\AbstractTable $table
      * @return \Db\ActiveRecord
      */
     public function setTable($table)
     {
         $this->table = $table;
+
         return $this;
     }
 
@@ -119,6 +122,7 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
     public function setHydrator(HydratorInterface $hydrator)
     {
         $this->hydrator = $hydrator;
+
         return $this;
     }
 
@@ -219,6 +223,7 @@ class ActiveRecord extends AbstractModel implements AdapterAwareInterface
 
         if ($results->count()) {
             $this->data = $results->current()->getData();
+
             return $this;
         }
 

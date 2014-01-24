@@ -3,7 +3,6 @@
 namespace Db;
 
 use PHPUnit_Framework_TestCase;
-use Db\AbstractModel;
 
 /**
  * Class AbstractModelTest
@@ -23,6 +22,7 @@ class AbstractModelTest extends PHPUnit_Framework_TestCase
         if (null === $this->model) {
             $this->model = new AbstractModel();
         }
+
         return $this->model;
     }
 

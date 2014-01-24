@@ -26,7 +26,6 @@ class AbstractModel implements \ArrayAccess
      */
     protected $data = array();
 
-
     /**
      * Exchange internal values from provided array
      *
@@ -51,28 +50,32 @@ class AbstractModel implements \ArrayAccess
     }
 
     /*
-     * @param   string $method
-     * @param   array $args
-     * @return  mixed
+     * @param  string $method
+     * @param  array  $args
+     * @return mixed
      */
     public function __call($method, $args)
     {
         switch (substr($method, 0, 3)) {
             case 'get':
                 $key = $this->underscore(substr($method, 3));
+
                 return $this->getData($key);
 
             case 'set':
                 $key = $this->underscore(substr($method, 3));
                 $value = isset($args[0]) ? $args[0] : null;
+
                 return $this->setData($key, $value);
 
             case 'uns':
                 $key = $this->underscore(substr($method, 3));
+
                 return $this->unsetData($key);
 
             case 'has':
                 $key = $this->underscore(substr($method, 3));
+
                 return $this->hasData($key);
         }
 
@@ -87,6 +90,7 @@ class AbstractModel implements \ArrayAccess
     public function clear()
     {
         $this->data = array();
+
         return $this;
     }
 
@@ -96,12 +100,13 @@ class AbstractModel implements \ArrayAccess
     public function unsetData($key)
     {
         $this->data[$key] = null;
+
         return $this;
     }
 
     /**
      * @param string|array $key
-     * @param mixed $value
+     * @param mixed        $value
      */
     public function setData($key, $value = null)
     {
@@ -110,11 +115,12 @@ class AbstractModel implements \ArrayAccess
         } else {
             $this->data[$key] = $value;
         }
+
         return $this;
     }
 
     /**
-     * @param string $key
+     * @param  string $key
      * @return mixed
      */
     public function getData($key = null)
@@ -149,7 +155,7 @@ class AbstractModel implements \ArrayAccess
     }
 
     /**
-     * @param string $key
+     * @param  string  $key
      * @return boolean
      */
     public function hasData($key)
@@ -158,7 +164,7 @@ class AbstractModel implements \ArrayAccess
     }
 
     /**
-     * @param string $name
+     * @param  string $name
      * @return string
      */
     protected function underscore($name)
@@ -169,6 +175,7 @@ class AbstractModel implements \ArrayAccess
 
         $result = strtolower(preg_replace('/(.)([A-Z])/', "$1_$2", $name));
         $this->underscoreCache[$name] = $result;
+
         return $result;
     }
 

@@ -1,7 +1,6 @@
 <?php
 namespace Application\Controller;
 
-use Application\Controller\AbstractActionController;
 use Application\Helper\Pie\Helper as PieHelper;
 use Application\Helper\Pie\Highchart as PieHighchartHelper;
 use Application\Helper\Month\Helper as MonthHelper;
@@ -21,7 +20,6 @@ class PieController extends AbstractActionController
 
     /** @var array */
     protected $pieChartElements;
-
 
     /**
      * @return MonthHelper
@@ -125,6 +123,7 @@ class PieController extends AbstractActionController
         $month->setValue($this->getMonthHelper()->getMonthRequestValue());
 
         $form->remove('submit');
+
         return $form;
     }
 
@@ -149,9 +148,9 @@ class PieController extends AbstractActionController
                 }
             }
         }
+
         return $this->transactionsData;
     }
-
 
     /**
      * @return \Zend\Db\Sql\Select
@@ -170,9 +169,8 @@ class PieController extends AbstractActionController
         return $select;
     }
 
-
     /**
-     * @param \Zend\Db\Sql\Select $select
+     * @param  \Zend\Db\Sql\Select $select
      * @return \Zend\Db\Sql\Select
      */
     private function applyTransactionSelectFilters(Select $select)
@@ -241,6 +239,7 @@ class PieController extends AbstractActionController
         $this->setParam('type', 'group');
 
         $this->getHelper()->reset();
+
         return $otherGroupIds;
     }
 
@@ -253,7 +252,7 @@ class PieController extends AbstractActionController
     }
 
     /**
-     * @param \Zend\Db\Sql\Select $select
+     * @param  \Zend\Db\Sql\Select                   $select
      * @return \Zend\Db\ResultSet\HydratingResultSet
      */
     private function fetchTransactions(Select $select)
@@ -264,6 +263,7 @@ class PieController extends AbstractActionController
 
         /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
         $transactionsResults = $table->fetch($select);
+
         return $transactionsResults;
     }
 

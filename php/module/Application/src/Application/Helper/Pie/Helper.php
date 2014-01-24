@@ -58,6 +58,7 @@ class Helper extends AbstractHelper
             }
             $this->setGroupedDataCache($groupedData);
         }
+
         return $this->getGroupedDataCache();
     }
 
@@ -91,6 +92,7 @@ class Helper extends AbstractHelper
         $html[] = $jsChartClass . 'Render.renderChart();';
 
         $script = implode(PHP_EOL, $html);
+
         return $script;
     }
 
@@ -113,7 +115,7 @@ class Helper extends AbstractHelper
                 $priceData = $categories = array();
                 $rows = $this->compactItems($groupedData[$sortedGroups[$i]]);
                 foreach ($rows as $row) {
-                    $priceData[]  = round((float)$row->getPrice(), 2);
+                    $priceData[]  = round((float) $row->getPrice(), 2);
 
                     $categories[] = array(
                         'name'     => $row->getItemName(),
@@ -170,7 +172,7 @@ class Helper extends AbstractHelper
             $total = 0;
             /** @var \Db\ActiveRecord $row */
             foreach ($groupedData[$groupName] as $row) {
-                $total += round((float)$row->getPrice(), 2);
+                $total += round((float) $row->getPrice(), 2);
             }
 
             $priceDataTmp[] = $total;
@@ -247,6 +249,7 @@ class Helper extends AbstractHelper
     {
         $data = $this->getGroupedData();
         $groupCount = count(array_keys($data));
+
         return $groupCount;
     }
 
@@ -264,6 +267,7 @@ class Helper extends AbstractHelper
             }
         }
         $itemCount = count(array_keys($allItems));
+
         return $itemCount;
     }
 
@@ -308,7 +312,6 @@ class Helper extends AbstractHelper
         $this->setGroupedDataCache(null);
         $this->setSortedGroupsDataCache(null);
         //$this->setTransactionsDataCache(null);
-
         return $this;
     }
 
@@ -394,6 +397,7 @@ class Helper extends AbstractHelper
                 }
             }
         }
+
         return $return;
     }
 

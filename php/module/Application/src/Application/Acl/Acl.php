@@ -43,12 +43,13 @@ class Acl
     }
 
     /**
-     * @param \Zend\Mvc\MvcEvent $eventManager
+     * @param  \Zend\Mvc\MvcEvent $eventManager
      * @return $this
      */
     public function setMvcEvent(MvcEvent $eventManager)
     {
         $this->mvcEvent = $eventManager;
+
         return $this;
     }
 
@@ -62,6 +63,7 @@ class Acl
             $mvcEvent = $this->getServiceManager()->get('application')->getMvcEvent();
             $this->setMvcEvent($mvcEvent);
         }
+
         return $this->mvcEvent;
     }
 
@@ -75,16 +77,18 @@ class Acl
                                          ->getApplication()
                                          ->getServiceManager();
         }
+
         return $this->serviceManager;
     }
 
     /**
-     * @param \Zend\ServiceManager\ServiceManager $serviceManager
+     * @param  \Zend\ServiceManager\ServiceManager $serviceManager
      * @return $this
      */
     public function setServiceManager(ServiceManager $serviceManager)
     {
         $this->serviceManager = $serviceManager;
+
         return $this;
     }
 
@@ -96,16 +100,18 @@ class Acl
         if (null === $this->eventManager) {
             $this->eventManager = $this->getServiceManager()->get('EventManager');
         }
+
         return $this->eventManager;
     }
 
     /**
-     * @param array $config
+     * @param  array $config
      * @return $this
      */
     public function setAclConfig(array $config)
     {
         $this->config = $config;
+
         return $this;
     }
 
@@ -125,12 +131,13 @@ class Acl
     }
 
     /**
-     * @param \Zend\Permissions\Acl\Acl $acl
+     * @param  \Zend\Permissions\Acl\Acl $acl
      * @return $this
      */
     public function setAcl(ZendAcl $acl)
     {
         $this->acl = $acl;
+
         return $this;
     }
 
@@ -184,7 +191,6 @@ class Acl
         }
 
         $routeParams = $mvcEvent->getRouteMatch()->getParams();
-
 
         $controller = $routeParams['controller'];
         //$action = $routeParams['action'];

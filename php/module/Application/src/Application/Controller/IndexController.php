@@ -1,7 +1,6 @@
 <?php
 namespace Application\Controller;
 
-use Application\Controller\AbstractActionController;
 use Application\Form\Form\Login as LoginForm;
 use Application\Form\Form\Register as RegisterForm;
 

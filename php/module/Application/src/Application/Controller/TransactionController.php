@@ -3,10 +3,8 @@ namespace Application\Controller;
 
 use Application\Form\Validator\Transaction as TransactionValidator;
 use Application\Form\Form\Transaction as TransactionForm;
-use Application\Controller\AbstractActionController;
 use Application\Exception;
 use Application\Helper\Transaction\Helper as TransactionHelper;
-use Zend\Db\Sql\Predicate\Predicate;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\Db\Sql\Expression;
@@ -187,12 +185,12 @@ class TransactionController extends AbstractActionController
     }
 
     /**
-     * @param int    $transactionId
-     * @param string $item
-     * @param string $group
-     * @param float  $price
-     * @param string $currency
-     * @param string $date
+     * @param  int              $transactionId
+     * @param  string           $item
+     * @param  string           $group
+     * @param  float            $price
+     * @param  string           $currency
+     * @param  string           $date
      * @return \Db\ActiveRecord transaction
      */
     protected function saveTransaction(
@@ -258,7 +256,6 @@ class TransactionController extends AbstractActionController
                 //throw new RuntimeException('Cannot predict. Missing predict parameter.');
                 break;
         }
-
 
         $data = array(
             'success' => true,
@@ -346,6 +343,7 @@ class TransactionController extends AbstractActionController
 
         sort($prices);
         $prices = array_unique($prices);
+
         return $prices;
     }
 
@@ -381,7 +379,6 @@ class TransactionController extends AbstractActionController
 
         return $transactionsResults;
     }
-
 
     /**
      * @return \Zend\Db\ResultSet\HydratingResultSet

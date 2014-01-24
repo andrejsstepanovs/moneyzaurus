@@ -18,7 +18,7 @@ class AbstractHelper extends AbstractModel
     protected $activeRecords;
 
     /**
-     * @param string $table
+     * @param  string           $table
      * @return \Db\ActiveRecord
      */
     public function getTable($table = null)

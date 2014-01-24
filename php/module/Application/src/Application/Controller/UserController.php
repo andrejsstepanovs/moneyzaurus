@@ -5,7 +5,6 @@ use Db\ActiveRecord;
 use Application\Form\Form\User as UserForm;
 use Application\Form\Validator\User as UserValidator;
 use Zend\Authentication\Storage\Session;
-use Application\Controller\AbstractActionController;
 
 /**
  * Class UserController
@@ -29,7 +28,6 @@ class UserController extends AbstractActionController
     /** @var \Application\Form\Validator\User */
     protected $userValidator;
 
-
     /**
      * @return \Db\ActiveRecord
      */
@@ -38,6 +36,7 @@ class UserController extends AbstractActionController
         if (null === $this->user) {
             $this->user = new ActiveRecord('user');
         }
+
         return $this->user;
     }
 
@@ -63,7 +62,6 @@ class UserController extends AbstractActionController
         }
 
         $user = $this->getUser()->load($this->getUserId());
-
 
         $formElements = $this->userForm->getElements();
 

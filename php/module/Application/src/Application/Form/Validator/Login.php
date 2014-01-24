@@ -25,6 +25,7 @@ class Login implements InputFilterAwareInterface
     public function setInputFilter(InputFilterInterface $inputFilter)
     {
         $this->inputFilter = $inputFilter;
+
         return $this;
     }
 

@@ -4,7 +4,6 @@ namespace Application\Controller;
 use Db\ActiveRecord;
 use Application\Form\Form\Register as RegisterForm;
 use Application\Form\Validator\Register as RegisterValidator;
-use Application\Controller\AbstractActionController;
 use Zend\Db\TableGateway\Exception\RuntimeException;
 use \Zend\Db\Sql\Expression as Expression;
 
@@ -24,7 +23,6 @@ class RegisterController extends AbstractActionController
     /** @var \Db\ActiveRecord */
     protected $user;
 
-
     /**
      * @return \Db\ActiveRecord
      */
@@ -33,6 +31,7 @@ class RegisterController extends AbstractActionController
         if (null === $this->user) {
             $this->user = new ActiveRecord('user');
         }
+
         return $this->user;
     }
 

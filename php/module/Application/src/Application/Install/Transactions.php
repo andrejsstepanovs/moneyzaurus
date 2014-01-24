@@ -42,7 +42,6 @@ class Transactions extends Script
 
         $data = $transactions->getTable()->fetchAll();
 
-
         foreach ($data as $row) {
 
             if ($row->getData('user_id') == 1 || $row->getData('user_id') == 86 || $row->getData('user_id') == 160) {
@@ -62,8 +61,6 @@ class Transactions extends Script
 
         return true;
     }
-
-
 
     /**
      * @param string $item
@@ -116,9 +113,8 @@ class Transactions extends Script
                     ->save();
     }
 
-
     /**
-     * @param string $table
+     * @param  string           $table
      * @return \Db\ActiveRecord
      */
     protected function getTable($table = null, $schema = null, $clear = true)

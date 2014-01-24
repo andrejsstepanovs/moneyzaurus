@@ -2,8 +2,6 @@
 
 namespace Db;
 
-use Db\Exception;
-use Db\AbstractModel;
 use Zend\Db\Metadata\Metadata;
 use Zend\Db\Sql\TableIdentifier;
 use Zend\Db\TableGateway\Feature;
@@ -30,12 +28,11 @@ class AbstractTable extends AbstractTableGateway
     /** @var \Zend\Db\Metadata\Object\TableObject */
     protected $metadataTableObject;
 
-
     /**
      *
-     * @param \Zend\Db\Adapter\Adapter|null $adapter
+     * @param \Zend\Db\Adapter\Adapter|null                           $adapter
      * @param |Zend\Db\ResultSet\HydratingResultSet|\Db\AbstractModel $resultSetPrototype
-     * @param \Zend\Db\Sql\TableIdentifier $table
+     * @param \Zend\Db\Sql\TableIdentifier                            $table
      */
     public function __construct($adapter, $resultSetPrototype, TableIdentifier $table = null)
     {
@@ -51,7 +48,6 @@ class AbstractTable extends AbstractTableGateway
         } elseif (is_string($this->table)) {
             $table = new TableIdentifier($this->table);
         }
-
 
         if (null === $adapter) {
             $this->featureSet = new Feature\FeatureSet();
@@ -219,11 +215,12 @@ class AbstractTable extends AbstractTableGateway
     public function fetch(Select $select)
     {
         $resultSet = $this->executeSelect($select);
+
         return $resultSet;
     }
 
     /**
-     * @param \Db\AbstractModel $model
+     * @param  \Db\AbstractModel                     $model
      * @return \Zend\Db\ResultSet\HydratingResultSet
      */
     public function fetchByModel(AbstractModel $model)
@@ -238,11 +235,12 @@ class AbstractTable extends AbstractTableGateway
 
         /** @var $resultSet \Zend\Db\ResultSet\HydratingResultSet */
         $resultSet = $this->executeSelect($select);
+
         return $resultSet;
     }
 
     /**
-     * @param \Db\AbstractModel $model
+     * @param  \Db\AbstractModel $model
      * @return array
      */
     protected function getPrimaryValue(AbstractModel $model)
@@ -258,7 +256,7 @@ class AbstractTable extends AbstractTableGateway
     }
 
     /**
-     * @param \Db\AbstractModel $model
+     * @param  \Db\AbstractModel $model
      * @return array
      */
     protected function getUniqeValue(AbstractModel $model)
@@ -274,7 +272,7 @@ class AbstractTable extends AbstractTableGateway
     }
 
     /**
-     * @param \Db\AbstractModel $model
+     * @param  \Db\AbstractModel $model
      * @return integer
      */
     public function deleteEntity(AbstractModel $model)
@@ -283,7 +281,7 @@ class AbstractTable extends AbstractTableGateway
     }
 
     /**
-     * @param \Db\AbstractModel $model
+     * @param  \Db\AbstractModel $model
      * @return integer
      */
     public function insertEntity(AbstractModel $model)
@@ -292,17 +290,18 @@ class AbstractTable extends AbstractTableGateway
     }
 
     /**
-     * @param \Db\AbstractModel $model
+     * @param  \Db\AbstractModel $model
      * @return integer
      */
     public function updateEntity(AbstractModel $model)
     {
         $where = $this->getPrimaryValue($model);
+
         return $this->update($model->toArray(), $where);
     }
 
     /**
-     * @param \Db\AbstractModel $model
+     * @param  \Db\AbstractModel $model
      * @return integer
      */
     public function saveEntity(AbstractModel $model)
@@ -311,6 +310,7 @@ class AbstractTable extends AbstractTableGateway
         if (empty($where)) {
             return $this->insertEntity($model);
         }
+
         return $this->updateEntity($model);
     }
 }

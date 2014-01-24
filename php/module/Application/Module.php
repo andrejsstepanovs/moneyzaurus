@@ -30,7 +30,6 @@ class Module
             $serviceManager->get('Zend\Db\Adapter\Adapter')
         );
 
-
         /** @var $acl \Application\Acl\Acl */
         $acl = $serviceManager->get('Application\Acl\Acl');
 

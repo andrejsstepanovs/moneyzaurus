@@ -5,7 +5,6 @@ use Db\ActiveRecord;
 use Application\Form\Form\Login as LoginForm;
 use Application\Form\Validator\Login as LoginValidator;
 use Zend\Authentication\Storage\Session;
-use Application\Controller\AbstractActionController;
 
 /**
  * Class LoginController
@@ -29,7 +28,6 @@ class LoginController extends AbstractActionController
     /** @var \Application\Form\Validator\User */
     protected $userValidator;
 
-
     /**
      * @return \Db\ActiveRecord
      */
@@ -38,6 +36,7 @@ class LoginController extends AbstractActionController
         if (null === $this->user) {
             $this->user = new ActiveRecord('user');
         }
+
         return $this->user;
     }
 

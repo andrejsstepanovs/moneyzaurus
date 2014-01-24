@@ -1,7 +1,6 @@
 <?php
 namespace Application\Controller;
 
-use Application\Controller\AbstractActionController;
 use Application\Helper\Lister\Helper as ListHelper;
 use Application\Form\Form\Transaction as TransactionForm;
 use Zend\Db\Sql\Expression;
@@ -217,6 +216,7 @@ class ListController extends AbstractActionController
         if (null === $this->searchForm) {
             $this->searchForm = new TransactionForm();
         }
+
         return $this->searchForm;
     }
 
@@ -338,6 +338,6 @@ class ListController extends AbstractActionController
             throw new RuntimeException('It is not allowed to edit other user transactions.');
         }
 
-        return (bool)$table->delete();
+        return (bool) $table->delete();
     }
 }

@@ -18,6 +18,7 @@ class Helper extends AbstractHelper
     {
         $params = $this->getParams();
         $orderBy = $params->fromRoute('order_by') ? $params->fromRoute('order_by') : 'transaction_id';
+
         return $orderBy;
     }
 
@@ -28,6 +29,7 @@ class Helper extends AbstractHelper
     {
         $params = $this->getParams();
         $order  = $params->fromRoute('order') ? $params->fromRoute('order') : \Zend\Db\Sql\Select::ORDER_DESCENDING;
+
         return $order;
     }
 
@@ -113,6 +115,6 @@ class Helper extends AbstractHelper
         $params = $this->getParams();
         $idUser = $params->fromQuery('id_user');
 
-        return (int)$idUser;
+        return (int) $idUser;
     }
 }

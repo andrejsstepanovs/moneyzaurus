@@ -2,7 +2,6 @@
 namespace Application\Controller;
 
 use \Zend\Db\Sql\Select;
-use Application\Controller\AbstractActionController;
 use Zend\Db\Sql\Where;
 use Zend\View\Model\ViewModel;
 
@@ -24,6 +23,7 @@ class DataController extends AbstractActionController
         if (null === $this->fileName) {
             $this->fileName = 'moneyzaurus_' . date('Y-m-d') . '.csv';
         }
+
         return $this->fileName;
     }
 
@@ -61,6 +61,7 @@ class DataController extends AbstractActionController
         $viewModel->setTerminal(true);
         $viewModel->setVariable('columns', $columns);
         $viewModel->setVariable('transactions', $transactions);
+
         return $viewModel;
     }
 
@@ -91,9 +92,9 @@ class DataController extends AbstractActionController
 
         /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
         $transactionsResults = $table->fetch($select)->buffer();
+
         return $transactionsResults;
     }
-
 
     /**
      * @return \Zend\Db\Sql\Where
