@@ -127,7 +127,7 @@ class AbstractModelTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerKeyValData
      */
-    public function testHasDataFalse($key, $val)
+    public function testHasDataFalse($key)
     {
         $this->assertFalse($this->getModel()->hasData($key));
     }
@@ -230,6 +230,22 @@ class AbstractModelTest extends PHPUnit_Framework_TestCase
         $array = $this->getModel()->toArray();
 
         $this->assertArrayNotHasKey('object', $array);
+    }
+
+    public function testToArrayWithExpressionObject()
+    {
+        $obj = new \Zend\Db\Sql\Expression('NOW()');
+
+        $data = array(
+            'lemon'  => 'yellow',
+            'object' => $obj
+        );
+        $this->getModel()->setData($data);
+
+        $array = $this->getModel()->toArray();
+
+        $this->assertArrayHasKey('object', $array);
+        $this->assertEquals(get_class($obj), get_class($array['object']));
     }
 
     /**

@@ -8,6 +8,9 @@ use \Zend\Db\Sql\Expression as Expression;
  * Abstract Db Model class.
  *
  * @uses ArrayAccess This class will allow get/set data using the [] operator
+ *
+ * @method \Db\AbstractModel setId(int)
+ * @method int               getId()
  */
 class AbstractModel implements \ArrayAccess
 {
@@ -50,6 +53,8 @@ class AbstractModel implements \ArrayAccess
     }
 
     /*
+     * for key-name = value use setKeyName(value); getKeyName(); unsKeyName(); hasKeyName();
+     *
      * @param  string $method
      * @param  array  $args
      * @return mixed
