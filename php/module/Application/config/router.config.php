@@ -23,6 +23,19 @@ return array(
                     ),
                 ),
             ),
+            'resend-password' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/resend-password[/:action]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\ResendPassword',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
             'logout' => array(
                 'type'    => 'segment',
                 'options' => array(

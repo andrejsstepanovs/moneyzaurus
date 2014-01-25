@@ -1,0 +1,40 @@
+<?php
+
+/** @var \Application\Form\Form\ResendPassword $form */
+$form = $this->form;
+
+$form->setAttribute('action', $this->url('resend-password'));
+$form->prepare();
+?>
+
+<h1>
+    <?php echo $this->translate('Forgot your password?'); ?>
+</h1>
+
+<?php
+echo $this->form()->openTag($form);
+
+/** @var \Zend\Form\Element|\Zend\Form\Element\Email $element */
+foreach ($form as $element) {
+
+    $formElementErrors = $this->formElementErrors($element);
+
+    ?>
+    <div  data-role="fieldcontain" <?php if ($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
+
+        <?php
+        echo $this->formElement($element);
+
+        if ($formElementErrors) {
+            ?>
+            <span class="help-inline">
+                <?php echo $formElementErrors; ?>
+            </span>
+            <?php
+        }
+        ?>
+    </div>
+    <?php
+}
+
+echo $this->form()->closeTag();

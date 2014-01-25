@@ -137,11 +137,15 @@ class LoginController extends AbstractActionController
             return null;
         }
 
-        $user = $this->getUser()
-                     ->setEmail($request->getPost('email'))
-                     ->load()
-                     ->unsPassword()
-                     ->toArray();
+        try {
+            $user = $this->getUser()
+                         ->setEmail($request->getPost('email'))
+                         ->load()
+                         ->unsPassword()
+                         ->toArray();
+        } catch (\Db\Exception\ModelNotFoundException $exc) {
+            return $this->redirect()->toRoute('moneyzaurus');
+        }
 
         $authService->setStorage($this->getSessionStorage());
         $authService->getStorage()->write($user);

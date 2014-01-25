@@ -4,6 +4,7 @@ return array(
         'guest' => array(
             'Application\Controller\Index',
             'Application\Controller\Login',
+            'Application\Controller\ResendPassword',
             'Application\Controller\Register',
         ),
         'user'  => array(

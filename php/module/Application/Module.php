@@ -5,6 +5,8 @@ namespace Application;
 use Zend\Db\TableGateway\Feature;
 use Zend\Mvc\MvcEvent;
 use Zend\Authentication\Adapter\DbTable\CredentialTreatmentAdapter;
+use Zend\ServiceManager\ServiceManager;
+use Zend\Mail\Transport\Sendmail as MailTransport;
 
 /**
  * Class Module
@@ -92,7 +94,7 @@ class Module
     {
         return array(
             'factories' => array(
-                'AuthService' => function (\Zend\ServiceManager\ServiceManager $serviceManager) {
+                'AuthService' => function (ServiceManager $serviceManager) {
                     $dbAdapter = $serviceManager->get('Zend\Db\Adapter\Adapter');
                     $tableName           = 'user';
                     $identityColumn      = 'email';
@@ -111,6 +113,10 @@ class Module
                 },
                 'Application\Acl\Acl' => function ($serviceManager) {
                     return new Acl\Acl($serviceManager);
+                },
+                'MailTransport' => function (ServiceManager $serviceManager) {
+                    $transport = new MailTransport();
+                    return $transport;
                 },
             )
         );
