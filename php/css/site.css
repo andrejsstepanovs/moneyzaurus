@@ -60,3 +60,17 @@ input[type='text'],input[type='number'],textarea {
 .ui-overlay-a, .ui-page-theme-a, .ui-page-theme-a .ui-panel-wrapper {
     background: #FFF;
 }
+
+#remember-checkbox{
+    float:left;width:1.5em;
+}
+
+#remember-label{
+    float:left;width:9em;
+}
+
+#forgot-password
+{
+    float:left;width:14em;
+}
+
