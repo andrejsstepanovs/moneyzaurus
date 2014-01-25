@@ -14,7 +14,8 @@
         "wormhit/HighchartsPHP": "*",
         "wormhit/PHPConfig": "*",
         "wormhit/InstallScripts": "*",
-        "wormhit/jQueryMobileMenu": "*"
+        "wormhit/jQueryMobileMenu": "*",
+        "wormhit/Db": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"
@@ -35,6 +36,10 @@
         {
             "type": "git",
             "url":  "https://github.com/wormhit/jQueryMobileMenu.git"
+        },
+        {
+            "type": "git",
+            "url":  "https://github.com/wormhit/Db.git"
         }
     ]
 
