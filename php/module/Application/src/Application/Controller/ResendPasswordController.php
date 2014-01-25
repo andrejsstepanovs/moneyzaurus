@@ -1,17 +1,18 @@
 <?php
 namespace Application\Controller;
 
-use Db\ActiveRecord;
 use Application\Form\Form\ResendPassword as ResendPasswordForm;
 use Application\Form\Validator\ResendPassword as ResendPasswordValicator;
-use Zend\Authentication\Storage\Session;
-use Zend\Mail\Message;
+use Db\ActiveRecord;
+use Application\Helper\ResendPassword\Helper;
 use Zend\Db\Sql\Expression as Expression;
 
 /**
  * Class ResendPasswordController
  *
  * @package Application\Controller
+ *
+ * @method \Application\Helper\ResendPassword\Helper getHelper()
  */
 class ResendPasswordController extends AbstractActionController
 {
@@ -20,9 +21,6 @@ class ResendPasswordController extends AbstractActionController
 
     /** @var \Application\Form\Validator\ResendPassword */
     protected $resendPassValidator;
-
-    /** @var \Zend\Authentication\Storage\Session */
-    protected $storage;
 
     /** @var \Db\ActiveRecord */
     protected $user;
@@ -38,17 +36,13 @@ class ResendPasswordController extends AbstractActionController
 
         return $this->user;
     }
-
     /**
-     * @return \Zend\Authentication\Storage\Session
+     * @return void
      */
-    public function getSessionStorage()
+    protected function init()
     {
-        if (null === $this->storage) {
-            $this->storage = new Session();
-        }
-
-        return $this->storage;
+        $helper = new Helper();
+        $this->setHelper($helper);
     }
 
     /**
@@ -97,7 +91,7 @@ class ResendPasswordController extends AbstractActionController
 
             if ($form->isValid()) {
 
-                $newPassword = $this->getNewPassword();
+                $newPassword = $this->getHelper()->getNewPassword();
                 $response = $this->resendPassword($newPassword);
                 if ($response) {
                     return $response;
@@ -113,11 +107,21 @@ class ResendPasswordController extends AbstractActionController
         );
     }
 
+    public function successAction()
+    {
+
+    }
+
+    public function failAction()
+    {
+
+    }
+
     /**
      * @param string $newPassword
      * @return null|\Zend\Http\PhpEnvironment\Response
      */
-    protected function resendPassword($newPassword)
+    private function resendPassword($newPassword)
     {
         try {
             $request = $this->getRequest();
@@ -130,62 +134,16 @@ class ResendPasswordController extends AbstractActionController
         /** @var \Zend\Mail\Transport\Sendmail $transport */
         $transport = $this->getServiceLocator()->get('MailTransport');
         try {
-            $transport->send($this->getMailMessage($user));
-            $passwordExpression = new Expression(
+            $transport->send($this->getHelper()->getMailMessage($user));
+            $password = new Expression(
                 AbstractActionController::CREDENTIAL_TREATMENT,
                 $user->getPassword()
             );
-            $user->setPassword($passwordExpression)->save();
+            $user->setPassword($password)->save();
         } catch (\Exception $exc) {
             return $this->redirect()->toRoute('resend-password', array('action' => 'fail'));
         }
 
         return $this->redirect()->toRoute('resend-password', array('action' => 'success'));
-    }
-
-    /**
-     * @return Message
-     */
-    private function getMailMessage($user)
-    {
-        $message = array();
-        $message[] ='Hi! New password is ' . $user->getPassword() . '';
-
-        $htmlPart = new \Zend\Mime\Part(implode('', $message));
-        $htmlPart->type = 'text/html';
-
-        $textPart = new \Zend\Mime\Part(implode('\r\n', $message));
-        $textPart->type = 'text/plain';
-
-        $body = new \Zend\Mime\Message();
-        $body->setParts(array($htmlPart, $textPart));
-
-
-        $mail = new Message();
-        $mail->addTo($user->getEmail());
-        $mail->setEncoding('UTF-8');
-        $mail->setSubject('moneyzaurus.com email reset');
-        $mail->setFrom('service@moneyzaurus.com');
-        $mail->setBody($body);
-
-        return $mail;
-    }
-
-    /**
-     * @return string
-     */
-    private function getNewPassword()
-    {
-        return uniqid();
-    }
-
-    public function successAction()
-    {
-
-    }
-
-    public function failAction()
-    {
-
     }
 }
