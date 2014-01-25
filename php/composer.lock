@@ -474,10 +474,11 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wormhit/HighchartsPHP.git",
-                "reference": "e93397356ec1bb9470da37f95dfe9e24b3dea39d"
+                "reference": "7e1eed154f3b0206cb4433b6e25148b1d810abb2"
             },
             "require": {
                 "php": ">=5.3",
+                "phpunit/phpunit": "3.7.*",
                 "zendframework/zendframework": "2.*"
             },
             "type": "library",
@@ -505,7 +506,7 @@
                 "zend framework 2",
                 "zf2"
             ],
-            "time": "2013-06-08 19:21:02"
+            "time": "2014-01-25 13:38:31"
         },
         {
             "name": "wormhit/InstallScripts",
@@ -513,7 +514,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wormhit/InstallScripts.git",
-                "reference": "168f1dc0eb41fff6ed7018f08e5b67796040ae89"
+                "reference": "9c6d72c43dbe6491226740e848090309b88d4e8d"
             },
             "require": {
                 "php": ">=5.3",
@@ -546,7 +547,7 @@
                 "zend framework 2",
                 "zf2"
             ],
-            "time": "2014-01-25 10:16:23"
+            "time": "2014-01-25 12:58:24"
         },
         {
             "name": "wormhit/PHPConfig",
@@ -554,7 +555,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wormhit/PHPConfig.git",
-                "reference": "75c8068dea606e1f52d11a4fdddcdc31ce819452"
+                "reference": "9471e2818c0d6e2ca393c5b8c42cfa2d88d00bfb"
             },
             "require": {
                 "php": ">=5.3",
@@ -584,7 +585,7 @@
                 "zend framework 2",
                 "zf2"
             ],
-            "time": "2013-06-08 19:59:37"
+            "time": "2014-01-25 13:25:38"
         },
         {
             "name": "wormhit/jQueryMobileMenu",
@@ -592,7 +593,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wormhit/jQueryMobileMenu.git",
-                "reference": "1193d900937e67886d406d394feb23a6d03a0304"
+                "reference": "363257fc8521356e4734a20505a93639ff0ce2f2"
             },
             "require": {
                 "php": ">=5.3",
@@ -625,7 +626,7 @@
                 "zend framework 2",
                 "zf2"
             ],
-            "time": "2013-06-21 09:24:47"
+            "time": "2014-01-25 13:37:28"
         },
         {
             "name": "zendframework/zend-developer-tools",
