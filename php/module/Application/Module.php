@@ -4,6 +4,7 @@ namespace Application;
 
 use Zend\Db\TableGateway\Feature;
 use Zend\Mvc\MvcEvent;
+use Zend\Authentication\Adapter\DbTable\CredentialTreatmentAdapter;
 
 /**
  * Class Module
@@ -91,14 +92,18 @@ class Module
     {
         return array(
             'factories' => array(
-                'AuthService' => function ($serviceManager) {
+                'AuthService' => function (\Zend\ServiceManager\ServiceManager $serviceManager) {
                     $dbAdapter = $serviceManager->get('Zend\Db\Adapter\Adapter');
-                    $dbTableAuthAdapter = new \Zend\Authentication\Adapter\DbTable(
+                    $tableName           = 'user';
+                    $identityColumn      = 'email';
+                    $credentialColumn    = 'password';
+                    $credentialTreatment = 'MD5(?)';
+                    $dbTableAuthAdapter  = new CredentialTreatmentAdapter(
                         $dbAdapter,
-                        'user',
-                        'email',
-                        'password',
-                        'MD5(?)'
+                        $tableName,
+                        $identityColumn,
+                        $credentialColumn,
+                        $credentialTreatment
                     );
 
                     return $serviceManager->get('Zend\Authentication\AuthenticationService')
