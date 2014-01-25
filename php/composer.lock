@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "97c98415dea8afead77c2369f14ae9b1",
+    "hash": "9c1eb42174e86423eb720adabb77d605",
     "packages": [
         {
             "name": "phpunit/php-code-coverage",
@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "10c5b2c8b72a801eaad0031cd6a6a3686909c5a9"
+                "reference": "6f5fe28389462fbfe9420ddbcc734be4691424f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/10c5b2c8b72a801eaad0031cd6a6a3686909c5a9",
-                "reference": "10c5b2c8b72a801eaad0031cd6a6a3686909c5a9",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/6f5fe28389462fbfe9420ddbcc734be4691424f5",
+                "reference": "6f5fe28389462fbfe9420ddbcc734be4691424f5",
                 "shasum": ""
             },
             "require": {
@@ -64,7 +64,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-11-01 09:17:11"
+            "time": "2014-01-25 07:52:49"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -255,12 +255,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "0a32f059e6e66cdfdd0d7c757646fdcbf822b0ca"
+                "reference": "641cd682a2cdd8c7dd7b018741f33b44d5b2ce0f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0a32f059e6e66cdfdd0d7c757646fdcbf822b0ca",
-                "reference": "0a32f059e6e66cdfdd0d7c757646fdcbf822b0ca",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/641cd682a2cdd8c7dd7b018741f33b44d5b2ce0f",
+                "reference": "641cd682a2cdd8c7dd7b018741f33b44d5b2ce0f",
                 "shasum": ""
             },
             "require": {
@@ -321,7 +321,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-01-15 07:18:27"
+            "time": "2014-01-25 07:51:18"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -329,12 +329,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "3e40f3b3f18c044a24688fe406440d7fd537744a"
+                "reference": "3f042938df71fb44ee4775d6757c9659ea485994"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/3e40f3b3f18c044a24688fe406440d7fd537744a",
-                "reference": "3e40f3b3f18c044a24688fe406440d7fd537744a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/3f042938df71fb44ee4775d6757c9659ea485994",
+                "reference": "3f042938df71fb44ee4775d6757c9659ea485994",
                 "shasum": ""
             },
             "require": {
@@ -342,7 +342,6 @@
                 "phpunit/php-text-template": ">=1.1.1@stable"
             },
             "require-dev": {
-                "pear-pear/pear": "1.9.4",
                 "phpunit/phpunit": "3.7.*@dev"
             },
             "suggest": {
@@ -379,7 +378,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2013-07-23 04:42:59"
+            "time": "2014-01-25 10:04:01"
         },
         {
             "name": "symfony/yaml",
@@ -429,6 +428,47 @@
             "time": "2014-01-07 13:29:57"
         },
         {
+            "name": "wormhit/Db",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wormhit/Db.git",
+                "reference": "6b4872abd4de8f8e9914bcff60fb2132edd9362d"
+            },
+            "require": {
+                "php": ">=5.3",
+                "phpunit/phpunit": "3.7.*",
+                "zendframework/zendframework": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Db": "src/"
+                },
+                "classmap": [
+                    "./Module.php"
+                ]
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Andrejs Stepanovs",
+                    "email": "andrejsstepanovs@gmail.com"
+                }
+            ],
+            "description": "Db active record adapter for zf2",
+            "homepage": "https://github.com/wormhit/Db",
+            "keywords": [
+                "active record",
+                "db",
+                "zend framework 2",
+                "zf2"
+            ],
+            "time": "2014-01-25 11:04:58"
+        },
+        {
             "name": "wormhit/HighchartsPHP",
             "version": "dev-master",
             "source": {
@@ -473,7 +513,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wormhit/InstallScripts.git",
-                "reference": "9568d84857768ee5ebe525f199d8b1e7353dbd3d"
+                "reference": "168f1dc0eb41fff6ed7018f08e5b67796040ae89"
             },
             "require": {
                 "php": ">=5.3",
@@ -506,7 +546,7 @@
                 "zend framework 2",
                 "zf2"
             ],
-            "time": "2013-07-31 13:33:45"
+            "time": "2014-01-25 10:16:23"
         },
         {
             "name": "wormhit/PHPConfig",
