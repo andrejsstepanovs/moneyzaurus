@@ -6,7 +6,8 @@ use Zend\Db\TableGateway\Feature;
 use Zend\Mvc\MvcEvent;
 use Zend\Authentication\Adapter\DbTable\CredentialTreatmentAdapter;
 use Zend\ServiceManager\ServiceManager;
-use Zend\Mail\Transport\Sendmail as MailTransport;
+use Zend\Mail\Transport\Smtp as MailTransport;
+use Zend\Mail\Transport\SmtpOptions;
 
 /**
  * Class Module
@@ -116,6 +117,9 @@ class Module
                 },
                 'MailTransport' => function (ServiceManager $serviceManager) {
                     $transport = new MailTransport();
+                    $config = $serviceManager->get('Config');
+                    $transport->setOptions(new SmtpOptions($config['mail']['transport']['options']));
+
                     return $transport;
                 },
             )

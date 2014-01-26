@@ -20,24 +20,15 @@ class Helper extends AbstractHelper
     public function getMailMessage(\Db\ActiveRecord $user)
     {
         $message = array();
-        $message[] ='Hi! New password is ' . $user->getPassword() . '';
-
-        $htmlPart = new \Zend\Mime\Part(implode('', $message));
-        $htmlPart->type = 'text/html';
-
-        $textPart = new \Zend\Mime\Part(implode('\r\n', $message));
-        $textPart->type = 'text/plain';
-
-        $body = new \Zend\Mime\Message();
-        $body->setParts(array($htmlPart, $textPart));
-
+        $message[] ='Hi!';
+        $message[] ='New password is ' . $user->getPassword() . '';
 
         $mail = new Message();
-        $mail->addTo($user->getEmail());
-        $mail->setEncoding('UTF-8');
-        $mail->setSubject('moneyzaurus.com email reset');
-        $mail->setFrom('service@moneyzaurus.com');
-        $mail->setBody($body);
+        $mail->addTo($user->getEmail())
+             ->setEncoding('UTF-8')
+             ->setSubject('moneyzaurus.com email reset')
+             ->setFrom('moneyzaurusapp@gmail.com')
+             ->setBody(implode('\r\n', $message));
 
         return $mail;
     }
