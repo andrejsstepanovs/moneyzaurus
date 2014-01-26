@@ -6,6 +6,7 @@ use Application\Helper\AbstractHelper;
 use Zend\Mail\Message;
 use Zend\Mime\Part as MimePart;
 use Zend\Mime\Message as MimeMessage;
+use \Zend\Mime\Mime;
 
 /**
  * Class Helper
@@ -15,26 +16,26 @@ use Zend\Mime\Message as MimeMessage;
 class Helper extends AbstractHelper
 {
     /**
-     * @param \Db\ActiveRecord $user
-     * @param string           $message
-     * @param string           $subject
-     * @param string           $fromEmail
+     * @param string $toEmail
+     * @param string $htmlBody
+     * @param string $subject
+     * @param string $fromEmail
      *
      * @return Message
      */
-    public function getMailMessage(\Db\ActiveRecord $user, $message, $subject, $fromEmail)
+    public function getMailMessage($toEmail, $htmlBody, $subject, $fromEmail)
     {
         $mimeParts = array();
 
-        $html = new MimePart(implode('<br />', $message));
-        $html->type = 'text/html';
+        $html = new MimePart($htmlBody);
+        $html->type = Mime::TYPE_HTML;
         $mimeParts[] = $html;
 
         $body = new MimeMessage();
         $body->setParts($mimeParts);
 
         $mail = new Message();
-        $mail->addTo($user->getEmail())
+        $mail->addTo($toEmail)
              ->setEncoding('UTF-8')
              ->setSubject($subject)
              ->setFrom($fromEmail)

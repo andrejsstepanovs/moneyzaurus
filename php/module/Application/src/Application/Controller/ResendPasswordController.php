@@ -182,13 +182,14 @@ class ResendPasswordController extends AbstractActionController
             $subject = $translator->translate('New moneyzaurus.com password');
             $fromEmail = $config['mail']['email'];
 
-            $message = $this->getHelper()->getMailMessage($user, $htmlBody, $subject, $fromEmail);
+            $message = $this->getHelper()->getMailMessage($user->getEmail(), $htmlBody, $subject, $fromEmail);
             $transport->send($message);
-            $password = new Expression(
+
+            $passwordExpression = new Expression(
                 AbstractActionController::CREDENTIAL_TREATMENT,
                 $user->getPassword()
             );
-            $user->setPassword($password)->save();
+            $user->setPassword($passwordExpression)->save();
         } catch (\Exception $exc) {
             return $this->redirect()->toRoute('resend-password', array('action' => 'fail'));
         }
