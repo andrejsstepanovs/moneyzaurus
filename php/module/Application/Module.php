@@ -100,7 +100,7 @@ class Module
                     $tableName           = 'user';
                     $identityColumn      = 'email';
                     $credentialColumn    = 'password';
-                    $credentialTreatment = 'MD5(?)';
+                    $credentialTreatment = \Application\Controller\AbstractActionController::CREDENTIAL_TREATMENT;
                     $dbTableAuthAdapter  = new CredentialTreatmentAdapter(
                         $dbAdapter,
                         $tableName,

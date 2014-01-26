@@ -170,9 +170,20 @@ class ResendPasswordController extends AbstractActionController
         }
 
         /** @var \Zend\Mail\Transport\Sendmail $transport */
-        $transport = $this->getServiceLocator()->get('MailTransport');
+        /** @var \Zend\I18n\Translator\Translator $translator */
+        $transport  = $this->getServiceLocator()->get('MailTransport');
+        $translator = $this->getServiceLocator()->get('Translator');
+        $config     = $this->getServiceLocator()->get('Config');
         try {
-            $transport->send($this->getHelper()->getMailMessage($user));
+            /** @var \Zend\View\Helper\Partial $partial */
+            $partial  = $this->getViewHelperPlugin('partial');
+            $htmlBody = $partial->__invoke('application/resend-password/email', array('user' => $user));
+
+            $subject = $translator->translate('New moneyzaurus.com password');
+            $fromEmail = $config['mail']['email'];
+
+            $message = $this->getHelper()->getMailMessage($user, $htmlBody, $subject, $fromEmail);
+            $transport->send($message);
             $password = new Expression(
                 AbstractActionController::CREDENTIAL_TREATMENT,
                 $user->getPassword()

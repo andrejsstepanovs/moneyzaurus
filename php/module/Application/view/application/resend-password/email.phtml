@@ -1,0 +1,14 @@
+<html>
+    <body>
+        <h3><?php echo sprintf($this->translate('Hi %s'), $user->getEmail()); ?>!</h3>
+        <br />
+        <?php echo $this->translate('You asked for new password?'); ?>
+        <br />
+        <?php echo sprintf($this->translate('Here it is: <strong>%s</strong>'), $user->getPassword()); ?>
+        <br />
+        <br />
+        <?php echo $this->translate('Have a nice day!'); ?>
+        <br />
+        <a href="http://www.moneyzaurus.com" target="_blank">moneyzaurus.com</a>
+    </body>
+</html>
