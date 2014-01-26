@@ -4,5 +4,16 @@
 </h1>
 
 <p>
-    <?php echo $this->translate('Email sent.'); ?>
+    <?php echo $this->translate('We created for you new password.'); ?>
 </p>
+<p>
+    <?php echo $this->translate('Please check your email. It should be there pretty soon.'); ?>
+</p>
+
+
+<?php
+echo $this->partial(
+    'application/login/index.phtml',
+    array('form' => $this->loginForm)
+);
+?>

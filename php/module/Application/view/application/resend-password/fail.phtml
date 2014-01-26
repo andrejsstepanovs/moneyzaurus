@@ -5,5 +5,15 @@
 
 <p>
     <?php echo $this->translate('Sorry, there was problem with sending email.'); ?>
+</p>
+<p>
     <?php echo $this->translate('Maybe try again tomorrow. :('); ?>
 </p>
+
+
+<?php
+echo $this->partial(
+    'application/register/index.phtml',
+    array('form' => $this->registerForm)
+);
+?>

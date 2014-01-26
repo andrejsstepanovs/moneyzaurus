@@ -1,6 +1,8 @@
 <?php
 namespace Application\Controller;
 
+use Application\Form\Form\Login as LoginForm;
+use Application\Form\Form\Register as RegisterForm;
 use Application\Form\Form\ResendPassword as ResendPasswordForm;
 use Application\Form\Validator\ResendPassword as ResendPasswordValicator;
 use Db\ActiveRecord;
@@ -16,6 +18,12 @@ use Zend\Db\Sql\Expression as Expression;
  */
 class ResendPasswordController extends AbstractActionController
 {
+    /** @var \Application\Form\Form\Login */
+    protected $loginForm;
+
+    /** @var \Application\Form\Form\Register */
+    protected $registerForm;
+
     /** @var \Application\Form\Form\ResendPassword */
     protected $resendPasswordForm;
 
@@ -24,6 +32,32 @@ class ResendPasswordController extends AbstractActionController
 
     /** @var \Db\ActiveRecord */
     protected $user;
+
+    /**
+     * @return \Application\Form\Form\Login
+     */
+    protected function getLoginForm()
+    {
+        if (null === $this->loginForm) {
+            $this->loginForm = new LoginForm();
+            $this->loginForm->setAttribute('data-ajax', 'false');
+        }
+
+        return $this->loginForm;
+    }
+
+    /**
+     * @return \Application\Form\Form\Register
+     */
+    protected function getRegisterForm()
+    {
+        if (null === $this->registerForm) {
+            $this->registerForm = new RegisterForm();
+            $this->registerForm->setAttribute('data-ajax', 'false');
+        }
+
+        return $this->registerForm;
+    }
 
     /**
      * @return \Db\ActiveRecord
@@ -109,12 +143,16 @@ class ResendPasswordController extends AbstractActionController
 
     public function successAction()
     {
-
+        return array(
+            'loginForm' => $this->getLoginForm()
+        );
     }
 
     public function failAction()
     {
-
+        return array(
+            'registerForm' => $this->getRegisterForm()
+        );
     }
 
     /**
