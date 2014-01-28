@@ -16,6 +16,7 @@ $ssl = empty($ssl) ? 'tls' : $ssl;
 
 return array(
     'mail' => array(
+        'email' => $username,
         'transport' => array(
             'options' => array(
                 'host'              => $host,
