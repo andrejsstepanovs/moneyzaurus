@@ -5,12 +5,12 @@ return array(
         'StorageAdapter' => array(
             'Adapter' => 'InstallScripts\StorageAdapter\FileStorageAdapter',
             'Options' => array(
-                'file' => __DIR__ . '/../../install.json',
+                'file' => __DIR__ . '/../../install.json'
             )
         ),
         'Scripts' => array(
             'Application' => array(
-                'Install\Transactions',
+                'Install\Transactions'
             )
         ),
     )
