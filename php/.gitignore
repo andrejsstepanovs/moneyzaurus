@@ -1,5 +1,5 @@
 /vendor/
 /nbproject/
-/data/
+/data/*.php
 /config/autoload/*.local.php
 
