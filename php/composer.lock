@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "dce090bdeeea701bb95f68f2ea66b4e532c68207"
+                "reference": "6a86b5410a90b7f458eb912ac79548ea3a78f573"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/dce090bdeeea701bb95f68f2ea66b4e532c68207",
-                "reference": "dce090bdeeea701bb95f68f2ea66b4e532c68207",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/6a86b5410a90b7f458eb912ac79548ea3a78f573",
+                "reference": "6a86b5410a90b7f458eb912ac79548ea3a78f573",
                 "shasum": ""
             },
             "require": {
@@ -95,7 +95,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2014-01-29 18:20:08"
+            "time": "2014-02-04 07:42:32"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -103,12 +103,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "ef021526dce9c9d62238780668a7b0cb6cf6f439"
+                "reference": "6ba4ed2895d538a039d5d5866edc4ec0424c7852"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ef021526dce9c9d62238780668a7b0cb6cf6f439",
-                "reference": "ef021526dce9c9d62238780668a7b0cb6cf6f439",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/6ba4ed2895d538a039d5d5866edc4ec0424c7852",
+                "reference": "6ba4ed2895d538a039d5d5866edc4ec0424c7852",
                 "shasum": ""
             },
             "require": {
@@ -156,7 +156,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-01-30 17:25:17"
+            "time": "2014-02-03 07:44:47"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -347,12 +347,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c30d7914e440887c4411f6c6475a7882dd6e9945"
+                "reference": "2f33258fa5a0c330515b7deba2bc040fa5c3953b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c30d7914e440887c4411f6c6475a7882dd6e9945",
-                "reference": "c30d7914e440887c4411f6c6475a7882dd6e9945",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2f33258fa5a0c330515b7deba2bc040fa5c3953b",
+                "reference": "2f33258fa5a0c330515b7deba2bc040fa5c3953b",
                 "shasum": ""
             },
             "require": {
@@ -413,7 +413,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-01-30 18:55:57"
+            "time": "2014-01-31 08:54:33"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -635,12 +635,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "47e82eadf64a81e0a778c7249c7292987f1bfcff"
+                "reference": "ce1d9d51cbb9f7c5d8b7b43ab93673cda4f2e5bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/47e82eadf64a81e0a778c7249c7292987f1bfcff",
-                "reference": "47e82eadf64a81e0a778c7249c7292987f1bfcff",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/ce1d9d51cbb9f7c5d8b7b43ab93673cda4f2e5bd",
+                "reference": "ce1d9d51cbb9f7c5d8b7b43ab93673cda4f2e5bd",
                 "shasum": ""
             },
             "require": {
@@ -679,7 +679,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-01-24 14:36:35"
+            "time": "2014-02-03 17:15:42"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -688,12 +688,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "a37a9430e2eafb6a66de240ac13f91b45b4c3d37"
+                "reference": "8f680ceb1eaec6f5f2404bea5c1c2af516a68494"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/a37a9430e2eafb6a66de240ac13f91b45b4c3d37",
-                "reference": "a37a9430e2eafb6a66de240ac13f91b45b4c3d37",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/8f680ceb1eaec6f5f2404bea5c1c2af516a68494",
+                "reference": "8f680ceb1eaec6f5f2404bea5c1c2af516a68494",
                 "shasum": ""
             },
             "require": {
@@ -735,7 +735,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2014-01-07 13:29:57"
+            "time": "2014-02-04 11:21:37"
         },
         {
             "name": "symfony/filesystem",
@@ -884,7 +884,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wormhit/Db.git",
-                "reference": "0f2b469f9152e0a8484d427aa05fa96dcac268c5"
+                "reference": "d4933a4028528da7870d73a17ba257587fe9801c"
             },
             "require": {
                 "php": ">=5.3",
@@ -918,7 +918,7 @@
                 "zend framework 2",
                 "zf2"
             ],
-            "time": "2014-01-29 09:01:40"
+            "time": "2014-02-03 20:21:41"
         },
         {
             "name": "wormhit/HighchartsPHP",
@@ -926,7 +926,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wormhit/HighchartsPHP.git",
-                "reference": "7e1eed154f3b0206cb4433b6e25148b1d810abb2"
+                "reference": "9a0a6a3f4954b5592f6f1c87d1a66cd01beebd79"
             },
             "require": {
                 "php": ">=5.3",
@@ -958,7 +958,7 @@
                 "zend framework 2",
                 "zf2"
             ],
-            "time": "2014-01-25 13:38:31"
+            "time": "2014-02-04 21:03:29"
         },
         {
             "name": "wormhit/InstallScripts",
@@ -966,7 +966,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wormhit/InstallScripts.git",
-                "reference": "97f25a1b695a80ef3d3305fc3794dd110ebf964e"
+                "reference": "b6eab70f394576cd0ebe10adbd8ef7763cd9bbba"
             },
             "require": {
                 "php": ">=5.3",
@@ -1000,7 +1000,7 @@
                 "zend framework 2",
                 "zf2"
             ],
-            "time": "2014-01-29 09:33:27"
+            "time": "2014-02-03 20:16:06"
         },
         {
             "name": "wormhit/PHPConfig",
@@ -1008,11 +1008,11 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wormhit/PHPConfig.git",
-                "reference": "9471e2818c0d6e2ca393c5b8c42cfa2d88d00bfb"
+                "reference": "06790032369a76dde44e479d31b0279241883479"
             },
             "require": {
                 "php": ">=5.3",
-                "zendframework/zendframework": "2.*"
+                "zendframework/zend-mvc": "2.*"
             },
             "type": "library",
             "autoload": {
@@ -1038,7 +1038,7 @@
                 "zend framework 2",
                 "zf2"
             ],
-            "time": "2014-01-25 13:25:38"
+            "time": "2014-02-04 20:50:29"
         },
         {
             "name": "wormhit/jQueryMobileMenu",
@@ -1046,11 +1046,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wormhit/jQueryMobileMenu.git",
-                "reference": "836d010b5d14496f7cb33f033fadf3029d26d7f3"
+                "reference": "2b9c901324b5254f71eb8c326b42846971949a8a"
             },
             "require": {
                 "php": ">=5.3",
-                "zendframework/zendframework": "2.*"
+                "zendframework/zend-navigation": "2.*",
+                "zendframework/zend-view": "2.*"
             },
             "type": "library",
             "autoload": {
@@ -1079,7 +1080,7 @@
                 "zend framework 2",
                 "zf2"
             ],
-            "time": "2014-01-25 13:53:22"
+            "time": "2014-02-04 20:23:56"
         },
         {
             "name": "zendframework/zend-developer-tools",
