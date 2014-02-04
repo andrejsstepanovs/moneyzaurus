@@ -1,5 +1,4 @@
 <?php
-$dbName = 'moneyzaurus';
 
 $host = getenv('OPENSHIFT_MYSQL_DB_HOST');
 $host = empty($host) ? 'localhost' : $host;
@@ -12,6 +11,9 @@ $user = empty($user) ? 'root' : $user;
 
 $password = getenv('OPENSHIFT_MYSQL_DB_PASSWORD');
 $password = empty($password) ? 'root' : $password;
+
+$dbName = getenv('OPENSHIFT_APP_NAME');
+$dbName = empty($dbName) ? 'app' : $dbName;
 
 return array(
     'db' => array(
