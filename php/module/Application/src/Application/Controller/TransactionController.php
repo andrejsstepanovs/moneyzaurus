@@ -318,7 +318,8 @@ class TransactionController extends AbstractActionController
         asort($data['by_count']);
 
         $prices = array();
-        $prices[] = end(array_keys($data['by_count'])); // most popular
+        $allSortedPrices = array_keys($data['by_count']);
+        $prices[] = end($allSortedPrices); // most popular
 
         $currentDay = date('w') + 1;
         if (array_key_exists($currentDay, $data['by_day'])) {
@@ -330,8 +331,9 @@ class TransactionController extends AbstractActionController
             $prices[] = end($pricesInThisDay); // most popular in this day
         }
 
-        $prices[] = next(array_keys($data['by_count'])); // next most popular
-        $prices[] = next(array_keys($data['by_count'])); // next most popular
+        $allSortedPrices = array_keys($data['by_count']);
+        $prices[] = next($allSortedPrices); // next most popular
+        $prices[] = next($allSortedPrices); // next most popular
         $prices[] = max($allPrices);
 
         $prices = array_filter(
