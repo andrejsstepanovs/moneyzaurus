@@ -3,12 +3,12 @@ namespace Application\Controller;
 
 use Application\Form\Validator\Transaction as TransactionValidator;
 use Application\Form\Form\Transaction as TransactionForm;
+use Application\Helper\Transaction\Predict\Price as PredictPrice;
 use Application\Exception;
 use Application\Helper\Transaction\Helper as TransactionHelper;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\Db\Sql\Expression;
-use Zend\Db\TableGateway\Exception\RuntimeException;
 
 /**
  * @method \Application\Helper\Transaction\Helper getHelper()
@@ -26,6 +26,9 @@ class TransactionController extends AbstractActionController
 
     /** @var \Application\Form\Validator\Transaction */
     protected $validator;
+
+    /** @var PredictPrice */
+    protected $predictPrice;
 
     /** @var array */
     protected $dataList;
@@ -248,8 +251,10 @@ class TransactionController extends AbstractActionController
                 break;
             case 'price':
                 $group = array();
-                $predictHelper = new \Application\Helper\Transaction\Predict();
-                $price = $predictHelper->setTransactions($this->getPriceTransactions())->getPredictions();
+                $price = $this
+                    ->getPredictPrice()
+                    ->setTransactions($this->getPriceTransactions())
+                    ->getPredictions();
                 break;
             default:
                 $group = array();
@@ -390,5 +395,17 @@ class TransactionController extends AbstractActionController
     private function getWhere()
     {
         return new Where();
+    }
+
+    /**
+     * @return PredictPrice
+     */
+    private function getPredictPrice()
+    {
+        if (null === $this->predictPrice) {
+            $this->predictPrice = new PredictPrice();
+        }
+
+        return $this->predictPrice;
     }
 }

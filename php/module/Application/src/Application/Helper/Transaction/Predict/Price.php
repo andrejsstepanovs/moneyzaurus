@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Helper\Transaction;
+namespace Application\Helper\Transaction\Predict;
 
 use Application\Helper\AbstractHelper;
 
@@ -9,9 +9,9 @@ use Application\Helper\AbstractHelper;
  *
  * @package Application\Helper\Transaction
  *
- * @method \Application\Helper\Transaction\Predict setTransactions(array $transactions)
+ * @method \Application\Helper\Transaction\Predict\Price setTransactions(array $transactions)
  */
-class Predict extends AbstractHelper
+class Price extends AbstractHelper
 {
     /** results grouped by usage count */
     const BY_COUNT = 0;
