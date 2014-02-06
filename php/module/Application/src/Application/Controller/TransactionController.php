@@ -332,9 +332,11 @@ class TransactionController extends AbstractActionController
         }
 
         $allSortedPrices = array_keys($data['by_count']);
-        $prices[] = next($allSortedPrices); // next most popular
-        $prices[] = next($allSortedPrices); // next most popular
-        $prices[] = max($allPrices);
+        if (count($allSortedPrices) > 3) {
+            $prices[] = next($allSortedPrices); // next most popular
+            $prices[] = next($allSortedPrices); // next most popular
+            $prices[] = max($allPrices);
+        }
 
         $prices = array_filter(
             $prices,
