@@ -292,63 +292,10 @@ class TransactionController extends AbstractActionController
      */
     protected function predictPrice()
     {
-        $data = array('by_count' => array(), 'by_day' => array());
-
+        $predictHelper = new \Application\Helper\Transaction\Predict();
         $transactions = $this->getPriceTransactions();
-        /** \Db\ActiveRecord */
-        foreach ($transactions as $transaction) {
-            $day = $transaction->getData('day_of_the_week');
-            $price = $transaction->getData('price');
-
-            if (empty($data['by_count'][$price])) {
-                $data['by_count'][$price] = 1;
-            } else {
-                $data['by_count'][$price] = $data['by_count'][$price] + 1;
-            }
-
-            if (empty($data[$day][$price])) {
-                $data['by_day'][$day][$price] = 1;
-            } else {
-                $data['by_day'][$day][$price] = $data[$day][$price] + 1;
-            }
-        }
-
-        $allPrices = array_keys($data['by_count']);
-
-        asort($data['by_count']);
-
-        $prices = array();
-        $allSortedPrices = array_keys($data['by_count']);
-        $prices[] = end($allSortedPrices); // most popular
-
-        $currentDay = date('w') + 1;
-        if (array_key_exists($currentDay, $data['by_day'])) {
-            $pricesInThisDay = array_keys($data['by_day'][$currentDay]);
-            $prices[] = reset($pricesInThisDay); // last used in this day
-            $prices[] = next($pricesInThisDay);  // next last used
-
-            sort($pricesInThisDay);
-            $prices[] = end($pricesInThisDay); // most popular in this day
-        }
-
-        $allSortedPrices = array_keys($data['by_count']);
-        if (count($allSortedPrices) > 3) {
-            $prices[] = next($allSortedPrices); // next most popular
-            $prices[] = next($allSortedPrices); // next most popular
-            $prices[] = max($allPrices);
-        }
-
-        $prices = array_filter(
-            $prices,
-            function ($val) {
-                return empty($val) ? false : true;
-            }
-        );
-
-        sort($prices);
-        $prices = array_unique($prices);
-
-        return $prices;
+        $predictHelper->setTransactions($transactions);
+        return $predictHelper->getPrices();
     }
 
     /**
