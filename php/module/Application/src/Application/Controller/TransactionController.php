@@ -248,7 +248,8 @@ class TransactionController extends AbstractActionController
                 break;
             case 'price':
                 $group = array();
-                $price = $this->predictPrice();
+                $predictHelper = new \Application\Helper\Transaction\Predict();
+                $price = $predictHelper->setTransactions($this->getPriceTransactions())->getPredictions();
                 break;
             default:
                 $group = array();
@@ -285,17 +286,6 @@ class TransactionController extends AbstractActionController
         }
 
         return $groups;
-    }
-
-    /**
-     * @return array
-     */
-    protected function predictPrice()
-    {
-        $predictHelper = new \Application\Helper\Transaction\Predict();
-        $transactions = $this->getPriceTransactions();
-        $predictHelper->setTransactions($transactions);
-        return $predictHelper->getPrices();
     }
 
     /**
