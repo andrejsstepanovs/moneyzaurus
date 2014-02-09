@@ -4,7 +4,7 @@
 moneyzaurus
 =============
 
-Simple expenditure planning system.
+Simple expenditure planning system. Frontend is using jQuery Mobile. Backend is zf2.
 
 
 Setup and deployment
@@ -13,7 +13,7 @@ Setup and deployment
 Create new OpenShift account. Install rhc. Create app.
 
 ``` sh
-    rhc app-create app php-5.4 mysql-5.5 --from-code=https://github.com/wormhit/moneyzaurus.git
+rhc app-create app php-5.4 mysql-5.5 --from-code=https://github.com/wormhit/moneyzaurus.git
 ```
 
 After that, import db and you're ready.
