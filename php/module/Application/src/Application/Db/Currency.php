@@ -25,7 +25,7 @@ class Currency extends ActiveRecord
      * @param \Zend\Db\Adapter\Adapter|null $adapter
      * @param string|null                   $shema
      */
-    public function __construct($tableName = 'Currency', $adapter = null, $schema = null)
+    public function __construct($tableName = 'currency', $adapter = null, $schema = null)
     {
         parent::__construct($tableName, $adapter, $schema);
     }
