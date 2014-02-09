@@ -8,6 +8,7 @@ use Application\Form\Form\ResendPassword as ResendPasswordForm;
 use Application\Form\Validator\ResendPassword as ResendPasswordValicator;
 use Application\Helper\ResendPassword\Helper;
 use Zend\Db\Sql\Expression as Expression;
+use Db\Exception\ModelNotFoundException;
 
 /**
  * Class ResendPasswordController
@@ -166,7 +167,7 @@ class ResendPasswordController extends AbstractActionController
             /** @var User $user */
             $user = $this->getUser()->setEmail($request->getPost('email'))->load();
             $user->setPassword($newPassword);
-        } catch (\Db\Exception\ModelNotFoundException $exc) {
+        } catch (ModelNotFoundException $exc) {
             return $this->redirect()->toRoute('resend-password', array('action' => 'fail'));
         }
 

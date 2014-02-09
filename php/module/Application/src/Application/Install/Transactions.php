@@ -4,6 +4,7 @@ namespace Application\Install;
 
 use InstallScripts\Script;
 use Db\ActiveRecord;
+use \Db\Exception\ModelNotFoundException;
 
 /**
  * Class Transactions
@@ -92,7 +93,7 @@ class Transactions extends Script
             $item->setName($itemName)
                  ->setIdUser($userId)
                  ->load();
-        } catch (\Db\Exception\ModelNotFoundException $exc) {
+        } catch (ModelNotFoundException $exc) {
             $item->save();
         }
 
@@ -102,7 +103,7 @@ class Transactions extends Script
             $group->setName($groupName)
                   ->setIdUser($userId)
                   ->load();
-        } catch (\Db\Exception\ModelNotFoundException $exc) {
+        } catch (ModelNotFoundException $exc) {
             $group->save();
         }
 
