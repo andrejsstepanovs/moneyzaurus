@@ -195,12 +195,13 @@ class Acl
         $controller = $routeParams['controller'];
         //$action = $routeParams['action'];
 
+        /** @var \Zend\Authentication\AuthenticationService $auth */
         $auth = $this->getServiceManager()->get('AuthService');
 
         $userRole = 'guest';
         if ($auth->hasIdentity()) {
             $identity = $auth->getIdentity();
-            if (!array_key_exists('role', $identity)) {
+            if (!$identity || empty($identity['role'])) {
                 // something is wrong.
                 $auth->clearIdentity();
             } else {
@@ -210,7 +211,7 @@ class Acl
 
         $allowed = $this->getAcl()->isAllowed($userRole, $controller);
         if (!$allowed) {
-            $this->redirect($mvcEvent, 'user');
+            $this->redirect($mvcEvent, 'moneyzaurus');
         }
 
         return $this;

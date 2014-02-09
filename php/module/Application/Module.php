@@ -96,6 +96,7 @@ class Module
         return array(
             'factories' => array(
                 'AuthService' => function (ServiceManager $serviceManager) {
+                    /** @var \Zend\Db\Adapter\Adapter $dbAdapter */
                     $dbAdapter = $serviceManager->get('Zend\Db\Adapter\Adapter');
                     $tableName           = 'user';
                     $identityColumn      = 'email';
@@ -109,8 +110,10 @@ class Module
                         $credentialTreatment
                     );
 
-                    return $serviceManager->get('Zend\Authentication\AuthenticationService')
-                              ->setAdapter($dbTableAuthAdapter);
+                    /** @var \Zend\Authentication\AuthenticationService $authService */
+                    $authService = $serviceManager->get('Zend\Authentication\AuthenticationService');
+                    $authService->setAdapter($dbTableAuthAdapter);
+                    return $authService;
                 },
                 'Application\Acl\Acl' => function ($serviceManager) {
                     return new Acl\Acl($serviceManager);
