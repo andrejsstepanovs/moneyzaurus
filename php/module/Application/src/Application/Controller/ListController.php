@@ -3,10 +3,10 @@ namespace Application\Controller;
 
 use Application\Helper\Lister\Helper as ListHelper;
 use Application\Form\Form\Transaction as TransactionForm;
-use Zend\Db\Sql\Expression;
-use Zend\Db\Sql\Select;
-use Zend\Db\Sql\Where;
-use Zend\Db\TableGateway\Exception\RuntimeException;
+use \Zend\Db\Sql\Expression;
+use \Zend\Db\Sql\Select;
+use \Zend\Db\Sql\Where;
+use \Zend\Db\TableGateway\Exception\RuntimeException;
 
 /**
  * @method \Application\Helper\Lister\Helper getHelper()
@@ -263,46 +263,9 @@ class ListController extends AbstractActionController
      */
     protected function saveTransaction($transactionId, $itemName, $groupName, $price, $currencyId, $date)
     {
-        if ($transactionId == 0) {
-            $transactionId = null;
-        }
-
-        /** @var \Application\Db\Transaction $currency */
-        $currency = $this->getTable('currency')
-                         ->setId($currencyId)
-                         ->load();
-
-        /** @var \Application\Db\Item $item */
-        $item = $this->getTable('item');
-        try {
-            $item->setName($itemName)
-                 ->setIdUser($this->getUserId())
-                 ->load();
-        } catch (\Db\Exception\ModelNotFoundException $exc) {
-            $item->save();
-        }
-
-        /** @var \Application\Db\Group $group */
-        $group = $this->getTable('group');
-        try {
-            $group->setName($groupName)
-                  ->setIdUser($this->getUserId())
-                  ->load();
-        } catch (\Db\Exception\ModelNotFoundException $exc) {
-            $group->save();
-        }
-
-        /** @var \Application\Db\Transaction $transaction */
-        $transaction = $this->getTable('transaction');
-        return $transaction
-            ->setTransactionId($transactionId)
-            ->setPrice($price)
-            ->setDate($date)
-            ->setIdUser($this->getUserId())
-            ->setIdItem($item->getId())
-            ->setIdGroup($group->getId())
-            ->setIdCurrency($currency->getId())
-            ->save();
+        $helper = new \Application\Helper\Transaction\Helper();
+        $helper->setServiceLocator($this->getServiceLocator());
+        return $helper->saveTransaction($transactionId, $itemName, $groupName, $price, $currencyId, $date);
     }
 
     public function deleteAction()

@@ -9,6 +9,7 @@ use Application\Helper\Transaction\Helper as TransactionHelper;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\Db\Sql\Expression;
+use \Db\Exception\ModelNotFoundException;
 
 /**
  * @method \Application\Helper\Transaction\Helper getHelper()
@@ -170,7 +171,7 @@ class TransactionController extends AbstractActionController
                         $this->showMessage('Failed to save');
                     }
 
-                } catch (\Db\Exception\ModelNotFoundException $exc) {
+                } catch (ModelNotFoundException $exc) {
                     $this->showMessage('Data missing');
                 } catch (\Exception $exc) {
                     $this->showMessage($exc->getMessage());
@@ -204,46 +205,9 @@ class TransactionController extends AbstractActionController
         $currencyId,
         $date
     ) {
-        if ($transactionId == 0) {
-            $transactionId = null;
-        }
-
-        /** @var \Application\Db\Currency $currency*/
-        $currency = $this->getTable('currency')
-                         ->setId($currencyId)
-                         ->load();
-
-        /** @var \Application\Db\Item $item */
-        $item = $this->getTable('item');
-        try {
-            $item->setName($itemName)
-                 ->setIdUser($this->getUserId())
-                 ->load();
-        } catch (\Db\Exception\ModelNotFoundException $exc) {
-            $item->save();
-        }
-
-        /** @var \Application\Db\Group $group */
-        $group = $this->getTable('group');
-        try {
-            $group->setName($groupName)
-                  ->setIdUser($this->getUserId())
-                  ->load();
-        } catch (\Db\Exception\ModelNotFoundException $exc) {
-            $group->save();
-        }
-
-        /** @var \Application\Db\Transaction $transaction */
-        $transaction = $this->getTable('transaction');
-        return $transaction
-            ->setTransactionId($transactionId)
-            ->setPrice($price)
-            ->setDate($date)
-            ->setIdUser($this->getUserId())
-            ->setIdItem($item->getId())
-            ->setIdGroup($group->getId())
-            ->setIdCurrency($currency->getId())
-            ->save();
+        $helper = new \Application\Helper\Transaction\Helper();
+        $helper->setServiceLocator($this->getServiceLocator());
+        return $helper->saveTransaction($transactionId, $itemName, $groupName, $price, $currencyId, $date);
     }
 
     public function predictAction()
