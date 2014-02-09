@@ -17,6 +17,10 @@ use Zend\Http\PhpEnvironment\Request;
  * @method Helper setChartDataCache(\HighchartsPHP\Highcharts $data)
  * @method Helper setGroupedDataCache(array $data)
  * @method Helper setPieHighchartHelper(\Application\Helper\Pie\Highchart $data)
+ * @method Helper unsChartDataCache()
+ * @method Helper unsGroupedDataCache()
+ * @method Helper unsSortedGroupsDataCache()
+ * @method Helper unsTransactionsDataCache()
  * @method \Application\Helper\Pie\Highchart getPieHighchartHelper()
  * @method array getTransactionsDataCache()
  * @method array getSortedGroupsDataCache()
@@ -292,6 +296,7 @@ class Helper extends AbstractHelper
             $newRows[] = $rows[$i];
         }
 
+        $row = false;
         $price = 0;
         for ($i; $i < $count; $i++) {
             /** @var \Application\Db\Transaction $row */
@@ -299,7 +304,7 @@ class Helper extends AbstractHelper
             $price += $row->getPrice();
         }
 
-        if (isset($row)) {
+        if ($row !== false) {
             $newRows[] = $row->setPrice($price)->setIdItem(0)->setItemName('Other Items');
         }
 
@@ -311,10 +316,10 @@ class Helper extends AbstractHelper
      */
     public function reset()
     {
-        $this->setChartDataCache(null);
-        $this->setGroupedDataCache(null);
-        $this->setSortedGroupsDataCache(null);
-        //$this->setTransactionsDataCache(null);
+        $this->unsChartDataCache();
+        $this->unsGroupedDataCache();
+        $this->unsSortedGroupsDataCache();
+        //$this->unsTransactionsDataCache(null);
         return $this;
     }
 
