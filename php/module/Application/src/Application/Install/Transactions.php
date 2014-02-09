@@ -38,10 +38,12 @@ class Transactions extends Script
      */
     public function MoveDatabase()
     {
+        /** @var \Application\Db\Transaction $transactions */
         $transactions = $this->getTable('transactions');
 
         $data = $transactions->getTable()->fetchAll();
 
+        /** @var \Application\Db\Transaction $row */
         foreach ($data as $row) {
 
             if ($row->getData('user_id') == 1 || $row->getData('user_id') == 86 || $row->getData('user_id') == 160) {
@@ -80,10 +82,11 @@ class Transactions extends Script
         $dateCreated,
         $userId
     ) {
-        $currency = $this->getTable('currency')
-                         ->setCurrencyId($currencyId)
-                         ->load();
+        /** @var \Application\Db\Currency $currency */
+        $currency = $this->getTable('currency');
+        $currency->setCurrencyId($currencyId)->load();
 
+        /** @var \Application\Db\Item $item */
         $item = $this->getTable('item');
         try {
             $item->setName($itemName)
@@ -93,6 +96,7 @@ class Transactions extends Script
             $item->save();
         }
 
+        /** @var \Application\Db\Group $group */
         $group = $this->getTable('group');
         try {
             $group->setName($groupName)
@@ -102,7 +106,9 @@ class Transactions extends Script
             $group->save();
         }
 
-        return $this->getTable('transaction')
+        /** @var \Application\Db\Transaction $transaction */
+        $transaction = $this->getTable('transaction');
+        return $transaction
                     ->setPrice($price)
                     ->setDate($date)
                     ->setDateCreated($dateCreated)

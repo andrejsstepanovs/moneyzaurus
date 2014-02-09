@@ -1,7 +1,6 @@
 <?php
 namespace Application\Controller;
 
-use Db\ActiveRecord;
 use Application\Form\Form\Login as LoginForm;
 use Application\Form\Validator\Login as LoginValidator;
 use Zend\Authentication\Storage\Session;
@@ -19,26 +18,11 @@ class LoginController extends AbstractActionController
     /** @var \Zend\Authentication\Storage\Session */
     protected $storage;
 
-    /** @var \Db\ActiveRecord */
-    protected $user;
-
     /** @var \Application\Form\Validator\Login */
     protected $loginValidator;
 
     /** @var \Application\Form\Validator\User */
     protected $userValidator;
-
-    /**
-     * @return \Db\ActiveRecord
-     */
-    public function getUser()
-    {
-        if (null === $this->user) {
-            $this->user = new ActiveRecord('user');
-        }
-
-        return $this->user;
-    }
 
     /**
      * @return \Zend\Authentication\Storage\Session
@@ -122,7 +106,7 @@ class LoginController extends AbstractActionController
     {
         $request = $this->getRequest();
 
-        /** @var $authService \Zend\Authentication\AuthenticationService */
+        /** @var \Zend\Authentication\AuthenticationService $authService */
         $authService = $this->getAuthService();
         $authService->getAdapter()
                     ->setIdentity($request->getPost('email'))
@@ -138,11 +122,12 @@ class LoginController extends AbstractActionController
         }
 
         try {
-            $user = $this->getUser()
-                         ->setEmail($request->getPost('email'))
-                         ->load()
-                         ->unsPassword()
-                         ->toArray();
+            /** @var \Application\Db\User $user */
+            $user = $this->getTable('user');
+            $user->setEmail($request->getPost('email'))
+                 ->load()
+                 ->unsPassword()
+                 ->toArray();
         } catch (\Db\Exception\ModelNotFoundException $exc) {
             return $this->redirect()->toRoute('moneyzaurus');
         }

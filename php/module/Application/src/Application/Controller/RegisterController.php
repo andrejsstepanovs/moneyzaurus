@@ -1,7 +1,6 @@
 <?php
 namespace Application\Controller;
 
-use Db\ActiveRecord;
 use Application\Form\Form\Register as RegisterForm;
 use Application\Form\Validator\Register as RegisterValidator;
 use Zend\Db\TableGateway\Exception\RuntimeException;
@@ -19,21 +18,6 @@ class RegisterController extends AbstractActionController
 
     /** @var \Application\Form\Validator\Register */
     protected $registerValidator;
-
-    /** @var \Db\ActiveRecord */
-    protected $user;
-
-    /**
-     * @return \Db\ActiveRecord
-     */
-    public function getUser()
-    {
-        if (null === $this->user) {
-            $this->user = new ActiveRecord('user');
-        }
-
-        return $this->user;
-    }
 
     /**
      * @return \Application\Form\Form\Register
@@ -103,7 +87,8 @@ class RegisterController extends AbstractActionController
     {
         $request = $this->getRequest();
 
-        $user = $this->getUser();
+        /** @var \Application\Db\User $user */
+        $user = $this->getTable('user');
         $user->setEmail($request->getPost('email'));
 
         try {

@@ -172,7 +172,7 @@ class TransactionController extends AbstractActionController
 
                 } catch (\Db\Exception\ModelNotFoundException $exc) {
                     $this->showMessage('Data missing');
-                } catch (Exception $exc) {
+                } catch (\Exception $exc) {
                     $this->showMessage($exc->getMessage());
                 }
 
@@ -208,10 +208,12 @@ class TransactionController extends AbstractActionController
             $transactionId = null;
         }
 
+        /** @var \Application\Db\Currency $currency*/
         $currency = $this->getTable('currency')
                          ->setId($currencyId)
                          ->load();
 
+        /** @var \Application\Db\Item $item */
         $item = $this->getTable('item');
         try {
             $item->setName($itemName)
@@ -221,6 +223,7 @@ class TransactionController extends AbstractActionController
             $item->save();
         }
 
+        /** @var \Application\Db\Group $group */
         $group = $this->getTable('group');
         try {
             $group->setName($groupName)
@@ -230,8 +233,9 @@ class TransactionController extends AbstractActionController
             $group->save();
         }
 
-        return $this
-            ->getTable('transaction')
+        /** @var \Application\Db\Transaction $transaction */
+        $transaction = $this->getTable('transaction');
+        return $transaction
             ->setTransactionId($transactionId)
             ->setPrice($price)
             ->setDate($date)

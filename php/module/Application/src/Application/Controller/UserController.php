@@ -1,7 +1,6 @@
 <?php
 namespace Application\Controller;
 
-use Db\ActiveRecord;
 use Application\Form\Form\User as UserForm;
 use Application\Form\Validator\User as UserValidator;
 use Zend\Authentication\Storage\Session;
@@ -19,26 +18,11 @@ class UserController extends AbstractActionController
     /** @var \Zend\Authentication\Storage\Session */
     protected $storage;
 
-    /** @var \Db\ActiveRecord */
-    protected $user;
-
     /** @var \Application\Form\Validator\Login */
     protected $loginValidator;
 
     /** @var \Application\Form\Validator\User */
     protected $userValidator;
-
-    /**
-     * @return \Db\ActiveRecord
-     */
-    public function getUser()
-    {
-        if (null === $this->user) {
-            $this->user = new ActiveRecord('user');
-        }
-
-        return $this->user;
-    }
 
     /**
      * @return \Zend\Authentication\Storage\Session
@@ -61,14 +45,12 @@ class UserController extends AbstractActionController
             $this->userForm = new UserForm();
         }
 
-        $user = $this->getUser()->load($this->getUserId());
+        /** @var \Application\Db\User $user */
+        $user = $this->getTable('user');
+        $user->load($this->getUserId());
 
+        /** @var \Zend\Form\Element\Select[] $formElements */
         $formElements = $this->userForm->getElements();
-
-        $formElements['month_start_date']->setValue($user->getMonthStartDate());
-
-        $formElements['default_currency']->setValueOptions($this->getCurrencyValueOptions())
-                                         ->setValue($user->getDefaultCurrency());
 
         $formElements['email']->setValue($user->getEmail());
 
@@ -108,7 +90,9 @@ class UserController extends AbstractActionController
 
                 $keys = array('month_start_date', 'default_currency');
 
-                $user = $this->getUser()->load($this->getUserId());
+                /** @var \Application\Db\User $user */
+                $user = $this->getTable('user');
+                $user->load($this->getUserId());
 
                 foreach ($keys as $key) {
                     $user->setData($key, $request->getPost($key));

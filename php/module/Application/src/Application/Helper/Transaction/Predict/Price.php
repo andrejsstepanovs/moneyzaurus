@@ -10,6 +10,7 @@ use Application\Helper\AbstractHelper;
  * @package Application\Helper\Transaction
  *
  * @method \Application\Helper\Transaction\Predict\Price setTransactions(array $transactions)
+ * @method \Application\Helper\Transaction\Predict\Price setCurrentDay(string $currentDay)
  */
 class Price extends AbstractHelper
 {
@@ -27,7 +28,7 @@ class Price extends AbstractHelper
      */
     protected function getCurrentDay()
     {
-        $currentDay = parent::getCurrentDay();
+        $currentDay = $this->getData('current_day');
         if (!$currentDay) {
             $currentDay = date('w') + 1;
             $this->setCurrentDay($currentDay);
@@ -161,7 +162,7 @@ class Price extends AbstractHelper
      */
     protected function getTransactions()
     {
-        $transactions = parent::getTransactions();
+        $transactions = $this->getData('transactions');
         return $transactions ? $transactions : array();
     }
 

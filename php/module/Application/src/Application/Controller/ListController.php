@@ -88,6 +88,8 @@ class ListController extends AbstractActionController
 
             $formElements = $this->transactionForm->getElements();
 
+            /** @var \Zend\Form\Element\Select $currencyElement */
+            /** @var \Zend\Form\Element\Select $dateElement */
             $currencyElement = $formElements['currency'];
             $dateElement     = $formElements['date'];
 
@@ -257,7 +259,7 @@ class ListController extends AbstractActionController
      * @param string $currencyId
      * @param string $date
      *
-     * @return \Db\ActiveRecord
+     * @return \Application\Db\Transaction
      */
     protected function saveTransaction($transactionId, $itemName, $groupName, $price, $currencyId, $date)
     {
@@ -265,10 +267,12 @@ class ListController extends AbstractActionController
             $transactionId = null;
         }
 
+        /** @var \Application\Db\Transaction $currency */
         $currency = $this->getTable('currency')
                          ->setId($currencyId)
                          ->load();
 
+        /** @var \Application\Db\Item $item */
         $item = $this->getTable('item');
         try {
             $item->setName($itemName)
@@ -278,6 +282,7 @@ class ListController extends AbstractActionController
             $item->save();
         }
 
+        /** @var \Application\Db\Group $group */
         $group = $this->getTable('group');
         try {
             $group->setName($groupName)
@@ -287,8 +292,9 @@ class ListController extends AbstractActionController
             $group->save();
         }
 
-        return $this
-            ->getTable('transaction')
+        /** @var \Application\Db\Transaction $transaction */
+        $transaction = $this->getTable('transaction');
+        return $transaction
             ->setTransactionId($transactionId)
             ->setPrice($price)
             ->setDate($date)
@@ -330,14 +336,15 @@ class ListController extends AbstractActionController
      */
     protected function deleteTransaction($transactionId)
     {
-        $table = $this->getTable('transaction');
-        $table->setTransactionId($transactionId);
-        $table->load();
+        /** @var \Application\Db\Transaction $transaction */
+        $transaction = $this->getTable('transaction');
+        $transaction->setTransactionId($transactionId);
+        $transaction->load();
 
-        if ($table->getIdUser() != $this->getUserId()) {
+        if ($transaction->getIdUser() != $this->getUserId()) {
             throw new RuntimeException('It is not allowed to edit other user transactions.');
         }
 
-        return (bool) $table->delete();
+        return (bool) $transaction->delete();
     }
 }

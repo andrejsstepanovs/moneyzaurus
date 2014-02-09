@@ -1,11 +1,11 @@
 <?php
 namespace Application\Controller;
 
+use Application\Db\User;
 use Application\Form\Form\Login as LoginForm;
 use Application\Form\Form\Register as RegisterForm;
 use Application\Form\Form\ResendPassword as ResendPasswordForm;
 use Application\Form\Validator\ResendPassword as ResendPasswordValicator;
-use Db\ActiveRecord;
 use Application\Helper\ResendPassword\Helper;
 use Zend\Db\Sql\Expression as Expression;
 
@@ -60,12 +60,12 @@ class ResendPasswordController extends AbstractActionController
     }
 
     /**
-     * @return \Db\ActiveRecord
+     * @return \Application\Db\User
      */
     public function getUser()
     {
         if (null === $this->user) {
-            $this->user = new ActiveRecord('user');
+            $this->user = new User();
         }
 
         return $this->user;
@@ -163,6 +163,7 @@ class ResendPasswordController extends AbstractActionController
     {
         try {
             $request = $this->getRequest();
+            /** @var User $user */
             $user = $this->getUser()->setEmail($request->getPost('email'))->load();
             $user->setPassword($newPassword);
         } catch (\Db\Exception\ModelNotFoundException $exc) {

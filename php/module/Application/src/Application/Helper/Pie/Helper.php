@@ -113,6 +113,7 @@ class Helper extends AbstractHelper
             // initial limited data
             for ($i = 0; $i < $this->getOptimalGroupCount(); $i++) {
                 $priceData = $categories = array();
+                /** @var \Application\Db\Transaction $row */
                 $rows = $this->compactItems($groupedData[$sortedGroups[$i]]);
                 foreach ($rows as $row) {
                     $priceData[]  = round((float) $row->getPrice(), 2);
@@ -157,6 +158,7 @@ class Helper extends AbstractHelper
             $groupName = $sortedGroups[$iterator];
 
             $groupId = null;
+            /** @var \Application\Db\Transaction $group */
             foreach ($groupedData[$groupName] as $group) {
                 $groupId = $group->getIdGroup();
                 break;
@@ -170,7 +172,7 @@ class Helper extends AbstractHelper
             );
 
             $total = 0;
-            /** @var \Db\ActiveRecord $row */
+            /** @var \Application\Db\Transaction $row */
             foreach ($groupedData[$groupName] as $row) {
                 $total += round((float) $row->getPrice(), 2);
             }
@@ -261,7 +263,7 @@ class Helper extends AbstractHelper
         $allItems = array();
         $data = $this->getGroupedData();
         foreach ($data as $groupName => $items) {
-            /** @var \Db\ActiveRecord $item */
+            /** @var \Application\Db\Transaction $item */
             foreach ($items as $item) {
                 $allItems[$groupName . $item->getIdItem()] = null;
             }
@@ -292,6 +294,7 @@ class Helper extends AbstractHelper
 
         $price = 0;
         for ($i; $i < $count; $i++) {
+            /** @var \Application\Db\Transaction $row */
             $row = $rows[$i];
             $price += $row->getPrice();
         }
@@ -357,7 +360,7 @@ class Helper extends AbstractHelper
     protected function fetchSortedGroupsData()
     {
         $groups = array();
-        /** @var \Db\ActiveRecord $row */
+        /** @var \Application\Db\Transaction $row */
         foreach ($this->getTransactionsData() as $row) {
             $groupName = $row->getGroupName();
             if (!array_key_exists($groupName, $groups)) {

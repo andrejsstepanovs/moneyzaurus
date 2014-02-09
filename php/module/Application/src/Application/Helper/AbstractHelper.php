@@ -4,6 +4,11 @@ namespace Application\Helper;
 
 use Db\AbstractModel;
 use Db\ActiveRecord;
+use Application\Db\Transaction;
+use Application\Db\User;
+use Application\Db\Item;
+use Application\Db\Group;
+use Application\Db\Currency;
 
 /**
  * Class AbstractHelper
@@ -25,7 +30,29 @@ class AbstractHelper extends AbstractModel
     {
         $key = !$table ? 'null' : $table;
         if (!isset($this->activeRecords[$table])) {
-            $this->activeRecords[$key] = new ActiveRecord($table);
+
+            switch ($table) {
+                case 'transaction':
+                    $activeRecord = new Transaction;
+                    break;
+                case 'user':
+                    $activeRecord = new User;
+                    break;
+                case 'item':
+                    $activeRecord = new Item;
+                    break;
+                case 'group':
+                    $activeRecord = new Group;
+                    break;
+                case 'currency':
+                    $activeRecord = new Currency;
+                    break;
+                default:
+                    $activeRecord = new ActiveRecord($table);
+                    break;
+            }
+
+            $this->activeRecords[$key] = $activeRecord;
         }
 
         return $this->activeRecords[$key];
