@@ -11,9 +11,9 @@ use Zend\Form\Form;
  */
 class ResendPassword extends Form
 {
-    public function __construct()
+    public function __construct($name = 'resend-password-form', $options = array())
     {
-        parent::__construct('resend-password-form');
+        parent::__construct($name, $options);
 
         $this->setAttribute('method', 'post');
 

@@ -11,9 +11,9 @@ use Zend\Form\Form;
  */
 class User extends Form
 {
-    public function __construct()
+    public function __construct($name = 'users', $options = array())
     {
-        parent::__construct('users');
+        parent::__construct($name, $options);
 
         $this->setAttribute('method', 'post');
 

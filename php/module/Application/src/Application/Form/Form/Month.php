@@ -11,9 +11,9 @@ use Zend\Form\Form;
  */
 class Month extends Form
 {
-    public function __construct()
+    public function __construct($name = 'month', $options = array())
     {
-        parent::__construct('month');
+        parent::__construct($name, $options);
 
         $this->setAttribute('method', 'get');
 
