@@ -4,6 +4,7 @@ namespace Application\Controller;
 use Application\Form\Form\Login as LoginForm;
 use Application\Form\Validator\Login as LoginValidator;
 use Zend\Authentication\Storage\Session as SessionStorage;
+use Db\Exception\ModelNotFoundException;
 
 /**
  * Class LoginController
@@ -133,7 +134,7 @@ class LoginController extends AbstractActionController
                  ->unsPassword()
                  ->toArray();
 
-        } catch (\Db\Exception\ModelNotFoundException $exc) {
+        } catch (ModelNotFoundException $exc) {
             return $this->redirect()->toRoute('moneyzaurus');
         }
 
