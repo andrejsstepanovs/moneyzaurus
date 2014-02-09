@@ -8,7 +8,6 @@ use Zend\Permissions\Acl\Acl as ZendAcl;
 use Zend\Permissions\Acl\Role\GenericRole as ZendRole;
 use Zend\Permissions\Acl\Resource\GenericResource as ZendResource;
 use Application\Exception;
-use Zend\Console\Request as ConsoleRequest;
 
 /**
  * Class Acl
@@ -186,7 +185,7 @@ class Acl
         }
 
         $request = $mvcEvent->getRequest();
-        if ($request instanceof ConsoleRequest) {
+        if ($request instanceof \Zend\Console\Request) {
             return true;
         }
 
