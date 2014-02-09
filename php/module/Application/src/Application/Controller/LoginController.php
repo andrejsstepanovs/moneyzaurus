@@ -3,7 +3,7 @@ namespace Application\Controller;
 
 use Application\Form\Form\Login as LoginForm;
 use Application\Form\Validator\Login as LoginValidator;
-use Zend\Authentication\Storage\Session;
+use Zend\Authentication\Storage\Session as SessionStorage;
 
 /**
  * Class LoginController
@@ -30,7 +30,7 @@ class LoginController extends AbstractActionController
     public function getSessionStorage()
     {
         if (null === $this->storage) {
-            $this->storage = new Session();
+            $this->storage = new SessionStorage();
         }
 
         return $this->storage;
@@ -108,11 +108,15 @@ class LoginController extends AbstractActionController
 
         /** @var \Zend\Authentication\AuthenticationService $authService */
         $authService = $this->getAuthService();
-        $authService->getAdapter()
-                    ->setIdentity($request->getPost('email'))
+
+        /** @var \Zend\Authentication\Adapter\DbTable\CredentialTreatmentAdapter $authAdapter */
+        $authAdapter = $authService->getAdapter();
+
+        $authAdapter->setIdentity($request->getPost('email'))
                     ->setCredential($request->getPost('password'));
 
-        $result = $authService->authenticate();
+        $result = $authAdapter->authenticate();
+
         if (!$result->isValid()) {
             foreach ($result->getMessages() as $message) {
                 $this->flashmessenger()->addMessage($message);
@@ -124,16 +128,17 @@ class LoginController extends AbstractActionController
         try {
             /** @var \Application\Db\User $user */
             $user = $this->getTable('user');
-            $user->setEmail($request->getPost('email'))
+            $userData = $user->setEmail($request->getPost('email'))
                  ->load()
                  ->unsPassword()
                  ->toArray();
+
         } catch (\Db\Exception\ModelNotFoundException $exc) {
             return $this->redirect()->toRoute('moneyzaurus');
         }
 
         $authService->setStorage($this->getSessionStorage());
-        $authService->getStorage()->write($user);
+        $authService->getStorage()->write($userData);
 
         return $this->redirect()->toRoute('moneyzaurus');
     }
