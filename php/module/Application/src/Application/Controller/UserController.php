@@ -4,6 +4,7 @@ namespace Application\Controller;
 use Application\Form\Form\User as UserForm;
 use Application\Form\Validator\User as UserValidator;
 use Zend\Authentication\Storage\Session;
+use \Zend\Db\Sql\Expression as Expression;
 
 /**
  * Class UserController
@@ -45,6 +46,9 @@ class UserController extends AbstractActionController
             $this->userForm = new UserForm();
         }
 
+        /** @var \Zend\I18n\Translator\Translator $translator */
+        $translator = $this->getServiceLocator()->get('Translator');
+
         /** @var \Application\Db\User $user */
         $user = $this->getTable('user');
         $user->load($this->getUserId());
@@ -53,6 +57,11 @@ class UserController extends AbstractActionController
         $formElements = $this->userForm->getElements();
 
         $formElements['email']->setValue($user->getEmail());
+        $formElements['email']->setAttribute('disabled', 'disabled');
+
+        $formElements['password']->setAttribute('placeholder', $translator->translate('New password'));
+
+        $formElements['submit']->setValue($translator->translate('Save'));
 
         return $this->userForm;
     }
@@ -77,32 +86,33 @@ class UserController extends AbstractActionController
     public function indexAction()
     {
         $form = $this->getUserForm();
+        $userForm = $form;
 
         /** @var \Zend\Http\PhpEnvironment\Request $request */
         $request = $this->getRequest();
 
         if ($request->isPost()) {
 
-            $form->setInputFilter($this->getUserValidator()->getInputFilter());
+            $inputFilter = $this->getUserValidator()->getInputFilter();
+            $inputFilter->remove('email');
+
+            $form->remove('email');
+            $form->setInputFilter($inputFilter);
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-
-                $keys = array('month_start_date', 'default_currency');
 
                 /** @var \Application\Db\User $user */
                 $user = $this->getTable('user');
                 $user->load($this->getUserId());
 
-                foreach ($keys as $key) {
-                    $user->setData($key, $request->getPost($key));
-                }
+                $passwordExpression = new Expression(
+                    AbstractActionController::CREDENTIAL_TREATMENT,
+                    $request->getPost('password')
+                );
 
-                try {
-                    $user->save();
-                } catch (\Exception $exc) {
-                    //$exc->getMessage();
-                }
+                $user->setPassword($passwordExpression);
+                $user->save();
 
             } else {
                 $this->flashmessenger()->addMessage('Wrong data');
@@ -110,7 +120,7 @@ class UserController extends AbstractActionController
         }
 
         return array(
-            'form'     => $this->getUserForm()
+            'form' => $userForm
         );
     }
 }
