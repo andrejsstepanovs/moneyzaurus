@@ -1,7 +1,8 @@
 <?php
 namespace Application\Controller;
 
-use Application\Helper\Lister\Helper as ListHelper;
+use Application\Helper\Lister\Helper as ListerHelper;
+use Application\Helper\Transaction\Helper as TransactionHelper;
 use Application\Form\Form\Transaction as TransactionForm;
 use \Zend\Db\Sql\Expression;
 use \Zend\Db\Sql\Select;
@@ -16,6 +17,12 @@ class ListController extends AbstractActionController
     /** @var TransactionForm */
     protected $transactionForm;
 
+    /** @var ListerHelper */
+    protected $listerHelper;
+
+    /** @var TransactionHelper */
+    protected $transactionHelper;
+
     /** @var TransactionForm */
     protected $searchForm;
 
@@ -23,13 +30,29 @@ class ListController extends AbstractActionController
     protected $whereFilter;
 
     /**
-     * @return void
+     * @return ListerHelper
      */
-    protected function init()
+    protected function getListerHelper()
     {
-        $helper = new ListHelper();
-        $helper->setParams($this->params());
-        $this->setHelper($helper);
+        if (null === $this->listerHelper) {
+            $this->listerHelper = new ListerHelper();
+            $this->listerHelper->setParams($this->params());
+        }
+
+        return $this->listerHelper;
+    }
+
+    /**
+     * @return TransactionHelper
+     */
+    protected function getTransactionHelper()
+    {
+        if (null === $this->transactionHelper) {
+            $this->transactionHelper = new TransactionHelper();
+            $this->transactionHelper->setAbstractHelper($this->getHelper());
+        }
+
+        return $this->transactionHelper;
     }
 
     public function ajaxAction()
@@ -48,8 +71,8 @@ class ListController extends AbstractActionController
             'success' => 1,
             'data'    => array(
                 'count'    => $totalItemCount,
-                'order_by' => $this->getHelper()->getOrderBy(),
-                'order'    => $this->getHelper()->getOrder(),
+                'order_by' => $this->getListerHelper()->getOrderBy(),
+                'order'    => $this->getListerHelper()->getOrder(),
                 'rows'     => $rows,
                 'columns'  => array( //http://stackoverflow.com/questions/14261115/zf2-use-translator-in-controller
                     'item_name',
@@ -105,8 +128,8 @@ class ListController extends AbstractActionController
      */
     protected function getTransactions()
     {
-        $orderBy = $this->getHelper()->getOrderBy();
-        $order   = $this->getHelper()->getOrder();
+        $orderBy = $this->getListerHelper()->getOrderBy();
+        $order   = $this->getListerHelper()->getOrder();
 
         $transactionTable = array('t' => 'transaction');
 
@@ -118,7 +141,7 @@ class ListController extends AbstractActionController
                ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email'))
                ->order($orderBy . ' ' . $order)
                ->quantifier(new Expression('SQL_CALC_FOUND_ROWS'))
-               ->limit($this->getHelper()->getItemsPerPage());
+               ->limit($this->getListerHelper()->getItemsPerPage());
 
         $where = $this->getWhereFilter();
         if (count($where)) {
@@ -141,11 +164,11 @@ class ListController extends AbstractActionController
     protected function getWhereFilter()
     {
         if (null === $this->whereFilter) {
-            $item   = $this->getHelper()->getItem();
-            $group  = $this->getHelper()->getGroup();
-            $date   = $this->getHelper()->getDate();
+            $item   = $this->getListerHelper()->getItem();
+            $group  = $this->getListerHelper()->getGroup();
+            $date   = $this->getListerHelper()->getDate();
             $idUser = $this->getUserId();
-            $price  = $this->getHelper()->getPrice();
+            $price  = $this->getListerHelper()->getPrice();
 
             $where = array();
 
@@ -224,20 +247,14 @@ class ListController extends AbstractActionController
 
     public function saveAction()
     {
-        $item   = $this->getHelper()->getItem();
-        $group  = $this->getHelper()->getGroup();
-        $date   = $this->getHelper()->getDate();
-        $currency = $this->getHelper()->getCurrencyId();
-        $price  = $this->getHelper()->getPrice();
-        $transactionId = $this->getHelper()->getTransactionId();
-
-        $transaction = $this->saveTransaction(
-            $transactionId,
-            $item,
-            $group,
-            $price,
-            $currency,
-            $date
+        $transaction = $this->getTransactionHelper()->saveTransaction(
+            $this->getUserId(),
+            $this->getListerHelper()->getTransactionId(),
+            $this->getListerHelper()->getItem(),
+            $this->getListerHelper()->getGroup(),
+            $this->getListerHelper()->getPrice(),
+            $this->getListerHelper()->getCurrencyId(),
+            $this->getListerHelper()->getDate()
         );
 
         $data = array(
@@ -251,26 +268,9 @@ class ListController extends AbstractActionController
         return $response;
     }
 
-    /**
-     * @param int    $transactionId
-     * @param string $itemName
-     * @param string $groupName
-     * @param string $price
-     * @param string $currencyId
-     * @param string $date
-     *
-     * @return \Application\Db\Transaction
-     */
-    protected function saveTransaction($transactionId, $itemName, $groupName, $price, $currencyId, $date)
-    {
-        $helper = new \Application\Helper\Transaction\Helper();
-        $helper->setServiceLocator($this->getServiceLocator());
-        return $helper->saveTransaction($transactionId, $itemName, $groupName, $price, $currencyId, $date);
-    }
-
     public function deleteAction()
     {
-        $transactionId = $this->getHelper()->getTransactionId();
+        $transactionId = $this->getListerHelper()->getTransactionId();
 
         $deleted = false;
         $error = '';

@@ -8,8 +8,9 @@ use \Db\Exception\ModelNotFoundException;
 /**
  * @method \Zend\Http\PhpEnvironment\Request getRequest()
  * @method \Application\Helper\Transaction\Helper setParams(\Zend\Mvc\Controller\Plugin\Params $params)
- * @method \Application\Helper\Transaction\Helper setServiceLocator(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+ * @method \Application\Helper\Transaction\Helper setAbstractHelper(\Application\Helper\AbstractHelper $abstractHelper)
  * @method \Zend\Mvc\Controller\Plugin\Params getParams()
+ * @method \Application\Helper\AbstractHelper getAbstractHelper()
  */
 class Helper extends AbstractHelper
 {
@@ -63,16 +64,18 @@ class Helper extends AbstractHelper
     }
 
     /**
-     * @param  int              $transactionId
-     * @param  string           $item
-     * @param  string           $group
-     * @param  float            $price
-     * @param  string           $currency
-     * @param  string           $date
+     * @param  int    $userId
+     * @param  int    $transactionId
+     * @param  string $item
+     * @param  string $group
+     * @param  float  $price
+     * @param  string $currency
+     * @param  string $date
      *
-     * @return \Db\ActiveRecord transaction
+     * @return \Application\Db\Transaction transaction
      */
     public function saveTransaction(
+        $userId,
         $transactionId,
         $itemName,
         $groupName,
@@ -85,37 +88,37 @@ class Helper extends AbstractHelper
         }
 
         /** @var \Application\Db\Currency $currency*/
-        $currency = $this->getTable('currency')
+        $currency = $this->getAbstractHelper()->getTable('currency')
                          ->setId($currencyId)
                          ->load();
 
         /** @var \Application\Db\Item $item */
-        $item = $this->getTable('item');
+        $item = $this->getAbstractHelper()->getTable('item');
         try {
             $item->setName($itemName)
-                 ->setIdUser($this->getUserId())
+                 ->setIdUser($userId)
                  ->load();
         } catch (ModelNotFoundException $exc) {
             $item->save();
         }
 
         /** @var \Application\Db\Group $group */
-        $group = $this->getTable('group');
+        $group = $this->getAbstractHelper()->getTable('group');
         try {
             $group->setName($groupName)
-                  ->setIdUser($this->getUserId())
+                  ->setIdUser($userId)
                   ->load();
         } catch (ModelNotFoundException $exc) {
             $group->save();
         }
 
         /** @var \Application\Db\Transaction $transaction */
-        $transaction = $this->getTable('transaction');
+        $transaction = $this->getAbstractHelper()->getTable('transaction');
         return $transaction
             ->setTransactionId($transactionId)
             ->setPrice($price)
             ->setDate($date)
-            ->setIdUser($this->getUserId())
+            ->setIdUser($userId)
             ->setIdItem($item->getId())
             ->setIdGroup($group->getId())
             ->setIdCurrency($currency->getId())

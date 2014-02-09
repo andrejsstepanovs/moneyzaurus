@@ -37,14 +37,21 @@ class TransactionController extends AbstractActionController
     /** @var array */
     protected $whereFilter;
 
+    /** @var TransactionHelper */
+    protected $transactionHelper;
+
     /**
-     * @return void
+     * @return TransactionHelper
      */
-    protected function init()
+    protected function getTransactionHelper()
     {
-        $helper = new TransactionHelper();
-        $helper->setParams($this->params());
-        $this->setHelper($helper);
+        if (null === $this->transactionHelper) {
+            $this->transactionHelper = new TransactionHelper();
+            $this->transactionHelper->setParams($this->params());
+            $this->transactionHelper->setAbstractHelper($this->getHelper());
+        }
+
+        return $this->transactionHelper;
     }
 
     /**
@@ -155,7 +162,8 @@ class TransactionController extends AbstractActionController
                 $data = $form->getData();
                 $data['currency'] = $this->getDefaultUserCurrency();
                 try {
-                    $transaction = $this->saveTransaction(
+                    $transaction = $this->getTransactionHelper()->saveTransaction(
+                        $this->getUserId(),
                         $transactionId,
                         $data['item'],
                         $data['group'],
@@ -188,31 +196,9 @@ class TransactionController extends AbstractActionController
         );
     }
 
-    /**
-     * @param  int              $transactionId
-     * @param  string           $item
-     * @param  string           $group
-     * @param  float            $price
-     * @param  string           $currency
-     * @param  string           $date
-     * @return \Db\ActiveRecord transaction
-     */
-    protected function saveTransaction(
-        $transactionId,
-        $itemName,
-        $groupName,
-        $price,
-        $currencyId,
-        $date
-    ) {
-        $helper = new \Application\Helper\Transaction\Helper();
-        $helper->setServiceLocator($this->getServiceLocator());
-        return $helper->saveTransaction($transactionId, $itemName, $groupName, $price, $currencyId, $date);
-    }
-
     public function predictAction()
     {
-        switch ($this->getHelper()->getPredict()) {
+        switch ($this->getTransactionHelper()->getPredict()) {
             case 'group':
                 $group = $this->predictGroups();
                 $price = array();
@@ -306,7 +292,7 @@ class TransactionController extends AbstractActionController
                ->columns(array('price', 'day_of_the_week' => new Expression('DAYOFWEEK(t.date)')))
                ->join(array('i' => 'item'), 't.id_item = i.item_id', array())
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array())
-               ->order($this->getHelper()->getOrderBy() . ' ' . $this->getHelper()->getOrder())
+               ->order($this->getTransactionHelper()->getOrderBy() . ' ' . $this->getTransactionHelper()->getOrder())
                //->limit(100)
                ;
 
@@ -333,8 +319,8 @@ class TransactionController extends AbstractActionController
     protected function getWhereFilter()
     {
         if (null === $this->whereFilter) {
-            $item   = $this->getHelper()->getItem();
-            $group  = $this->getHelper()->getGroup();
+            $item   = $this->getTransactionHelper()->getItem();
+            $group  = $this->getTransactionHelper()->getGroup();
             $idUser = $this->getUserId();
 
             $where = array();
