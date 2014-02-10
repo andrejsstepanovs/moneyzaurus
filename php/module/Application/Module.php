@@ -43,6 +43,16 @@ class Module
             array($acl, 'checkAcl'),
             -100
         );
+
+        $eventManager->attach(
+            \Zend\Mvc\MvcEvent::EVENT_DISPATCH_ERROR,
+            function(MvcEvent $mvcEvent) use ($serviceManager) {
+                if ($mvcEvent->getParam('exception')) {
+                    $serviceManager->get('Zend\Log\Logger')->crit($mvcEvent->getParam('exception'));
+                }
+            },
+            -999
+        );
     }
 
     /**
