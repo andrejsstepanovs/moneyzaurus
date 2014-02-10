@@ -7,7 +7,7 @@ use Zend\ServiceManager\ServiceManager;
 use Zend\Permissions\Acl\Acl as ZendAcl;
 use Zend\Permissions\Acl\Role\GenericRole as ZendRole;
 use Zend\Permissions\Acl\Resource\GenericResource as ZendResource;
-use Application\Exception;
+use Application\Exception\AclResourceNotAllowedException;
 
 /**
  * Class Acl
@@ -176,7 +176,6 @@ class Acl
      * @param MvcEvent|null $mvcEvent
      *
      * @return $this
-     * @throws Exception\AclResourceNotAllowedException
      */
     public function checkAcl(MvcEvent $mvcEvent = null)
     {
@@ -189,7 +188,8 @@ class Acl
             return true;
         }
 
-        $routeParams = $mvcEvent->getRouteMatch()->getParams();
+        $routeMatch = $mvcEvent->getRouteMatch();
+        $routeParams = $routeMatch->getParams();
 
         $controller = $routeParams['controller'];
         //$action = $routeParams['action'];
@@ -210,7 +210,15 @@ class Acl
 
         $allowed = $this->getAcl()->isAllowed($userRole, $controller);
         if (!$allowed) {
-            $this->redirect($mvcEvent, 'moneyzaurus');
+            $message = 'Controller "' . $routeMatch->getMatchedRouteName() . '" not allowed for "' . $userRole . '".';
+            $exception = new AclResourceNotAllowedException($message, 600);
+
+            $mvcEvent
+                ->setError(\Zend\Mvc\Application::ERROR_EXCEPTION)
+                ->setParam('exception', $exception)
+                ->getApplication()
+                ->getEventManager()
+                ->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $mvcEvent);
         }
 
         return $this;
