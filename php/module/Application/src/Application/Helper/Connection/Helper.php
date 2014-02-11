@@ -50,15 +50,15 @@ class Helper extends AbstractHelper
     }
 
     /**
-     * @param int $parentUserId
+     * @param int $userId
      *
      * @return array
      */
-    protected function getWhereFilter($parentUserId)
+    protected function getWhereFilter($userId)
     {
         if (null === $this->whereFilter) {
             $where = array();
-            $where[] = $this->getWhere()->equalTo('c.id_user_parent', $parentUserId);
+            $where[] = $this->getWhere()->equalTo('c.id_user', $userId);
 
             $this->whereFilter = $where;
         }
