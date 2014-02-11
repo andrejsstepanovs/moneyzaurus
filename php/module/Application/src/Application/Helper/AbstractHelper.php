@@ -9,6 +9,7 @@ use Application\Db\User;
 use Application\Db\Item;
 use Application\Db\Group;
 use Application\Db\Currency;
+use Application\Db\Connection;
 
 /**
  * Class AbstractHelper
@@ -46,6 +47,9 @@ class AbstractHelper extends AbstractModel
                     break;
                 case 'currency':
                     $activeRecord = new Currency;
+                    break;
+                case 'connection':
+                    $activeRecord = new Connection;
                     break;
                 default:
                     $activeRecord = new ActiveRecord($table);
