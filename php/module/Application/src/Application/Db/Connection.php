@@ -13,13 +13,21 @@ use \Db\ActiveRecord;
  * @method \Application\Db\Connection setIdUser(int $idUser)
  * @method \Application\Db\Connection setIdUserParent(int $idUserParent)
  * @method \Application\Db\Connection setDateCreated(string $dateCreated)
+ * @method \Application\Db\Connection setState(int $state)
  * @method int    getConnectionId()
  * @method int    getIdUser()
  * @method int    getIdUserParent()
  * @method string getDateCreated()
+ * @method int    getState()
  */
 class Connection extends ActiveRecord
 {
+    /** connection is accepted */
+    const STATE_ACCEPTED = 'accepted';
+
+    /** connection is rejected */
+    const STATE_REJECTED = 'rejected';
+
     /**
      * @param string|null                   $tableName
      * @param \Zend\Db\Adapter\Adapter|null $adapter

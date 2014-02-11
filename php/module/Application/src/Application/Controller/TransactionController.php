@@ -303,8 +303,8 @@ class TransactionController extends AbstractActionController
 
         //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
-        $transactions = $this->getTable('transactions');
-        $table = $transactions->getTable();
+        $transactionsTable = $this->getTable('transactions');
+        $table = $transactionsTable->getTable();
         $table->setTable($transactionTable);
 
         /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */

@@ -3,6 +3,7 @@ namespace Application\Controller;
 
 use Application\Form\Form\User as UserForm;
 use Application\Form\Validator\User as UserValidator;
+use Application\Helper\Connection\Helper as ConnectionHelper;
 use Zend\Authentication\Storage\Session;
 use \Zend\Db\Sql\Expression as Expression;
 
@@ -25,6 +26,9 @@ class UserController extends AbstractActionController
     /** @var \Application\Form\Validator\User */
     protected $userValidator;
 
+    /** @var ConnectionHelper */
+    protected $connectionHelper;
+
     /**
      * @return \Zend\Authentication\Storage\Session
      */
@@ -35,6 +39,19 @@ class UserController extends AbstractActionController
         }
 
         return $this->storage;
+    }
+
+    /**
+     * @return ConnectionHelper
+     */
+    public function getConnectionHelper()
+    {
+        if (null === $this->connectionHelper) {
+            $this->connectionHelper = new ConnectionHelper;
+            $this->connectionHelper->setAbstractHelper($this->getHelper());
+        }
+
+        return $this->connectionHelper;
     }
 
     /**
@@ -119,8 +136,11 @@ class UserController extends AbstractActionController
             }
         }
 
+        $connections = $this->getConnectionHelper()->getUserConnections($this->getUserId());
         return array(
-            'form' => $userForm
+            'form'        => $userForm,
+            'connections' => $connections,
+            'userId'      => $this->getUserId()
         );
     }
 }

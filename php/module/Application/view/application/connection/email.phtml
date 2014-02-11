@@ -1,0 +1,23 @@
+<?php
+/** @var \Application\Db\User $user */
+/** @var \Application\Db\User $friend */
+
+$friend = $this->friend;
+?>
+
+<html>
+    <body>
+        <h3><?php echo sprintf($this->translate('Hi %s'), $user->getEmail()); ?>!</h3>
+        <br />
+        <?php echo $this->translate('Your friend invited you to share your moneyzaurus account.'); ?>
+        <br />
+        <h2><?php echo $this->translate('From: '); ?> <?php echo $friend->getEmail(); ?></h2>
+        <br />
+        <?php echo $this->message; ?>
+        <br />
+        <br />
+        <?php echo $this->translate('To accept connection, please go to moneyzaurus!'); ?>
+        <br />
+        <a href="http://www.moneyzaurus.com" target="_blank">moneyzaurus.com</a>
+    </body>
+</html>
