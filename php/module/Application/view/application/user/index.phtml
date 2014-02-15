@@ -33,8 +33,7 @@ $this->headTitle('User');
                 //'connection_id' => $this->translate('Id'),
                 'email'        => $this->translate('Email'),
                 'date_created' => $this->translate('Date'),
-                //'state'        => $this->translate('State'),
-                'action'       => $this->translate('Action'),
+                'state'        => $this->translate('State'),
             );
 
             echo '<thead>';
@@ -53,10 +52,11 @@ $this->headTitle('User');
                     echo '<tr>';
                         foreach ($columns as $key => $label) {
                             echo '<td>';
-                            if ($key == 'action') {
+                            if ($key == 'state' && $userId == $connection->getIdUser()) {
                                 $stateRejected = \Application\Db\Connection::STATE_REJECTED;
                                 $action = $connection->getState() == $stateRejected ? 'accept' : 'reject';
-                                $icon = $connection->getState() == $stateRejected ? 'check' : 'delete';
+                                $icon   = $connection->getState() == $stateRejected ? 'check' : 'delete';
+                                $label  = $connection->getState() == $stateRejected ? 'Accept' : 'Revoke';
 
                                 $url = $this->url('connection', array('action' => $action));
                                 $url .= '?id=' . $connection->getConnectionId();
@@ -67,7 +67,7 @@ $this->headTitle('User');
                                    data-icon="<?php echo $icon; ?>"
                                    data-mini="true"
                                    data-theme="a" >
-                                    <?php echo $this->translate('Accept'); ?>
+                                    <?php echo $this->translate($label); ?>
                                 </a>
                                 <?php
                             } else {

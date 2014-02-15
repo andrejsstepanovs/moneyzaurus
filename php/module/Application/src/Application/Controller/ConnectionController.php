@@ -112,7 +112,7 @@ class ConnectionController extends AbstractActionController
 
         /** @var /Application\Db\Connection $connection */
         $connection = $this->getTable('connection');
-        $connection->setConnectionId($id)->setIdUserParent($this->getUserId())->load();
+        $connection->setConnectionId($id)->setIdUser($this->getUserId())->load();
         $connection->setState(\Application\Db\Connection::STATE_REJECTED)->save();
 
         return $this->redirect()->toRoute('user'); //#connection
