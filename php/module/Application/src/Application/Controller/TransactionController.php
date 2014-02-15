@@ -8,9 +8,6 @@ use \Application\Helper\Transaction\Helper as TransactionHelper;
 use \Zend\Json\Json;
 use \Zend\Http\PhpEnvironment\Request;
 
-/**
- * @method TransactionHelper getHelper()
- */
 class TransactionController extends AbstractActionController
 {
     /** @var array */
@@ -42,7 +39,7 @@ class TransactionController extends AbstractActionController
         if (null === $this->transactionHelper) {
             $this->transactionHelper = new TransactionHelper();
             $this->transactionHelper->setParams($this->params());
-            $this->transactionHelper->setAbstractHelper($this->getHelper());
+            $this->transactionHelper->setAbstractHelper($this->getAbstractHelper());
             $this->transactionHelper->setUserId($this->getUserId());
         }
 
@@ -102,7 +99,7 @@ class TransactionController extends AbstractActionController
 
                 /** @var \Db\AbstractTable $table */
                 /** @var \Zend\Db\ResultSet\HydratingResultSet $results */
-                $table = $this->getTable($name)->getTable();
+                $table = $this->getAbstractHelper()->getTable($name)->getTable();
                 $results = $table->fetchUniqeColum(
                     $column,
                     array('id_user' => $this->getUserId())

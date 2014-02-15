@@ -8,7 +8,7 @@ use Zend\Db\Sql\Select as Select;
 use Zend\Db\Sql\Where;
 
 /**
- * @method \Application\Helper\Pie\Helper getHelper()
+ * @method \Application\Helper\Pie\Helper getAbstractHelper()
  */
 class PieController extends AbstractActionController
 {
@@ -96,7 +96,7 @@ class PieController extends AbstractActionController
             'level'         => $level
         );
 
-        $script = $this->getHelper()->renderChart(
+        $script = $this->getAbstractHelper()->renderChart(
             $this->getPieChartTitle(),
             $targetElement,
             $parameters
@@ -232,13 +232,13 @@ class PieController extends AbstractActionController
         // set type = null to get all transaction data. Use this data to get other group ids.
         $transactionData = $this->setParam('type', null)->getTransactionsData();
 
-        $this->getHelper()->setTransactionsData($transactionData);
+        $this->getAbstractHelper()->setTransactionsData($transactionData);
 
-        $otherGroupIds = $this->getHelper()->getSortedGroups(PieHelper::GET_LIMIT, 'id', $level);
+        $otherGroupIds = $this->getAbstractHelper()->getSortedGroups(PieHelper::GET_LIMIT, 'id', $level);
 
         $this->setParam('type', 'group');
 
-        $this->getHelper()->reset();
+        $this->getAbstractHelper()->reset();
 
         return $otherGroupIds;
     }
@@ -257,7 +257,7 @@ class PieController extends AbstractActionController
      */
     private function fetchTransactions(Select $select)
     {
-        $transactions = $this->getTable('transactions');
+        $transactions = $this->getAbstractHelper()->getTable('transactions');
         $table = $transactions->getTable();
         $table->setTable(array('t' => 'transaction'));
 

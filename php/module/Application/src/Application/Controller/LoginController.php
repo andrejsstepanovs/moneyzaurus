@@ -128,7 +128,7 @@ class LoginController extends AbstractActionController
 
         try {
             /** @var \Application\Db\User $user */
-            $user = $this->getTable('user');
+            $user = $this->getAbstractHelper()->getTable('user');
             $userData = $user->setEmail($request->getPost('email'))
                  ->load()
                  ->unsPassword()

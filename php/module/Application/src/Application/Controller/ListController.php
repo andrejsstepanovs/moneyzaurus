@@ -10,7 +10,7 @@ use \Zend\Db\Sql\Where;
 use \Zend\Db\TableGateway\Exception\RuntimeException;
 
 /**
- * @method \Application\Helper\Lister\Helper getHelper()
+ * @method \Application\Helper\Lister\Helper getAbstractHelper()
  */
 class ListController extends AbstractActionController
 {
@@ -49,7 +49,7 @@ class ListController extends AbstractActionController
     {
         if (null === $this->transactionHelper) {
             $this->transactionHelper = new TransactionHelper();
-            $this->transactionHelper->setAbstractHelper($this->getHelper());
+            $this->transactionHelper->setAbstractHelper($this->getAbstractHelper());
         }
 
         return $this->transactionHelper;
@@ -148,7 +148,7 @@ class ListController extends AbstractActionController
             $select->where($where);
         }
 
-        $transactions = $this->getTable('transactions');
+        $transactions = $this->getAbstractHelper()->getTable('transactions');
         $table = $transactions->getTable();
         $table->setTable($transactionTable);
 
@@ -224,7 +224,7 @@ class ListController extends AbstractActionController
             array('total' => new Expression('FOUND_ROWS()'))
         );
 
-        $sql = $this->getTable('transactions')->getTable()->getSql();
+        $sql = $this->getAbstractHelper()->getTable('transactions')->getTable()->getSql();
         $statement = $sql->prepareStatementForSqlObject($selectTotal);
 
         $result2 = $statement->execute();
@@ -300,7 +300,7 @@ class ListController extends AbstractActionController
     protected function deleteTransaction($transactionId)
     {
         /** @var \Application\Db\Transaction $transaction */
-        $transaction = $this->getTable('transaction');
+        $transaction = $this->getAbstractHelper()->getTable('transaction');
         $transaction->setTransactionId($transactionId);
         $transaction->load();
 

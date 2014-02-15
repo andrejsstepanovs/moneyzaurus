@@ -48,7 +48,7 @@ class UserController extends AbstractActionController
     {
         if (null === $this->connectionHelper) {
             $this->connectionHelper = new ConnectionHelper;
-            $this->connectionHelper->setAbstractHelper($this->getHelper());
+            $this->connectionHelper->setAbstractHelper($this->getAbstractHelper());
         }
 
         return $this->connectionHelper;
@@ -67,7 +67,7 @@ class UserController extends AbstractActionController
         $translator = $this->getServiceLocator()->get('Translator');
 
         /** @var \Application\Db\User $user */
-        $user = $this->getTable('user');
+        $user = $this->getAbstractHelper()->getTable('user');
         $user->load($this->getUserId());
 
         /** @var \Zend\Form\Element\Select[] $formElements */
@@ -120,7 +120,7 @@ class UserController extends AbstractActionController
             if ($form->isValid()) {
 
                 /** @var \Application\Db\User $user */
-                $user = $this->getTable('user');
+                $user = $this->getAbstractHelper()->getTable('user');
                 $user->load($this->getUserId());
 
                 $passwordExpression = new Expression(

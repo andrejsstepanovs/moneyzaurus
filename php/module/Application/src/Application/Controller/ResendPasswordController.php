@@ -15,7 +15,7 @@ use Db\Exception\ModelNotFoundException;
  *
  * @package Application\Controller
  *
- * @method \Application\Helper\ResendPassword\Helper getHelper()
+ * @method \Application\Helper\ResendPassword\Helper getAbstractHelper()
  */
 class ResendPasswordController extends AbstractActionController
 {
@@ -126,7 +126,7 @@ class ResendPasswordController extends AbstractActionController
 
             if ($form->isValid()) {
 
-                $newPassword = $this->getHelper()->getNewPassword();
+                $newPassword = $this->getAbstractHelper()->getNewPassword();
                 $response = $this->resendPassword($newPassword);
                 if ($response) {
                     return $response;
@@ -184,7 +184,7 @@ class ResendPasswordController extends AbstractActionController
             $subject = $translator->translate('New moneyzaurus.com password');
             $fromEmail = $config['mail']['email'];
 
-            $message = $this->getHelper()->getMailMessage($user->getEmail(), $htmlBody, $subject, $fromEmail);
+            $message = $this->getAbstractHelper()->getMailMessage($user->getEmail(), $htmlBody, $subject, $fromEmail);
             $transport->send($message);
 
             $passwordExpression = new Expression(

@@ -117,7 +117,7 @@ class AbstractActionController extends ZendAbstractActionController
     /**
      * @return AbstractHelper
      */
-    protected function getHelper()
+    protected function getAbstractHelper()
     {
         if (null === $this->helper) {
             $this->helper = new AbstractHelper();
@@ -155,7 +155,7 @@ class AbstractActionController extends ZendAbstractActionController
      */
     public function getCurrencyValueOptions()
     {
-        $currency = $this->getTable('currency');
+        $currency = $this->getAbstractHelper()->getTable('currency');
         $currencies = $currency->getTable()->fetchAll();
 
         $valueOptions = array();
@@ -192,15 +192,6 @@ class AbstractActionController extends ZendAbstractActionController
         }
 
         return $this->authService;
-    }
-
-    /**
-     * @param  string           $table
-     * @return \Db\ActiveRecord
-     */
-    protected function getTable($table = null)
-    {
-        return $this->getHelper()->getTable($table);
     }
 
     /**
