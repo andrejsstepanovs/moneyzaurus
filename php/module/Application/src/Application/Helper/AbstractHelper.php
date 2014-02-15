@@ -10,6 +10,8 @@ use Application\Db\Item;
 use Application\Db\Group;
 use Application\Db\Currency;
 use Application\Db\Connection;
+use \Zend\Db\Sql\Select;
+use \Zend\Db\Sql\Where;
 
 /**
  * Class AbstractHelper
@@ -61,4 +63,26 @@ class AbstractHelper extends AbstractModel
 
         return $this->activeRecords[$key];
     }
+
+
+    /**
+     * @param Select $select
+     * @param int    $userId
+     *
+     * @return Select
+     */
+    public function addTransactionUserFilter(Select $select, $userId)
+    {
+        $where = new Where();
+        $where
+            ->equalTo('t.id_user', $userId)
+            ->or
+            ->equalTo('c.id_user_parent', $userId);
+
+        $select->join(array('c' => 'connection'), 'c.id_user = t.id_user');
+        $select->where->addPredicate($where);
+
+        return $select;
+    }
+
 }

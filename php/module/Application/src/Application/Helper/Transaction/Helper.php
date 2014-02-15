@@ -159,6 +159,8 @@ class Helper extends AbstractHelper
             $select->where($where);
         }
 
+        $select = $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
+
         //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
         $transactionsTable = $this->getTable('transactions');
@@ -191,8 +193,9 @@ class Helper extends AbstractHelper
         if (count($where)) {
             $select->where($where);
         }
+        $select = $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
 
-        //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
+        //\DEBUG::dump(@$select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
         $transactions = $this->getAbstractHelper()->getTable('transactions');
         $table = $transactions->getTable();
@@ -212,7 +215,6 @@ class Helper extends AbstractHelper
         if (null === $this->whereFilter) {
             $item   = $this->getItem();
             $group  = $this->getGroup();
-            $idUser = $this->getUserId();
 
             $where = array();
 
@@ -225,8 +227,6 @@ class Helper extends AbstractHelper
             }
 
             //$where[] = $this->getWhere()->greaterThan('t.date', date('Y-m-d H:i:s', strtotime('-1 year')));
-
-            $where[] = $this->getWhere()->equalTo('t.id_user', $idUser);
 
             $this->whereFilter = $where;
         }
