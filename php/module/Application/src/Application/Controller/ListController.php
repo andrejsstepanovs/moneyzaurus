@@ -145,6 +145,7 @@ class ListController extends AbstractActionController
         if (count($where)) {
             $select->where($where);
         }
+        $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
 
         $transactions = $this->getAbstractHelper()->getTable('transactions');
         $table = $transactions->getTable();
@@ -165,7 +166,6 @@ class ListController extends AbstractActionController
             $item   = $this->getListerHelper()->getItem();
             $group  = $this->getListerHelper()->getGroup();
             $date   = $this->getListerHelper()->getDate();
-            $idUser = $this->getUserId();
             $price  = $this->getListerHelper()->getPrice();
 
             $where = array();
@@ -185,8 +185,6 @@ class ListController extends AbstractActionController
             if (!empty($date)) {
                 $where[] = $this->getWhere()->like('t.date', $date . '%');
             }
-
-            $where[] = $this->getWhere()->equalTo('t.id_user', $idUser);
 
             $this->whereFilter = $where;
         }
