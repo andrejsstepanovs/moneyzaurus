@@ -174,6 +174,8 @@ class PieController extends AbstractActionController
             ->join(array('c' => 'currency'), 't.id_currency = c.currency_id', array('currency_html' => 'html'))
             ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email'));
 
+        $select = $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
+
         return $select;
     }
 
@@ -190,7 +192,6 @@ class PieController extends AbstractActionController
         $monthDateTimeTill = date('Y-m-d', strtotime($month . '-' . date('t', $timestamp))) . ' 23:59:59';
 
         $where = array(
-            $this->getWhere()->equalTo('t.id_user', $this->getUserId()),
             $this->getWhere()->between('t.date', $monthDateTimeFrom, $monthDateTimeTill),
             $this->getWhere()->expression('t.price > ?', 0)
         );

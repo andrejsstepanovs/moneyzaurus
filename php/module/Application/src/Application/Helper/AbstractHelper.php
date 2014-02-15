@@ -10,8 +10,10 @@ use Application\Db\Item;
 use Application\Db\Group;
 use Application\Db\Currency;
 use Application\Db\Connection;
+use \Zend\Db\Sql\Expression;
 use \Zend\Db\Sql\Select;
 use \Zend\Db\Sql\Where;
+use \Zend\Db\Sql;
 
 /**
  * Class AbstractHelper
@@ -77,9 +79,20 @@ class AbstractHelper extends AbstractModel
         $where
             ->equalTo('t.id_user', $userId)
             ->or
-            ->equalTo('c.id_user_parent', $userId);
+            ->equalTo('uc.id_user_parent', $userId)
+            ->or
+            ->equalTo('uc.id_user', $userId);
 
-        $select->join(array('c' => 'connection'), 'c.id_user = t.id_user');
+        $select->join(
+            array('uc' => 'connection'),
+            new Expression(
+                '(uc.id_user = t.id_user OR t.id_user = uc.id_user_parent) '
+                . 'AND uc.state = "' . Connection::STATE_ACCEPTED . '"'
+            ),
+            array(),
+            Select::JOIN_LEFT
+        );
+
         $select->where->addPredicate($where);
 
         return $select;
