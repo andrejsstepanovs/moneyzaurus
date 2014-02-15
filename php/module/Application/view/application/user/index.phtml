@@ -1,4 +1,5 @@
 <?php
+use \Application\Db\Connection;
 $this->headTitle('User');
 ?>
 
@@ -51,25 +52,31 @@ $this->headTitle('User');
                 foreach ($connections as $connection) {
                     echo '<tr>';
                         foreach ($columns as $key => $label) {
+                            $state = $connection->getState();
                             echo '<td>';
-                            if ($key == 'state' && $userId == $connection->getIdUser()) {
-                                $stateRejected = \Application\Db\Connection::STATE_REJECTED;
-                                $action = $connection->getState() == $stateRejected ? 'accept' : 'reject';
-                                $icon   = $connection->getState() == $stateRejected ? 'check' : 'delete';
-                                $label  = $connection->getState() == $stateRejected ? 'Accept' : 'Revoke';
+                            if ($key == 'state') {
+                                $state = $connection->getState();
+                                if ($userId == $connection->getIdUser() || $state == Connection::STATE_ACCEPTED) {
+                                    $stateRejected = Connection::STATE_REJECTED;
+                                    $action = $state == $stateRejected ? 'accept' : 'reject';
+                                    $icon   = $state == $stateRejected ? 'check' : 'delete';
+                                    $label  = $state == $stateRejected ? 'Accept' : 'Revoke';
 
-                                $url = $this->url('connection', array('action' => $action));
-                                $url .= '?id=' . $connection->getConnectionId();
-                                ?>
-                                <a href="<?php echo $url; ?>"
-                                   data-ajax="false"
-                                   data-role="button"
-                                   data-icon="<?php echo $icon; ?>"
-                                   data-mini="true"
-                                   data-theme="a" >
-                                    <?php echo $this->translate($label); ?>
-                                </a>
-                                <?php
+                                    $url = $this->url('connection', array('action' => $action));
+                                    $url .= '?id=' . $connection->getConnectionId();
+                                    ?>
+                                        <a href="<?php echo $url; ?>"
+                                           data-ajax="false"
+                                           data-role="button"
+                                           data-icon="<?php echo $icon; ?>"
+                                           data-mini="true"
+                                           data-theme="a" >
+                                            <?php echo $this->translate($label); ?>
+                                        </a>
+                                    <?php
+                                } else {
+                                    echo $connection->getData($key);
+                                }
                             } else {
                                 echo $connection->getData($key);
                             }

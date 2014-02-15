@@ -59,7 +59,11 @@ class Helper extends AbstractHelper
     {
         if (null === $this->whereFilter) {
             $where = array();
-            $where[] = $this->getWhere()->equalTo('c.id_user', $userId);
+            $where[] = $this
+                ->getWhere()
+                ->equalTo('c.id_user', $userId)
+                ->or
+                ->equalTo('c.id_user_parent', $userId);
 
             $this->whereFilter = $where;
         }

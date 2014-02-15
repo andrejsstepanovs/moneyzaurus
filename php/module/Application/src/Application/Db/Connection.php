@@ -19,6 +19,7 @@ use \Db\ActiveRecord;
  * @method int    getIdUserParent()
  * @method string getDateCreated()
  * @method int    getState()
+ * @method Connection unsIdUser()
  */
 class Connection extends ActiveRecord
 {

@@ -1,7 +1,7 @@
 <?php
 namespace Application\Controller;
 
-use \Db\Exception\ModelNotFoundException;
+use Db\Exception\ModelNotFoundException as DbModelNotFoundException;
 use Application\Form\Form\Connection as ConnectionForm;
 use Application\Form\Validator\Connection as ConnectionValidator;
 use Application\Helper\Mail\Helper as MailHelper;
@@ -102,7 +102,7 @@ class ConnectionController extends AbstractActionController
 
         /** @var DbConnection $connection */
         $connection = $this->getAbstractHelper()->getTable('connection');
-        $connection->setConnectionId($id)->setIdUserParent($this->getUserId())->load();
+        $connection->setConnectionId($id)->setIdUser($this->getUserId())->load();
         $connection->setState(DbConnection::STATE_ACCEPTED)->save();
 
         return $this->redirect()->toRoute('user'); //#connection
@@ -114,7 +114,13 @@ class ConnectionController extends AbstractActionController
 
         /** @var DbConnection $connection */
         $connection = $this->getAbstractHelper()->getTable('connection');
-        $connection->setConnectionId($id)->setIdUser($this->getUserId())->load();
+        $connection->setConnectionId($id);
+        try {
+            $connection->setIdUser($this->getUserId())->load();
+        } catch (DbModelNotFoundException $exc) {
+            $connection->unsIdUser()->setIdUserParent($this->getUserId())->load();
+        }
+
         $connection->setState(DbConnection::STATE_REJECTED)->save();
 
         return $this->redirect()->toRoute('user'); //#connection
