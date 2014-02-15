@@ -4,24 +4,26 @@ namespace Application\Helper\Pie;
 
 use Application\Helper\AbstractHelper;
 use Zend\Http\PhpEnvironment\Request;
+use \HighchartsPHP\Highcharts as HighchartsPHPHighcharts;
+use \Application\Helper\Pie\Highchart as PieHighchart;
 
 /**
  * Class Helper
  *
  * @package Application\Helper\Pie
  *
- * @method \Zend\Http\PhpEnvironment\Request getRequest()
+ * @method Request getRequest()
  * @method Helper setRequest(Request $request)
  * @method Helper setTransactionsDataCache(array $data)
  * @method Helper setSortedGroupsDataCache(array $data)
- * @method Helper setChartDataCache(\HighchartsPHP\Highcharts $data)
+ * @method Helper setChartDataCache(HighchartsPHPHighcharts $data)
  * @method Helper setGroupedDataCache(array $data)
- * @method Helper setPieHighchartHelper(\Application\Helper\Pie\Highchart $data)
+ * @method Helper setPieHighchartHelper(PieHighchart $data)
  * @method Helper unsChartDataCache()
  * @method Helper unsGroupedDataCache()
  * @method Helper unsSortedGroupsDataCache()
  * @method Helper unsTransactionsDataCache()
- * @method \Application\Helper\Pie\Highchart getPieHighchartHelper()
+ * @method PieHighchart getPieHighchartHelper()
  * @method array getTransactionsDataCache()
  * @method array getSortedGroupsDataCache()
  * @method array getChartDataCache()
@@ -324,7 +326,7 @@ class Helper extends AbstractHelper
     }
 
     /**
-     * @param bool        $full
+     * @param int         $full
      * @param null|string $selectKey
      * @param null|int    $level     will return other groups in specific level
      *
@@ -418,6 +420,8 @@ class Helper extends AbstractHelper
     }
 
     /**
+     * @param array $transactionsData
+     *
      * @return $this
      */
     public function setTransactionsData(array $transactionsData)

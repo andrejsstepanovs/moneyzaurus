@@ -82,9 +82,8 @@ class Highchart extends AbstractHelper
     }
 
     /**
-     * @param array    $priceData
-     * @param array    $data
-     * @param null|int $count
+     * @param array $priceData
+     * @param array $data
      *
      * @return $this
      */

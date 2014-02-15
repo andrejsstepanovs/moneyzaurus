@@ -9,11 +9,11 @@ use \Db\ActiveRecord;
  *
  * @package Application\Db
  *
- * @method \Application\Db\Connection setConnectionId(int $connectionId)
- * @method \Application\Db\Connection setIdUser(int $idUser)
- * @method \Application\Db\Connection setIdUserParent(int $idUserParent)
- * @method \Application\Db\Connection setDateCreated(string $dateCreated)
- * @method \Application\Db\Connection setState(int $state)
+ * @method Connection setConnectionId(int $connectionId)
+ * @method Connection setIdUser(int $idUser)
+ * @method Connection setIdUserParent(int $idUserParent)
+ * @method Connection setDateCreated(string $dateCreated)
+ * @method Connection setState(int $state)
  * @method int    getConnectionId()
  * @method int    getIdUser()
  * @method int    getIdUserParent()
@@ -31,7 +31,7 @@ class Connection extends ActiveRecord
     /**
      * @param string|null                   $tableName
      * @param \Zend\Db\Adapter\Adapter|null $adapter
-     * @param string|null                   $shema
+     * @param string|null                   $schema
      */
     public function __construct($tableName = 'connection', $adapter = null, $schema = null)
     {

@@ -8,6 +8,9 @@ use Zend\Permissions\Acl\Acl as ZendAcl;
 use Zend\Permissions\Acl\Role\GenericRole as ZendRole;
 use Zend\Permissions\Acl\Resource\GenericResource as ZendResource;
 use Application\Exception\AclResourceNotAllowedException;
+use \Zend\Mvc\Application as ZendApplication;
+use \Zend\Http\Headers as HttpHeaders;
+use \Zend\Console\Request as ConsoleRequest;
 
 /**
  * Class Acl
@@ -184,7 +187,7 @@ class Acl
         }
 
         $request = $mvcEvent->getRequest();
-        if ($request instanceof \Zend\Console\Request) {
+        if ($request instanceof ConsoleRequest) {
             return true;
         }
 
@@ -214,7 +217,7 @@ class Acl
             $exception = new AclResourceNotAllowedException($message, 600);
 
             $mvcEvent
-                ->setError(\Zend\Mvc\Application::ERROR_EXCEPTION)
+                ->setError(ZendApplication::ERROR_EXCEPTION)
                 ->setParam('exception', $exception)
                 ->getApplication()
                 ->getEventManager()
@@ -238,7 +241,7 @@ class Acl
         /** @var \Zend\Http\PhpEnvironment\Response $response */
         $response = $mvcEvent->getResponse();
 
-        $header = new \Zend\Http\Headers();
+        $header = new HttpHeaders();
         $header->addHeaderLine('Location', $url);
 
         $response->setHeaders($header);

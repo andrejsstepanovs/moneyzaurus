@@ -9,13 +9,13 @@ use \Db\ActiveRecord;
  *
  * @package Application\Db
  *
- * @method \Application\Db\User setUserId(int $userId)
- * @method \Application\Db\User setRole(string $role)
- * @method \Application\Db\User setUsername(string $username)
- * @method \Application\Db\User setEmail(string $email)
- * @method \Application\Db\User setDisplayName(string $displayName)
- * @method \Application\Db\User setPassword(string $password)
- * @method \Application\Db\User setState(int $state)
+ * @method User setUserId(int $userId)
+ * @method User setRole(string $role)
+ * @method User setUsername(string $username)
+ * @method User setEmail(string $email)
+ * @method User setDisplayName(string $displayName)
+ * @method User setPassword(string $password)
+ * @method User setState(int $state)
  * @method int    getUserId()
  * @method string getRole()
  * @method string getUsername()
@@ -23,7 +23,8 @@ use \Db\ActiveRecord;
  * @method string getDisplayName()
  * @method string getPassword()
  * @method int    getState()
- * @method \Application\Db\User unsPassword()
+ * @method User unsPassword()
+ * @method User load()
  */
 class User extends ActiveRecord
 {
@@ -42,7 +43,7 @@ class User extends ActiveRecord
     /**
      * @param string|null                   $tableName
      * @param \Zend\Db\Adapter\Adapter|null $adapter
-     * @param string|null                   $shema
+     * @param string|null                   $schema
      */
     public function __construct($tableName = 'user', $adapter = null, $schema = null)
     {

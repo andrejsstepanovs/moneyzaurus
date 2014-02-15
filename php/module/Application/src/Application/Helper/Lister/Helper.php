@@ -3,11 +3,14 @@
 namespace Application\Helper\Lister;
 
 use Application\Helper\AbstractHelper;
+use \Zend\Http\PhpEnvironment\Request;
+use \Zend\Mvc\Controller\Plugin\Params as PluginParams;
+use \Zend\Db\Sql\Select;
 
 /**
- * @method \Zend\Http\PhpEnvironment\Request getRequest()
- * @method Helper setParams(\Zend\Mvc\Controller\Plugin\Params $params)
- * @method \Zend\Mvc\Controller\Plugin\Params getParams()
+ * @method Request getRequest()
+ * @method Helper setParams(PluginParams $params)
+ * @method PluginParams getParams()
  */
 class Helper extends AbstractHelper
 {
@@ -28,7 +31,7 @@ class Helper extends AbstractHelper
     public function getOrder()
     {
         $params = $this->getParams();
-        $order  = $params->fromRoute('order') ? $params->fromRoute('order') : \Zend\Db\Sql\Select::ORDER_DESCENDING;
+        $order  = $params->fromRoute('order') ? $params->fromRoute('order') : Select::ORDER_DESCENDING;
 
         return $order;
     }

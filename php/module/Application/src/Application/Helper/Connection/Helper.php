@@ -3,6 +3,7 @@
 namespace Application\Helper\Connection;
 
 use Application\Helper\AbstractHelper;
+use Application\Helper\Transaction\Helper as TransactionHelper;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 
@@ -11,8 +12,8 @@ use Zend\Db\Sql\Where;
  *
  * @package Application\Helper\Connection
  *
- * @method \Application\Helper\Transaction\Helper setAbstractHelper(\Application\Helper\AbstractHelper $abstractHelper)
- * @method \Application\Helper\AbstractHelper getAbstractHelper()
+ * @method TransactionHelper setAbstractHelper(AbstractHelper $abstractHelper)
+ * @method AbstractHelper getAbstractHelper()
  */
 class Helper extends AbstractHelper
 {

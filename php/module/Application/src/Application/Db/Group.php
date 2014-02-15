@@ -9,10 +9,10 @@ use \Db\ActiveRecord;
  *
  * @package Application\Db
  *
- * @method \Application\Db\Group setGroupId(int $GroupId)
- * @method \Application\Db\Group setIdUser(int $idUser)
- * @method \Application\Db\Group setName(string $name)
- * @method \Application\Db\Group setDateCreated(string $dateCreated)
+ * @method Group setGroupId(int $GroupId)
+ * @method Group setIdUser(int $idUser)
+ * @method Group setName(string $name)
+ * @method Group setDateCreated(string $dateCreated)
  * @method int    getGroupId()
  * @method int    getIdUser()
  * @method string getName()
@@ -23,7 +23,7 @@ class Group extends ActiveRecord
     /**
      * @param string|null                   $tableName
      * @param \Zend\Db\Adapter\Adapter|null $adapter
-     * @param string|null                   $shema
+     * @param string|null                   $schema
      */
     public function __construct($tableName = 'group', $adapter = null, $schema = null)
     {

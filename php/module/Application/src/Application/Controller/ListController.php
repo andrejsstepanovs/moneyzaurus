@@ -7,11 +7,9 @@ use Application\Form\Form\Transaction as TransactionForm;
 use \Zend\Db\Sql\Expression;
 use \Zend\Db\Sql\Select;
 use \Zend\Db\Sql\Where;
+use \Zend\Json\Json;
 use \Zend\Db\TableGateway\Exception\RuntimeException;
 
-/**
- * @method \Application\Helper\Lister\Helper getAbstractHelper()
- */
 class ListController extends AbstractActionController
 {
     /** @var TransactionForm */
@@ -86,7 +84,7 @@ class ListController extends AbstractActionController
         );
 
         $response = $this->getResponse();
-        $response->setContent(\Zend\Json\Json::encode($data));
+        $response->setContent(Json::encode($data));
 
         return $response;
     }
@@ -263,7 +261,7 @@ class ListController extends AbstractActionController
         );
 
         $response = $this->getResponse();
-        $response->setContent(\Zend\Json\Json::encode($data));
+        $response->setContent(Json::encode($data));
 
         return $response;
     }
@@ -286,7 +284,7 @@ class ListController extends AbstractActionController
         );
 
         $response = $this->getResponse();
-        $response->setContent(\Zend\Json\Json::encode($data));
+        $response->setContent(Json::encode($data));
 
         return $response;
     }

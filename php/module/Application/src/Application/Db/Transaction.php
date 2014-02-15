@@ -9,14 +9,14 @@ use \Db\ActiveRecord;
  *
  * @package Application\Db
  *
- * @method \Application\Db\Transaction setTransactionId(int $transactionId)
- * @method \Application\Db\Transaction setIdUser(int $idUser)
- * @method \Application\Db\Transaction setIdGroup(int $idGroup)
- * @method \Application\Db\Transaction setIdItem(int $idItem)
- * @method \Application\Db\Transaction setPrice(float $idPrice)
- * @method \Application\Db\Transaction setIdCurrency(string $idCurrency)
- * @method \Application\Db\Transaction setDate(string $data)
- * @method \Application\Db\Transaction setDateCreated(string $dataCreated)
+ * @method Transaction setTransactionId(int $transactionId)
+ * @method Transaction setIdUser(int $idUser)
+ * @method Transaction setIdGroup(int $idGroup)
+ * @method Transaction setIdItem(int $idItem)
+ * @method Transaction setPrice(float $idPrice)
+ * @method Transaction setIdCurrency(string $idCurrency)
+ * @method Transaction setDate(string $data)
+ * @method Transaction setDateCreated(string $dataCreated)
  * @method int    getTransactionId()
  * @method int    getIdUser()
  * @method int    getIdGroup()
@@ -31,7 +31,7 @@ class Transaction extends ActiveRecord
     /**
      * @param string|null                   $tableName
      * @param \Zend\Db\Adapter\Adapter|null $adapter
-     * @param string|null                   $shema
+     * @param string|null                   $schema
      */
     public function __construct($tableName = 'transaction', $adapter = null, $schema = null)
     {

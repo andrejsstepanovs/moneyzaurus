@@ -5,6 +5,7 @@ use Application\Form\Form\Register as RegisterForm;
 use Application\Form\Validator\Register as RegisterValidator;
 use Zend\Db\TableGateway\Exception\RuntimeException;
 use \Zend\Db\Sql\Expression as Expression;
+use \Db\Exception\ModelNotFoundException;
 
 /**
  * Class RegisterController
@@ -82,6 +83,7 @@ class RegisterController extends AbstractActionController
 
     /**
      * @return null|\Zend\Http\PhpEnvironment\Response
+     * @throws RuntimeException
      */
     protected function register()
     {
@@ -97,7 +99,7 @@ class RegisterController extends AbstractActionController
                 throw new RuntimeException('User already exists.');
             }
 
-        } catch (\Db\Exception\ModelNotFoundException $exc) {
+        } catch (ModelNotFoundException $exc) {
             $passwordExpression = new Expression(
                 AbstractActionController::CREDENTIAL_TREATMENT,
                 $request->getPost('password')

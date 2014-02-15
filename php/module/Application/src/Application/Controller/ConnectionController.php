@@ -7,6 +7,8 @@ use Application\Form\Validator\Connection as ConnectionValidator;
 use Application\Helper\Mail\Helper as MailHelper;
 use Application\Exception\ConnectionExistsException;
 use Application\Exception\UserNotFoundException;
+use \Application\Db\User as DbUser;
+use \Application\Db\Connection as DbConnection;
 
 /**
  * Class ConnectionController
@@ -98,10 +100,10 @@ class ConnectionController extends AbstractActionController
     {
         $id = $this->getParam('id');
 
-        /** @var /Application\Db\Connection $connection */
+        /** @var DbConnection $connection */
         $connection = $this->getAbstractHelper()->getTable('connection');
         $connection->setConnectionId($id)->setIdUserParent($this->getUserId())->load();
-        $connection->setState(\Application\Db\Connection::STATE_ACCEPTED)->save();
+        $connection->setState(DbConnection::STATE_ACCEPTED)->save();
 
         return $this->redirect()->toRoute('user'); //#connection
     }
@@ -110,10 +112,10 @@ class ConnectionController extends AbstractActionController
     {
         $id = $this->getParam('id');
 
-        /** @var /Application\Db\Connection $connection */
+        /** @var DbConnection $connection */
         $connection = $this->getAbstractHelper()->getTable('connection');
         $connection->setConnectionId($id)->setIdUser($this->getUserId())->load();
-        $connection->setState(\Application\Db\Connection::STATE_REJECTED)->save();
+        $connection->setState(DbConnection::STATE_REJECTED)->save();
 
         return $this->redirect()->toRoute('user'); //#connection
     }
@@ -121,8 +123,10 @@ class ConnectionController extends AbstractActionController
     /**
      * @param \Application\Db\User $user
      * @param string               $message
+     *
+     * @return bool
      */
-    public function sendEmail(\Application\Db\User $user, $message)
+    public function sendEmail(DbUser $user, $message)
     {
         /** @var \Zend\Mail\Transport\Sendmail $transport */
         /** @var \Zend\I18n\Translator\Translator $translator */
@@ -159,11 +163,12 @@ class ConnectionController extends AbstractActionController
     }
 
     /**
-     * @param \Application\Db\User $user
+     * @param DbUser $user
      *
-     * @return \Application\Db\Connection
+     * @throws ConnectionExistsException
+     * @return DbConnection
      */
-    protected function saveConnection(\Application\Db\User $user)
+    protected function saveConnection(DbUser $user)
     {
         /** @var \Application\Db\Connection $connection */
         $connection = $this->getAbstractHelper()->getTable('connection');
@@ -185,6 +190,7 @@ class ConnectionController extends AbstractActionController
     /**
      * @param string $email
      *
+     * @throws UserNotFoundException
      * @return \Application\Db\User
      */
     protected function findUser($email)

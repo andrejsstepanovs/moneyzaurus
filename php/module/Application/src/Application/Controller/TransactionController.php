@@ -8,6 +8,11 @@ use \Application\Helper\Transaction\Helper as TransactionHelper;
 use \Zend\Json\Json;
 use \Zend\Http\PhpEnvironment\Request;
 
+/**
+ * Class TransactionController
+ *
+ * @package Application\Controller
+ */
 class TransactionController extends AbstractActionController
 {
     /** @var array */

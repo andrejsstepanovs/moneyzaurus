@@ -9,8 +9,8 @@ use Application\Helper\AbstractHelper;
  *
  * @package Application\Helper\Transaction
  *
- * @method \Application\Helper\Transaction\Predict\Price setTransactions(array $transactions)
- * @method \Application\Helper\Transaction\Predict\Price setCurrentDay(string $currentDay)
+ * @method Price setTransactions(array $transactions)
+ * @method Price setCurrentDay(string $currentDay)
  */
 class Price extends AbstractHelper
 {

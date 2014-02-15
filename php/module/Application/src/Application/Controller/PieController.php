@@ -6,9 +6,12 @@ use Application\Helper\Pie\Highchart as PieHighchartHelper;
 use Application\Helper\Month\Helper as MonthHelper;
 use Zend\Db\Sql\Select as Select;
 use Zend\Db\Sql\Where;
+use \Zend\Json\Json;
 
 /**
- * @method \Application\Helper\Pie\Helper getAbstractHelper()
+ * Class PieController
+ *
+ * @package Application\Controller
  */
 class PieController extends AbstractActionController
 {
@@ -20,6 +23,9 @@ class PieController extends AbstractActionController
 
     /** @var array */
     protected $pieChartElements;
+
+    /** @var PieHelper */
+    protected $pieHelper;
 
     /**
      * @return MonthHelper
@@ -35,15 +41,17 @@ class PieController extends AbstractActionController
     }
 
     /**
-     * @return void
+     * @return PieHelper
      */
-    protected function init()
+    protected function getPieHelper()
     {
-        $pieHelper = new PieHelper();
-        $pieHelper->setPieHighchartHelper(new PieHighchartHelper());
+        if (null === $this->pieHelper) {
+            $this->pieHelper = new PieHelper();
+            $this->pieHelper->setPieHighchartHelper(new PieHighchartHelper());
+            $this->pieHelper->setTransactionsData($this->getTransactionsData());
+        }
 
-        $this->setHelper($pieHelper);
-        $pieHelper->setTransactionsData($this->getTransactionsData());
+        return $this->pieHelper;
     }
 
     /**
@@ -96,7 +104,7 @@ class PieController extends AbstractActionController
             'level'         => $level
         );
 
-        $script = $this->getAbstractHelper()->renderChart(
+        $script = $this->getPieHelper()->renderChart(
             $this->getPieChartTitle(),
             $targetElement,
             $parameters
@@ -108,7 +116,7 @@ class PieController extends AbstractActionController
         );
 
         $response = $this->getResponse();
-        $response->setContent(\Zend\Json\Json::encode($data));
+        $response->setContent(Json::encode($data));
 
         return $response;
     }
@@ -232,13 +240,13 @@ class PieController extends AbstractActionController
         // set type = null to get all transaction data. Use this data to get other group ids.
         $transactionData = $this->setParam('type', null)->getTransactionsData();
 
-        $this->getAbstractHelper()->setTransactionsData($transactionData);
+        $this->getPieHelper()->setTransactionsData($transactionData);
 
-        $otherGroupIds = $this->getAbstractHelper()->getSortedGroups(PieHelper::GET_LIMIT, 'id', $level);
+        $otherGroupIds = $this->getPieHelper()->getSortedGroups(PieHelper::GET_LIMIT, 'id', $level);
 
         $this->setParam('type', 'group');
 
-        $this->getAbstractHelper()->reset();
+        $this->getPieHelper()->reset();
 
         return $otherGroupIds;
     }
