@@ -186,7 +186,7 @@ class ConnectionController extends AbstractActionController
             if ($connection->getId()) {
                 throw new ConnectionExistsException('Connection already exist.');
             }
-        } catch (ModelNotFoundException $exc) {
+        } catch (DbModelNotFoundException $exc) {
             $connection->save();
         }
 
