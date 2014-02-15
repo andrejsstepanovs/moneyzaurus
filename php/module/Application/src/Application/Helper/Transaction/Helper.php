@@ -2,18 +2,30 @@
 
 namespace Application\Helper\Transaction;
 
-use Application\Helper\AbstractHelper;
+use \Application\Helper\AbstractHelper;
 use \Db\Exception\ModelNotFoundException;
+use \Zend\Db\Sql\Select;
+use \Zend\Db\Sql\Expression;
+use \Zend\Db\Sql\Where;
+use \Zend\Http\PhpEnvironment\Request;
+use \Application\Helper\Transaction\Helper as TransactionHelper;
+use \Zend\Mvc\Controller\Plugin\Params as PluginParams;
+use \Application\Db\Transaction as DbTransaction;
 
 /**
- * @method \Zend\Http\PhpEnvironment\Request getRequest()
- * @method \Application\Helper\Transaction\Helper setParams(\Zend\Mvc\Controller\Plugin\Params $params)
- * @method \Application\Helper\Transaction\Helper setAbstractHelper(\Application\Helper\AbstractHelper $abstractHelper)
- * @method \Zend\Mvc\Controller\Plugin\Params getParams()
- * @method \Application\Helper\AbstractHelper getAbstractHelper()
+ * @method Request getRequest()
+ * @method TransactionHelper setParams(PluginParams $params)
+ * @method TransactionHelper setAbstractHelper(AbstractHelper $abstractHelper)
+ * @method TransactionHelper setUserId(int $userId)
+ * @method PluginParams getParams()
+ * @method AbstractHelper getAbstractHelper()
+ * @method AbstractHelper getUserId()
  */
 class Helper extends AbstractHelper
 {
+    /** @var array */
+    private $whereFilter;
+
     /**
      * @return string
      */
@@ -60,19 +72,19 @@ class Helper extends AbstractHelper
      */
     public function getOrder()
     {
-        return \Zend\Db\Sql\Select::ORDER_DESCENDING;
+        return Select::ORDER_DESCENDING;
     }
 
     /**
      * @param  int    $userId
      * @param  int    $transactionId
-     * @param  string $item
-     * @param  string $group
+     * @param  string $itemName
+     * @param  string $groupName
      * @param  float  $price
-     * @param  string $currency
+     * @param  string $currencyId
      * @param  string $date
      *
-     * @return \Application\Db\Transaction transaction
+     * @return DbTransaction transaction
      */
     public function saveTransaction(
         $userId,
@@ -124,4 +136,110 @@ class Helper extends AbstractHelper
             ->setIdCurrency($currency->getId())
             ->save();
     }
+
+
+    /**
+     * @return \Zend\Db\ResultSet\HydratingResultSet
+     */
+    public function getPriceTransactions()
+    {
+        $transactionTable = array('t' => 'transaction');
+
+        $select = new Select();
+        $select->from($transactionTable)
+               ->columns(array('price', 'day_of_the_week' => new Expression('DAYOFWEEK(t.date)')))
+               ->join(array('i' => 'item'), 't.id_item = i.item_id', array())
+               ->join(array('g' => 'group'), 't.id_group = g.group_id', array())
+               ->order($this->getOrderBy() . ' ' . $this->getOrder())
+            //->limit(100)
+        ;
+
+        $where = $this->getWhereFilter();
+        if (count($where)) {
+            $select->where($where);
+        }
+
+        //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
+
+        $transactionsTable = $this->getTable('transactions');
+        $table = $transactionsTable->getTable();
+        $table->setTable($transactionTable);
+
+        /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
+        $transactionsResults = $table->fetch($select)->buffer();
+
+        return $transactionsResults;
+    }
+
+    /**
+     * @return \Zend\Db\ResultSet\HydratingResultSet
+     */
+    public function getGroupTransactions()
+    {
+        $transactionTable = array('t' => 'transaction');
+
+        $select = new Select();
+        $select->from($transactionTable)
+               ->columns(array('times_used' => new Expression("COUNT(*)")))
+               ->join(array('i' => 'item'), 't.id_item = i.item_id', array())
+               ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
+               ->group('g.name')
+               ->order(new Expression("COUNT(*) DESC"))
+               ->limit(5);
+
+        $where = $this->getWhereFilter();
+        if (count($where)) {
+            $select->where($where);
+        }
+
+        //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
+
+        $transactions = $this->getAbstractHelper()->getTable('transactions');
+        $table = $transactions->getTable();
+        $table->setTable($transactionTable);
+
+        /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
+        $transactionsResults = $table->fetch($select)->buffer();
+
+        return $transactionsResults;
+    }
+
+    /**
+     * @return array
+     */
+    private function getWhereFilter()
+    {
+        if (null === $this->whereFilter) {
+            $item   = $this->getItem();
+            $group  = $this->getGroup();
+            $idUser = $this->getUserId();
+
+            $where = array();
+
+            if (!empty($item)) {
+                $where[] = $this->getWhere()->equalTo('i.name', $item);
+            }
+
+            if (!empty($group)) {
+                $where[] = $this->getWhere()->equalTo('g.name', $group);
+            }
+
+            //$where[] = $this->getWhere()->greaterThan('t.date', date('Y-m-d H:i:s', strtotime('-1 year')));
+
+            $where[] = $this->getWhere()->equalTo('t.id_user', $idUser);
+
+            $this->whereFilter = $where;
+        }
+
+        return $this->whereFilter;
+    }
+
+    /**
+     * @return \Zend\Db\Sql\Where
+     */
+    private function getWhere()
+    {
+        return new Where();
+    }
+
 }

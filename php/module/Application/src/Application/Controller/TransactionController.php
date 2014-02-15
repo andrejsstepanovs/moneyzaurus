@@ -1,18 +1,15 @@
 <?php
 namespace Application\Controller;
 
-use Application\Form\Validator\Transaction as TransactionValidator;
-use Application\Form\Form\Transaction as TransactionForm;
-use Application\Helper\Transaction\Predict\Price as PredictPrice;
-use Application\Exception;
-use Application\Helper\Transaction\Helper as TransactionHelper;
-use Zend\Db\Sql\Select;
-use Zend\Db\Sql\Where;
-use Zend\Db\Sql\Expression;
-use \Db\Exception\ModelNotFoundException;
+use \Application\Form\Validator\Transaction as TransactionValidator;
+use \Application\Form\Form\Transaction as TransactionForm;
+use \Application\Helper\Transaction\Predict\Price as PredictPrice;
+use \Application\Helper\Transaction\Helper as TransactionHelper;
+use \Zend\Json\Json;
+use \Zend\Http\PhpEnvironment\Request;
 
 /**
- * @method \Application\Helper\Transaction\Helper getHelper()
+ * @method TransactionHelper getHelper()
  */
 class TransactionController extends AbstractActionController
 {
@@ -34,9 +31,6 @@ class TransactionController extends AbstractActionController
     /** @var array */
     protected $dataList;
 
-    /** @var array */
-    protected $whereFilter;
-
     /** @var TransactionHelper */
     protected $transactionHelper;
 
@@ -49,6 +43,7 @@ class TransactionController extends AbstractActionController
             $this->transactionHelper = new TransactionHelper();
             $this->transactionHelper->setParams($this->params());
             $this->transactionHelper->setAbstractHelper($this->getHelper());
+            $this->transactionHelper->setUserId($this->getUserId());
         }
 
         return $this->transactionHelper;
@@ -67,11 +62,7 @@ class TransactionController extends AbstractActionController
 
             $formElements = $this->form->getElements();
 
-            if (array_key_exists('currency', $formElements)) {
-                $currencyElement = $formElements['currency'];
-                $currencyElement->setValueOptions($this->getCurrencyValueOptions());
-            }
-
+            /** @var \Zend\Form\Element $dateElement */
             $dateElement = $formElements['date'];
             $dateElement->setValue(date('Y-m-d'));
         }
@@ -82,11 +73,11 @@ class TransactionController extends AbstractActionController
     public function unsetFormData()
     {
         $elements = $this->getForm()->getElements();
+        /** @var \Zend\Form\Element $element */
         foreach ($elements as $name => $element) {
             if (in_array($name, array('currency', 'date', 'submit'))) {
                 continue;
             }
-
             $element->setValue('');
         }
     }
@@ -94,23 +85,23 @@ class TransactionController extends AbstractActionController
     /**
      * @return array
      */
-    public function getDatalist()
+    public function getDataList()
     {
         if (null === $this->dataList) {
             $this->dataList = array();
-            $datalistElements = array(
+            $dataListElements = array(
                 'item'  => 'name',
                 'group' => 'name'
             );
             $elements = $this->getForm()->getElements();
             foreach (array_keys($elements) as $name) {
-                if (!array_key_exists($name, $datalistElements)) {
+                if (!array_key_exists($name, $dataListElements)) {
                     continue;
                 }
-                $column = $datalistElements[$name];
+                $column = $dataListElements[$name];
 
-                /** @var $table \Db\AbstractTable */
-                /** @var $results \Zend\Db\ResultSet\HydratingResultSet */
+                /** @var \Db\AbstractTable $table */
+                /** @var \Zend\Db\ResultSet\HydratingResultSet $results */
                 $table = $this->getTable($name)->getTable();
                 $results = $table->fetchUniqeColum(
                     $column,
@@ -118,6 +109,7 @@ class TransactionController extends AbstractActionController
                 );
 
                 $dataValues = array();
+                /** @var \Db\AbstractModel $model */
                 foreach ($results as $model) {
                     $dataValues[] = $model->getData($column);
                 }
@@ -150,49 +142,17 @@ class TransactionController extends AbstractActionController
         $form = $this->getForm();
 
         $request = $this->getRequest();
-
         if ($request->isPost()) {
-            $form->setInputFilter($this->getValidator()->getInputFilter());
-            $form->setData($request->getPost());
-
-            $transactionId = $request->getPost()->get('transaction_id');
-
-            if ($form->isValid()) {
-
-                $data = $form->getData();
-                $data['currency'] = $this->getDefaultUserCurrency();
-                try {
-                    $transaction = $this->getTransactionHelper()->saveTransaction(
-                        $this->getUserId(),
-                        $transactionId,
-                        $data['item'],
-                        $data['group'],
-                        $data['price'],
-                        $data['currency'],
-                        $data['date']
-                    );
-
-                    if ($transaction->getId()) {
-                        $this->showMessage('Saved');
-                        $this->unsetFormData();
-                    } else {
-                        $this->showMessage('Failed to save');
-                    }
-
-                } catch (ModelNotFoundException $exc) {
-                    $this->showMessage('Data missing');
-                } catch (\Exception $exc) {
-                    $this->showMessage($exc->getMessage());
-                }
-
-            } else {
-                $this->flashmessenger()->addMessage('Wrong data');
+            try {
+                $this->saveTransaction($form, $request);
+            } catch (\Exception $exc) {
+                $this->showMessage($exc->getMessage());
             }
         }
 
         return array(
             'form'     => $form,
-            'datalist' => $this->getDatalist(),
+            'datalist' => $this->getDataList(),
         );
     }
 
@@ -207,7 +167,7 @@ class TransactionController extends AbstractActionController
                 $group = array();
                 $price = $this
                     ->getPredictPrice()
-                    ->setTransactions($this->getPriceTransactions())
+                    ->setTransactions($this->getTransactionHelper()->getPriceTransactions())
                     ->getPredictions();
                 break;
             default:
@@ -227,9 +187,48 @@ class TransactionController extends AbstractActionController
         );
 
         $response = $this->getResponse();
-        $response->setContent(\Zend\Json\Json::encode($data));
+        $response->setContent(Json::encode($data));
 
         return $response;
+    }
+
+    /**
+     * @param TransactionForm                   $form
+     * @param \Zend\Http\PhpEnvironment\Request $request
+     *
+     * @throws \RuntimeException
+     */
+    protected function saveTransaction(
+        TransactionForm $form,
+        Request $request
+    ) {
+        $form->setInputFilter($this->getValidator()->getInputFilter());
+        $form->setData($request->getPost());
+
+        if (!$form->isValid()) {
+            throw new \RuntimeException('Wrong data');
+        }
+
+        $data = $form->getData();
+        $data['currency'] = $this->getDefaultUserCurrency();
+
+        $transactionId = $request->getPost()->get('transaction_id');
+        $transaction = $this->getTransactionHelper()->saveTransaction(
+            $this->getUserId(),
+            $transactionId,
+            $data['item'],
+            $data['group'],
+            $data['price'],
+            $data['currency'],
+            $data['date']
+        );
+
+        if ($transaction->getId()) {
+            $this->showMessage('Saved');
+            $this->unsetFormData();
+        } else {
+            $this->showMessage('Failed to save');
+        }
     }
 
     /**
@@ -238,117 +237,13 @@ class TransactionController extends AbstractActionController
     protected function predictGroups()
     {
         $groups = array();
-        $transactions = $this->getGroupTransactions();
-        /** \Db\ActiveRecord */
+        $transactions = $this->getTransactionHelper()->getGroupTransactions();
+        /** @var \Db\ActiveRecord $transaction */
         foreach ($transactions as $transaction) {
             $groups[] = $transaction->getData('group_name');
         }
 
         return $groups;
-    }
-
-    /**
-     * @return \Zend\Db\ResultSet\HydratingResultSet
-     */
-    protected function getGroupTransactions()
-    {
-        $transactionTable = array('t' => 'transaction');
-
-        $select = new Select();
-        $select->from($transactionTable)
-               ->columns(array('times_used' => new Expression("COUNT(*)")))
-               ->join(array('i' => 'item'), 't.id_item = i.item_id', array())
-               ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
-               ->group('g.name')
-               ->order(new Expression("COUNT(*) DESC"))
-               ->limit(5);
-
-        $where = $this->getWhereFilter();
-        if (count($where)) {
-            $select->where($where);
-        }
-
-        //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
-
-        $transactions = $this->getTable('transactions');
-        $table = $transactions->getTable();
-        $table->setTable($transactionTable);
-
-        /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
-        $transactionsResults = $table->fetch($select)->buffer();
-
-        return $transactionsResults;
-    }
-
-    /**
-     * @return \Zend\Db\ResultSet\HydratingResultSet
-     */
-    protected function getPriceTransactions()
-    {
-        $transactionTable = array('t' => 'transaction');
-
-        $select = new Select();
-        $select->from($transactionTable)
-               ->columns(array('price', 'day_of_the_week' => new Expression('DAYOFWEEK(t.date)')))
-               ->join(array('i' => 'item'), 't.id_item = i.item_id', array())
-               ->join(array('g' => 'group'), 't.id_group = g.group_id', array())
-               ->order($this->getTransactionHelper()->getOrderBy() . ' ' . $this->getTransactionHelper()->getOrder())
-               //->limit(100)
-               ;
-
-        $where = $this->getWhereFilter();
-        if (count($where)) {
-            $select->where($where);
-        }
-
-        //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
-
-        $transactionsTable = $this->getTable('transactions');
-        $table = $transactionsTable->getTable();
-        $table->setTable($transactionTable);
-
-        /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
-        $transactionsResults = $table->fetch($select)->buffer();
-
-        return $transactionsResults;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getWhereFilter()
-    {
-        if (null === $this->whereFilter) {
-            $item   = $this->getTransactionHelper()->getItem();
-            $group  = $this->getTransactionHelper()->getGroup();
-            $idUser = $this->getUserId();
-
-            $where = array();
-
-            if (!empty($item)) {
-                $where[] = $this->getWhere()->equalTo('i.name', $item);
-            }
-
-            if (!empty($group)) {
-                $where[] = $this->getWhere()->equalTo('g.name', $group);
-            }
-
-            //$where[] = $this->getWhere()->greaterThan('t.date', date('Y-m-d H:i:s', strtotime('-1 year')));
-
-            $where[] = $this->getWhere()->equalTo('t.id_user', $idUser);
-
-            $this->whereFilter = $where;
-        }
-
-        return $this->whereFilter;
-    }
-
-    /**
-     * @return \Zend\Db\Sql\Where
-     */
-    private function getWhere()
-    {
-        return new Where();
     }
 
     /**

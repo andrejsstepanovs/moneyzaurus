@@ -4,14 +4,17 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController as ZendAbstractActionController;
 use Application\Helper\AbstractHelper;
+use Application\Exception\UserNotFoundException;
 use Zend\Mvc\Exception;
 use Zend\Mvc\MvcEvent;
 use Zend\Escaper\Escaper;
+use Zend\Http\PhpEnvironment\Request;
 
 /**
  * Class AbstractActionController
  *
  * @package Application\Controller
+ * @method  Request getRequest()
  */
 class AbstractActionController extends ZendAbstractActionController
 {
@@ -48,7 +51,7 @@ class AbstractActionController extends ZendAbstractActionController
      * @return mixed
      * @throws Exception\DomainException
      */
-    public function onDispatch(\Zend\Mvc\MvcEvent $mvcEvent)
+    public function onDispatch(MvcEvent $mvcEvent)
     {
         $this->init();
 
@@ -112,7 +115,7 @@ class AbstractActionController extends ZendAbstractActionController
     }
 
     /**
-     * @return AbstractHelper|int
+     * @return AbstractHelper
      */
     protected function getHelper()
     {
@@ -125,6 +128,8 @@ class AbstractActionController extends ZendAbstractActionController
 
     /**
      * @return integer
+     *
+     * @throws UserNotFoundException
      */
     protected function getUserId()
     {
@@ -136,7 +141,7 @@ class AbstractActionController extends ZendAbstractActionController
             }
 
             if (empty($this->userId)) {
-                throw new Exception\UserNotFoundException(
+                throw new UserNotFoundException(
                     'User not found'
                 );
             }
@@ -154,6 +159,7 @@ class AbstractActionController extends ZendAbstractActionController
         $currencies = $currency->getTable()->fetchAll();
 
         $valueOptions = array();
+        /** @var \Application\Db\Currency $currency */
         foreach ($currencies as $currency) {
             $valueOptions[$currency->getId()] = $currency->getName();
         }
@@ -214,15 +220,14 @@ class AbstractActionController extends ZendAbstractActionController
      *
      * @return \Zend\View\Helper\InlineScript
      */
-    protected function getViewHelperPlugin($plugin)
+    protected function getViewHelperPlugin($pluginName)
     {
-        $plugin = strtolower($plugin);
-        if (!array_key_exists($plugin, $this->viewHelperPlugin)) {
-            $this->viewHelperPlugin[$plugin] = $this->getViewHelper()
-                                                    ->get($plugin);
+        $pluginName = strtolower($pluginName);
+        if (!array_key_exists($pluginName, $this->viewHelperPlugin)) {
+            $this->viewHelperPlugin[$pluginName] = $this->getViewHelper()->get($pluginName);
         }
 
-        return $this->viewHelperPlugin[$plugin];
+        return $this->viewHelperPlugin[$pluginName];
     }
 
     /**
