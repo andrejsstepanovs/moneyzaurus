@@ -9,7 +9,9 @@ use Zend\ServiceManager\ServiceManager;
 use Zend\Mail\Transport\Smtp as MailTransport;
 use Zend\Mail\Transport\SmtpOptions;
 use Application\Controller\AbstractActionController;
-use Zend\Authentication\Storage\Session;
+use Zend\Authentication\Storage\Session as AuthenticationSessionStorage;
+use Zend\Session\SessionManager;
+use Zend\Session\Config\StandardConfig as SessionConfig;
 
 /**
  * Class Module
@@ -128,7 +130,7 @@ class Module
                     /** @var \Zend\Authentication\AuthenticationService $authService */
                     $authService = $serviceManager->get('Zend\Authentication\AuthenticationService');
                     $authService->setAdapter($dbTableAuthAdapter);
-                    $authService->setStorage($serviceManager->get('Session'));
+                    $authService->setStorage($serviceManager->get('AuthStorage'));
 
                     return $authService;
                 },
@@ -142,9 +144,21 @@ class Module
 
                     return $transport;
                 },
-                'Session' => function (ServiceManager $serviceManager) {
-                    $session = new Session();
+                'AuthStorage' => function (ServiceManager $serviceManager) {
+                    $config = new SessionConfig();
+                    $config->setName('MNZ');
+                    $config->setCookieLifetime(100);
+                    $session = new AuthenticationSessionStorage(
+                        null,
+                        null,
+                        $serviceManager->get('SessionManager')
+                    );
+                    return $session;
+                },
+                'SessionManager' => function (ServiceManager $serviceManager) {
+                    $config = new SessionConfig();
 
+                    $session = new SessionManager($config);
                     return $session;
                 },
             )
