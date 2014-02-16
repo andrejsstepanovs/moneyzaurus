@@ -85,7 +85,7 @@ class Helper extends AbstractHelper
         $html = array();
         $html[] = 'var ' . $jsChartClass . ' = new PieChartData();';
         $html[] = $jsChartClass;
-        $html[] = '.setData(' . $this->getChartData($jsChartClass)->renderOptions() . ')';
+        $html[] = '.setData(' . $this->getChartData()->renderOptions() . ')';
         $html[] = '.setGroups(' . json_encode($groupName) . ')';
         $html[] = '.setGroupIds(' . json_encode($groupIds) . ');';
 
