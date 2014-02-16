@@ -68,7 +68,7 @@ class UserController extends AbstractActionController
 
         /** @var \Application\Db\User $user */
         $user = $this->getAbstractHelper()->getTable('user');
-        $user->load($this->getUserId());
+        $user->setUserId($this->getUserId())->load();
 
         /** @var \Zend\Form\Element\Select[] $formElements */
         $formElements = $this->userForm->getElements();
@@ -121,7 +121,7 @@ class UserController extends AbstractActionController
 
                 /** @var \Application\Db\User $user */
                 $user = $this->getAbstractHelper()->getTable('user');
-                $user->load($this->getUserId());
+                $user->setUserId($this->getUserId())->load();
 
                 $passwordExpression = new SqlExpression(
                     AbstractActionController::CREDENTIAL_TREATMENT,
