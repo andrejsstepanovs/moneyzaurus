@@ -4,6 +4,7 @@ namespace Application\Helper\Transaction;
 
 use Application\Helper\AbstractHelper;
 use Db\Exception\ModelNotFoundException;
+use Zend\Db\Sql;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Where;
@@ -205,6 +206,36 @@ class Helper extends AbstractHelper
         $transactionsResults = $table->fetch($select)->buffer();
 
         return $transactionsResults;
+    }
+
+    /**
+     * @param string $tableName
+     * @param string $column
+     *
+     * @return array
+     */
+    public function getDistinctTransactionValues($tableName, $column)
+    {
+        /** @var \Db\AbstractTable $table */
+        /** @var \Zend\Db\ResultSet\HydratingResultSet $results */
+        $table = $this->getAbstractHelper()->getTable($tableName)->getTable();
+        $results = $table->fetchUniqeColum(
+            $column,
+            array(
+                $this->getWhere()->equalTo(
+                    'id_user',
+                    $this->getUserId()
+                )
+            )
+        );
+
+        $dataValues = array();
+        /** @var \Db\AbstractModel $model */
+        foreach ($results as $model) {
+            $dataValues[] = $model->getData($column);
+        }
+
+        return $dataValues;
     }
 
     /**

@@ -101,20 +101,9 @@ class TransactionController extends AbstractActionController
                     continue;
                 }
                 $column = $dataListElements[$name];
-
-                /** @var \Db\AbstractTable $table */
-                /** @var \Zend\Db\ResultSet\HydratingResultSet $results */
-                $table = $this->getAbstractHelper()->getTable($name)->getTable();
-                $results = $table->fetchUniqeColum(
-                    $column,
-                    array('id_user' => $this->getUserId())
-                );
-
-                $dataValues = array();
-                /** @var \Db\AbstractModel $model */
-                foreach ($results as $model) {
-                    $dataValues[] = $model->getData($column);
-                }
+                $dataValues = $this
+                    ->getTransactionHelper()
+                    ->getDistinctTransactionValues($name, $column);
 
                 $this->dataList[$name] = $dataValues;
             }
