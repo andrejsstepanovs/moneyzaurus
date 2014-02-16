@@ -3,6 +3,7 @@ namespace Application\Controller;
 
 use Application\Form\Form\Register as RegisterForm;
 use Application\Form\Validator\Register as RegisterValidator;
+use Application\Module;
 use Zend\Db\TableGateway\Exception\RuntimeException;
 use Zend\Db\Sql\Expression as Expression;
 use Db\Exception\ModelNotFoundException;
@@ -101,7 +102,7 @@ class RegisterController extends AbstractActionController
 
         } catch (ModelNotFoundException $exc) {
             $passwordExpression = new Expression(
-                AbstractActionController::CREDENTIAL_TREATMENT,
+                Module::CREDENTIAL_TREATMENT,
                 $request->getPost('password')
             );
 

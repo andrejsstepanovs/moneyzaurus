@@ -9,6 +9,7 @@ use Zend\ServiceManager\ServiceManager;
 use Zend\Mail\Transport\Smtp as MailTransport;
 use Zend\Mail\Transport\SmtpOptions;
 use Application\Controller\AbstractActionController;
+use Zend\Authentication\Storage\Session;
 
 /**
  * Class Module
@@ -17,6 +18,8 @@ use Application\Controller\AbstractActionController;
  */
 class Module
 {
+    const CREDENTIAL_TREATMENT = 'MD5(?)';
+
     /** @var array */
     protected $config;
 
@@ -113,7 +116,7 @@ class Module
                     $tableName           = 'user';
                     $identityColumn      = 'email';
                     $credentialColumn    = 'password';
-                    $credentialTreatment = AbstractActionController::CREDENTIAL_TREATMENT;
+                    $credentialTreatment = Module::CREDENTIAL_TREATMENT;
                     $dbTableAuthAdapter  = new CredentialTreatmentAdapter(
                         $dbAdapter,
                         $tableName,
@@ -125,6 +128,8 @@ class Module
                     /** @var \Zend\Authentication\AuthenticationService $authService */
                     $authService = $serviceManager->get('Zend\Authentication\AuthenticationService');
                     $authService->setAdapter($dbTableAuthAdapter);
+                    $authService->setStorage($serviceManager->get('Session'));
+
                     return $authService;
                 },
                 'Application\Acl\Acl' => function ($serviceManager) {
@@ -136,6 +141,11 @@ class Module
                     $transport->setOptions(new SmtpOptions($config['mail']['transport']['options']));
 
                     return $transport;
+                },
+                'Session' => function (ServiceManager $serviceManager) {
+                    $session = new Session();
+
+                    return $session;
                 },
             )
         );

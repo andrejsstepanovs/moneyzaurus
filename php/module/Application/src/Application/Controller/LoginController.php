@@ -3,7 +3,6 @@ namespace Application\Controller;
 
 use Application\Form\Form\Login as LoginForm;
 use Application\Form\Validator\Login as LoginValidator;
-use Zend\Authentication\Storage\Session as SessionStorage;
 use Db\Exception\ModelNotFoundException;
 
 /**
@@ -16,26 +15,11 @@ class LoginController extends AbstractActionController
     /** @var \Application\Form\Form\Login */
     protected $loginForm;
 
-    /** @var \Zend\Authentication\Storage\Session */
-    protected $storage;
-
     /** @var \Application\Form\Validator\Login */
     protected $loginValidator;
 
     /** @var \Application\Form\Validator\User */
     protected $userValidator;
-
-    /**
-     * @return \Zend\Authentication\Storage\Session
-     */
-    public function getSessionStorage()
-    {
-        if (null === $this->storage) {
-            $this->storage = new SessionStorage();
-        }
-
-        return $this->storage;
-    }
 
     /**
      * @return \Application\Form\Form\Login
@@ -138,7 +122,6 @@ class LoginController extends AbstractActionController
             return $this->redirect()->toRoute('moneyzaurus');
         }
 
-        $authService->setStorage($this->getSessionStorage());
         $authService->getStorage()->write($userData);
 
         return $this->redirect()->toRoute('moneyzaurus');

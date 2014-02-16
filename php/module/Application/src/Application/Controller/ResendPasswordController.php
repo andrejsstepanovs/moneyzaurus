@@ -9,6 +9,7 @@ use Application\Form\Validator\ResendPassword as ResendPasswordValicator;
 use Application\Helper\ResendPassword\Helper as ResendPasswordHelper;
 use Zend\Db\Sql\Expression as Expression;
 use Db\Exception\ModelNotFoundException;
+use Application\Module;
 
 /**
  * Class ResendPasswordController
@@ -198,7 +199,7 @@ class ResendPasswordController extends AbstractActionController
             $transport->send($message);
 
             $passwordExpression = new Expression(
-                AbstractActionController::CREDENTIAL_TREATMENT,
+                Module::CREDENTIAL_TREATMENT,
                 $user->getPassword()
             );
             $user->setPassword($passwordExpression)->save();
