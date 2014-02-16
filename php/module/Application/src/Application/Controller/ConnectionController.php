@@ -7,8 +7,8 @@ use Application\Form\Validator\Connection as ConnectionValidator;
 use Application\Helper\Mail\Helper as MailHelper;
 use Application\Exception\ConnectionExistsException;
 use Application\Exception\UserNotFoundException;
-use \Application\Db\User as DbUser;
-use \Application\Db\Connection as DbConnection;
+use Application\Db\User as DbUser;
+use Application\Db\Connection as DbConnection;
 
 /**
  * Class ConnectionController

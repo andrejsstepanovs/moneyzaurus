@@ -2,7 +2,7 @@
 
 namespace Application\Db;
 
-use \Db\ActiveRecord;
+use Db\ActiveRecord;
 
 /**
  * Class Item

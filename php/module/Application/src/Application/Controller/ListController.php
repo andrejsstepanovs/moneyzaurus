@@ -4,11 +4,11 @@ namespace Application\Controller;
 use Application\Helper\Lister\Helper as ListerHelper;
 use Application\Helper\Transaction\Helper as TransactionHelper;
 use Application\Form\Form\Transaction as TransactionForm;
-use \Zend\Db\Sql\Expression;
-use \Zend\Db\Sql\Select;
-use \Zend\Db\Sql\Where;
-use \Zend\Json\Json;
-use \Zend\Db\TableGateway\Exception\RuntimeException;
+use Zend\Db\Sql\Expression;
+use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Where;
+use Zend\Json\Json;
+use Zend\Db\TableGateway\Exception\RuntimeException;
 
 class ListController extends AbstractActionController
 {

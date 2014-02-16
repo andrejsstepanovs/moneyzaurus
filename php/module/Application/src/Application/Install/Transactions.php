@@ -3,8 +3,6 @@
 namespace Application\Install;
 
 use InstallScripts\Script;
-use Db\ActiveRecord;
-use \Db\Exception\ModelNotFoundException;
 
 /**
  * Class Transactions

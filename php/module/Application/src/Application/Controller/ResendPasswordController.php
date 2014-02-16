@@ -6,7 +6,7 @@ use Application\Form\Form\Login as LoginForm;
 use Application\Form\Form\Register as RegisterForm;
 use Application\Form\Form\ResendPassword as ResendPasswordForm;
 use Application\Form\Validator\ResendPassword as ResendPasswordValicator;
-use Application\Helper\ResendPassword\Helper;
+use Application\Helper\ResendPassword\Helper as ResendPasswordHelper;
 use Zend\Db\Sql\Expression as Expression;
 use Db\Exception\ModelNotFoundException;
 
@@ -15,7 +15,7 @@ use Db\Exception\ModelNotFoundException;
  *
  * @package Application\Controller
  *
- * @method \Application\Helper\ResendPassword\Helper getAbstractHelper()
+ * @method ResendPasswordHelper getAbstractHelper()
  */
 class ResendPasswordController extends AbstractActionController
 {
@@ -30,6 +30,9 @@ class ResendPasswordController extends AbstractActionController
 
     /** @var \Application\Form\Validator\ResendPassword */
     protected $resendPassValidator;
+
+    /** @var ResendPasswordHelper */
+    protected $resendPasswordHelper;
 
     /** @var \Db\ActiveRecord */
     protected $user;
@@ -71,13 +74,17 @@ class ResendPasswordController extends AbstractActionController
 
         return $this->user;
     }
+
     /**
-     * @return void
+     * @return ResendPasswordHelper
      */
-    protected function init()
+    protected function getResendPasswordHelper()
     {
-        $helper = new Helper();
-        $this->setHelper($helper);
+        if (null === $this->resendPasswordHelper) {
+            $this->resendPasswordHelper = new ResendPasswordHelper;
+        }
+
+        return $this->resendPasswordHelper;
     }
 
     /**
@@ -126,7 +133,7 @@ class ResendPasswordController extends AbstractActionController
 
             if ($form->isValid()) {
 
-                $newPassword = $this->getAbstractHelper()->getNewPassword();
+                $newPassword = $this->getResendPasswordHelper()->getNewPassword();
                 $response = $this->resendPassword($newPassword);
                 if ($response) {
                     return $response;
@@ -184,7 +191,10 @@ class ResendPasswordController extends AbstractActionController
             $subject = $translator->translate('New moneyzaurus.com password');
             $fromEmail = $config['mail']['email'];
 
-            $message = $this->getAbstractHelper()->getMailMessage($user->getEmail(), $htmlBody, $subject, $fromEmail);
+            $message = $this
+                ->getResendPasswordHelper()
+                ->getMailMessage($user->getEmail(), $htmlBody, $subject, $fromEmail);
+
             $transport->send($message);
 
             $passwordExpression = new Expression(

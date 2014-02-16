@@ -4,8 +4,8 @@ namespace Application\Controller;
 use Application\Form\Form\Register as RegisterForm;
 use Application\Form\Validator\Register as RegisterValidator;
 use Zend\Db\TableGateway\Exception\RuntimeException;
-use \Zend\Db\Sql\Expression as Expression;
-use \Db\Exception\ModelNotFoundException;
+use Zend\Db\Sql\Expression as Expression;
+use Db\Exception\ModelNotFoundException;
 
 /**
  * Class RegisterController

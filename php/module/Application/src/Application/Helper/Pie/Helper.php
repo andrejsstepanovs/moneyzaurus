@@ -4,8 +4,8 @@ namespace Application\Helper\Pie;
 
 use Application\Helper\AbstractHelper;
 use Zend\Http\PhpEnvironment\Request;
-use \HighchartsPHP\Highcharts as HighchartsPHPHighcharts;
-use \Application\Helper\Pie\Highchart as PieHighchart;
+use HighchartsPHP\Highcharts as HighchartsPHPHighcharts;
+use Application\Helper\Pie\Highchart as PieHighchart;
 
 /**
  * Class Helper

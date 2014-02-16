@@ -10,10 +10,10 @@ use Application\Db\Item;
 use Application\Db\Group;
 use Application\Db\Currency;
 use Application\Db\Connection;
-use \Zend\Db\Sql\Expression;
-use \Zend\Db\Sql\Select;
-use \Zend\Db\Sql\Where;
-use \Zend\Db\Sql;
+use Zend\Db\Sql\Expression;
+use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Where;
+use Zend\Db\Sql;
 
 /**
  * Class AbstractHelper

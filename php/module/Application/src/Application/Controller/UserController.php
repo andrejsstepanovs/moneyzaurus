@@ -5,7 +5,7 @@ use Application\Form\Form\User as UserForm;
 use Application\Form\Validator\User as UserValidator;
 use Application\Helper\Connection\Helper as ConnectionHelper;
 use Zend\Authentication\Storage\Session;
-use \Zend\Db\Sql\Expression as Expression;
+use Zend\Db\Sql\Expression as SqlExpression;
 
 /**
  * Class UserController
@@ -123,7 +123,7 @@ class UserController extends AbstractActionController
                 $user = $this->getAbstractHelper()->getTable('user');
                 $user->load($this->getUserId());
 
-                $passwordExpression = new Expression(
+                $passwordExpression = new SqlExpression(
                     AbstractActionController::CREDENTIAL_TREATMENT,
                     $request->getPost('password')
                 );

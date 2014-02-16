@@ -1,12 +1,12 @@
 <?php
 namespace Application\Controller;
 
-use \Application\Form\Validator\Transaction as TransactionValidator;
-use \Application\Form\Form\Transaction as TransactionForm;
-use \Application\Helper\Transaction\Predict\Price as PredictPrice;
-use \Application\Helper\Transaction\Helper as TransactionHelper;
-use \Zend\Json\Json;
-use \Zend\Http\PhpEnvironment\Request;
+use Application\Form\Validator\Transaction as TransactionValidator;
+use Application\Form\Form\Transaction as TransactionForm;
+use Application\Helper\Transaction\Predict\Price as PredictPrice;
+use Application\Helper\Transaction\Helper as TransactionHelper;
+use Zend\Json\Json;
+use Zend\Http\PhpEnvironment\Request;
 
 /**
  * Class TransactionController

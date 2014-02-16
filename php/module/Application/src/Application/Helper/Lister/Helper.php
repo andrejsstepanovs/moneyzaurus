@@ -3,9 +3,9 @@
 namespace Application\Helper\Lister;
 
 use Application\Helper\AbstractHelper;
-use \Zend\Http\PhpEnvironment\Request;
-use \Zend\Mvc\Controller\Plugin\Params as PluginParams;
-use \Zend\Db\Sql\Select;
+use Zend\Http\PhpEnvironment\Request;
+use Zend\Mvc\Controller\Plugin\Params as PluginParams;
+use Zend\Db\Sql\Select;
 
 /**
  * @method Request getRequest()

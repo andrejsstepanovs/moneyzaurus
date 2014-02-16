@@ -8,6 +8,7 @@ use Zend\Authentication\Adapter\DbTable\CredentialTreatmentAdapter;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mail\Transport\Smtp as MailTransport;
 use Zend\Mail\Transport\SmtpOptions;
+use Application\Controller\AbstractActionController;
 
 /**
  * Class Module
@@ -39,13 +40,13 @@ class Module
 
         $eventManager = $application->getEventManager();
         $eventManager->attach(
-            \Zend\Mvc\MvcEvent::EVENT_ROUTE,
+            MvcEvent::EVENT_ROUTE,
             array($acl, 'checkAcl'),
             -100
         );
 
         $eventManager->attach(
-            \Zend\Mvc\MvcEvent::EVENT_DISPATCH_ERROR,
+            MvcEvent::EVENT_DISPATCH_ERROR,
             function(MvcEvent $mvcEvent) use ($serviceManager) {
                 if ($mvcEvent->getParam('exception')) {
                     $serviceManager->get('Zend\Log\Logger')->crit($mvcEvent->getParam('exception'));
@@ -73,6 +74,8 @@ class Module
     }
 
     /**
+     * @param string $key
+     *
      * @return array
      */
     public function getConfig($key = null)
@@ -110,7 +113,7 @@ class Module
                     $tableName           = 'user';
                     $identityColumn      = 'email';
                     $credentialColumn    = 'password';
-                    $credentialTreatment = \Application\Controller\AbstractActionController::CREDENTIAL_TREATMENT;
+                    $credentialTreatment = AbstractActionController::CREDENTIAL_TREATMENT;
                     $dbTableAuthAdapter  = new CredentialTreatmentAdapter(
                         $dbAdapter,
                         $tableName,

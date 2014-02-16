@@ -33,7 +33,7 @@ class Logger implements FactoryInterface
     protected function _getFileName()
     {
         $filename = str_replace('/', DIRECTORY_SEPARATOR, self::DIR_NAME);
-        $filename .= date('Y').'-error.log';
+        $filename .= 'error' . date('Y') . '.log';
 
         return $filename;
     }

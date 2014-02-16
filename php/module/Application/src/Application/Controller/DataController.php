@@ -1,7 +1,7 @@
 <?php
 namespace Application\Controller;
 
-use \Zend\Db\Sql\Select;
+use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\View\Model\ViewModel;
 

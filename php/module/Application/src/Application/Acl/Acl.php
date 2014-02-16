@@ -8,9 +8,9 @@ use Zend\Permissions\Acl\Acl as ZendAcl;
 use Zend\Permissions\Acl\Role\GenericRole as ZendRole;
 use Zend\Permissions\Acl\Resource\GenericResource as ZendResource;
 use Application\Exception\AclResourceNotAllowedException;
-use \Zend\Mvc\Application as ZendApplication;
-use \Zend\Http\Headers as HttpHeaders;
-use \Zend\Console\Request as ConsoleRequest;
+use Zend\Mvc\Application as ZendApplication;
+use Zend\Http\Headers as HttpHeaders;
+use Zend\Console\Request as ConsoleRequest;
 
 /**
  * Class Acl
@@ -19,13 +19,13 @@ use \Zend\Console\Request as ConsoleRequest;
  */
 class Acl
 {
-    /** @var \Zend\ServiceManager\ServiceManager */
+    /** @var ServiceManager */
     protected $serviceManager;
 
-    /** @var \Zend\Permissions\Acl\Acl */
+    /** @var ZendAcl */
     protected $acl;
 
-    /** @var \Zend\Mvc\MvcEvent */
+    /** @var MvcEvent */
     protected $mvcEvent;
 
     /** @var array */
@@ -35,7 +35,7 @@ class Acl
     protected $eventManager;
 
     /**
-     * @param null|\Zend\ServiceManager\ServiceManager $serviceManager
+     * @param null|ServiceManager $serviceManager
      */
     public function __construct($serviceManager = null)
     {
@@ -45,7 +45,7 @@ class Acl
     }
 
     /**
-     * @param  \Zend\Mvc\MvcEvent $eventManager
+     * @param  MvcEvent $eventManager
      * @return $this
      */
     public function setMvcEvent(MvcEvent $eventManager)
@@ -56,12 +56,12 @@ class Acl
     }
 
     /**
-     * @return \Zend\Mvc\MvcEvent
+     * @return MvcEvent
      */
     public function getMvcEvent()
     {
         if (null === $this->mvcEvent) {
-            /** @var $mvcEvent \Zend\Mvc\MvcEvent */
+            /** @var $mvcEvent MvcEvent */
             $mvcEvent = $this->getServiceManager()->get('application')->getMvcEvent();
             $this->setMvcEvent($mvcEvent);
         }
@@ -70,7 +70,7 @@ class Acl
     }
 
     /**
-     * @return \Zend\ServiceManager\ServiceManager
+     * @return ServiceManager
      */
     protected function getServiceManager()
     {
@@ -84,7 +84,7 @@ class Acl
     }
 
     /**
-     * @param  \Zend\ServiceManager\ServiceManager $serviceManager
+     * @param  ServiceManager $serviceManager
      * @return $this
      */
     public function setServiceManager(ServiceManager $serviceManager)
@@ -133,7 +133,7 @@ class Acl
     }
 
     /**
-     * @param  \Zend\Permissions\Acl\Acl $acl
+     * @param  ZendAcl $acl
      * @return $this
      */
     public function setAcl(ZendAcl $acl)
@@ -144,7 +144,7 @@ class Acl
     }
 
     /**
-     * @return \Zend\Permissions\Acl\Acl
+     * @return ZendAcl
      */
     public function getAcl()
     {

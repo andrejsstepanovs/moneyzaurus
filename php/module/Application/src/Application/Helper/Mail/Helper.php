@@ -6,7 +6,7 @@ use Application\Helper\AbstractHelper;
 use Zend\Mail\Message;
 use Zend\Mime\Part as MimePart;
 use Zend\Mime\Message as MimeMessage;
-use \Zend\Mime\Mime;
+use Zend\Mime\Mime;
 
 /**
  * Class Helper
