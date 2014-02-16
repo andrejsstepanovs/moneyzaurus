@@ -207,7 +207,7 @@ class ConnectionController extends AbstractActionController
 
         try {
             $user->load();
-        } catch (ModelNotFoundException $exc) {
+        } catch (DbModelNotFoundException $exc) {
             throw new UserNotFoundException('User ' . $email . ' not found');
         }
 

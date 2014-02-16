@@ -19,7 +19,7 @@ use \Application\Db\Transaction as DbTransaction;
  * @method TransactionHelper setUserId(int $userId)
  * @method PluginParams getParams()
  * @method AbstractHelper getAbstractHelper()
- * @method AbstractHelper getUserId()
+ * @method int getUserId()
  */
 class Helper extends AbstractHelper
 {

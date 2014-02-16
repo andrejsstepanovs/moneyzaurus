@@ -57,7 +57,7 @@ class PieController extends AbstractActionController
     /**
      * @param int $key
      *
-     * @return array
+     * @return string|array
      */
     protected function getPieChartElements($key = null)
     {
