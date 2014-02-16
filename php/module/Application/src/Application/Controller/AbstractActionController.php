@@ -53,8 +53,6 @@ class AbstractActionController extends ZendAbstractActionController
      */
     public function onDispatch(MvcEvent $mvcEvent)
     {
-        $this->init();
-
         $actionResponse = parent::onDispatch($mvcEvent);
 
         $messages = $this->flashmessenger()->getMessages();
@@ -63,11 +61,6 @@ class AbstractActionController extends ZendAbstractActionController
         }
 
         return $actionResponse;
-    }
-
-    protected function init()
-    {
-        return;
     }
 
     /**
