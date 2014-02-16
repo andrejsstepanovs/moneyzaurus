@@ -21,11 +21,11 @@ class Transaction extends Form
             array(
                 'name'       => 'item',
                 'attributes' => array(
-                    'type'        => 'search',
-                    'list'        => 'items',
-                    'id'          => 'item',
-                    'placeholder' => 'Item name',
-                    'required'    => 'required',
+                    'type'         => 'text',
+                    'id'           => 'item',
+                    'placeholder'  => 'Item name',
+                    'required'     => 'required',
+                    'autocomplete' => 'off',
                 ),
                 'options'    => array(
                     'label' => 'Item',
@@ -37,11 +37,11 @@ class Transaction extends Form
             array(
                 'name'       => 'group',
                 'attributes' => array(
-                    'type'        => 'search',
-                    'list'        => 'groups',
+                    'type'        => 'text',
                     'id'          => 'group',
                     'placeholder' => 'Group name',
                     'required'    => 'required',
+                    'autocomplete' => 'off',
                 ),
                 'options'    => array(
                     'label' => 'Group',

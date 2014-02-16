@@ -7,6 +7,7 @@ function Transaction(formElement)
     this.groupElement = null;
     this.priceElement = null;
     this.dateElement  = null;
+    this.minInputLength = 3;
 }
 
 Transaction.prototype.setData = function(key, value)
@@ -87,19 +88,21 @@ Transaction.prototype.start = function()
 
     var self = this;
     this.getItemElement().bind("input keyup", function() {
-        if (self.getItemElement().val() == "") {
+        var value = self.getItemElement().val();
+        if (value == "") {
             self.getPredictionElement("group").hide();
             self.getPredictionElement("price").hide();
-        } else {
+        } else if (value.length >= self.minInputLength) {
             self.setData("item", $(this).val());
             self.fetchPrediction(self.getGroupElement(), "group");
         }
     });
 
     this.getGroupElement().bind("input keyup change", function() {
-        if (self.getGroupElement().val() == "") {
+        var value = self.getGroupElement().val();
+        if (value == "") {
             self.getPredictionElement("price").hide();
-        } else {
+        } else if (value.length >= self.minInputLength) {
             self.setData("item", self.getItemElement().val());
             self.setData("group", $(this).val());
             self.fetchPrediction(self.getPriceElement(), "price");

@@ -91,19 +91,15 @@ class TransactionController extends AbstractActionController
     {
         if (null === $this->dataList) {
             $this->dataList = array();
-            $dataListElements = array(
-                'item'  => 'name',
-                'group' => 'name'
-            );
+            $dataListElements = array('item', 'group');
             $elements = $this->getForm()->getElements();
             foreach (array_keys($elements) as $name) {
-                if (!array_key_exists($name, $dataListElements)) {
+                if (!in_array($name, $dataListElements)) {
                     continue;
                 }
-                $column = $dataListElements[$name];
                 $dataValues = $this
                     ->getTransactionHelper()
-                    ->getDistinctTransactionValues($name, $column);
+                    ->getDistinctTransactionValues($name);
 
                 $this->dataList[$name] = $dataValues;
             }

@@ -8,17 +8,22 @@ $form->setAttribute('action', $this->url('transaction'))
 
 echo $this->form()->openTag($form);
 
-
+/** @var \Zend\Form\Element $element */
 foreach ($form as $element) {
-
     $formElementErrors = $this->formElementErrors($element);
 
     ?>
-    <div  data-role="fieldcontain" <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
+    <div data-role="fieldcontain" <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
 
         <?php
         echo $this->formElement($element);
-
+        ?>
+        <ul id="suggestions-<?php echo $element->getName(); ?>"
+            data-role="listview"
+            data-inset="true"
+            class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+        </ul>
+        <?php
         if ($formElementErrors) {
             ?>
             <span class="help-inline">
@@ -31,17 +36,41 @@ foreach ($form as $element) {
     <?php
 }
 
-
-foreach ($this->datalist as $name => $values) :
-    ?>
-    <datalist id="<?php echo $name; ?>s">
-        <?php foreach ($values as $value): ?>
-            <option value="<?php echo $value; ?>">
-        <?php endforeach; ?>
-    </datalist>
-    <?php
-endforeach;
-
-
 echo $this->form()->closeTag();
-//http://raymondcamden.com/index.cfm/2012/3/27/Example-of-Autocomplete-in-jQuery-Mobile
+
+
+
+?>
+
+
+<script>
+    autocompleteInput(
+        $("#item"),
+        $('#suggestions-item'),
+        <?php echo json_encode($this->datalist['item']); ?>,
+        $('#group')
+    );
+
+    autocompleteInput(
+        $("#group"),
+        $('#suggestions-group'),
+        <?php echo json_encode($this->datalist['group']); ?>,
+        $('#price')
+    );
+
+    function autocompleteInput(element, target, data, nextElement)
+    {
+        var elementId = element.attr('id');
+        var targetId  = target.attr('id');
+        var nextElementId = nextElement.attr('id');
+        element.autocomplete({
+            target: target,
+            source: data,
+            link: '$(\'#' + elementId + '\').val(\'%s\');'
+                + '$(\'#' + elementId + '\').trigger(\'input\');'
+                + '$(\'#' + targetId + '\')[0].innerHTML=\'\';'
+                + '$(\'#' + nextElementId + '\').focus();',
+            minLength: 1
+        });
+    }
+</script>

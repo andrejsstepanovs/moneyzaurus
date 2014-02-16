@@ -210,32 +210,37 @@ class Helper extends AbstractHelper
 
     /**
      * @param string $tableName
-     * @param string $column
      *
      * @return array
      */
-    public function getDistinctTransactionValues($tableName, $column)
+    public function getDistinctTransactionValues($tableName)
     {
-        /** @var \Db\AbstractTable $table */
-        /** @var \Zend\Db\ResultSet\HydratingResultSet $results */
-        $table = $this->getAbstractHelper()->getTable($tableName)->getTable();
-        $results = $table->fetchUniqeColum(
-            $column,
-            array(
-                $this->getWhere()->equalTo(
-                    'id_user',
-                    $this->getUserId()
-                )
-            )
-        );
+        $transactionTable = array('i' => $tableName);
 
-        $dataValues = array();
-        /** @var \Db\AbstractModel $model */
-        foreach ($results as $model) {
-            $dataValues[] = $model->getData($column);
+        $select = new Select();
+        $select->from($transactionTable)
+               ->columns(array('label' => 'name', 'value' => new Expression("COUNT(*)")))
+               ->join(array('t' => 'transaction'), 't.id_' . $tableName . ' = i.' . $tableName . '_id', array())
+               ->group('i.name')
+               ->order(new Expression("COUNT(*) DESC"));
+
+        $select = $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
+
+        //\DEBUG::dump(@$select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
+
+        $transactions = $this->getAbstractHelper()->getTable('transactions');
+        $table = $transactions->getTable();
+        $table->setTable($transactionTable);
+
+        /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
+        /** @var $transactionsResults \Db\AbstractModel */
+        $data = array();
+        $transactionsResults = $table->fetch($select)->buffer();
+        foreach ($transactionsResults as $model) {
+            $data[] = $model->getData();
         }
 
-        return $dataValues;
+        return $data;
     }
 
     /**
