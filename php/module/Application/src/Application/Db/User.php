@@ -24,7 +24,7 @@ use Db\ActiveRecord;
  * @method string getPassword()
  * @method int    getState()
  * @method User unsPassword()
- * @method User load(int $id = null)
+ * @method User load() load(int $id = 0)
  */
 class User extends ActiveRecord
 {

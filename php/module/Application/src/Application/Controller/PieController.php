@@ -55,11 +55,9 @@ class PieController extends AbstractActionController
     }
 
     /**
-     * @param int $key
-     *
-     * @return string|array
+     * @return array
      */
-    protected function getPieChartElements($key = null)
+    protected function getPieChartElements()
     {
         if (null === $this->pieChartElements) {
             $this->pieChartElements = array(
@@ -69,11 +67,18 @@ class PieController extends AbstractActionController
             );
         }
 
-        if ($key !== null) {
-            return $this->pieChartElements[$key];
-        }
-
         return $this->pieChartElements;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return string
+     */
+    protected function getPieChartElement($key)
+    {
+        $pieChartElements = $this->getPieChartElements();
+        return $pieChartElements[$key];
     }
 
     /**
@@ -100,7 +105,7 @@ class PieController extends AbstractActionController
 
         $parameters = array(
             'month'         => $this->getMonthHelper()->getMonthRequestValue(),
-            'targetElement' => $this->getPieChartElements($level),
+            'targetElement' => $this->getPieChartElement($level),
             'level'         => $level
         );
 
