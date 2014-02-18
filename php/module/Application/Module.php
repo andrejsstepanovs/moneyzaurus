@@ -8,10 +8,11 @@ use Zend\Authentication\Adapter\DbTable\CredentialTreatmentAdapter;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mail\Transport\Smtp as MailTransport;
 use Zend\Mail\Transport\SmtpOptions;
-use Application\Controller\AbstractActionController;
+use Zend\Session\Container as SessionContainer;
 use Zend\Authentication\Storage\Session as AuthenticationSessionStorage;
 use Zend\Session\SessionManager;
 use Zend\Session\Config\StandardConfig as SessionConfig;
+use Zend\Session\Storage\SessionArrayStorage as SessionStorage;
 
 /**
  * Class Module
@@ -20,6 +21,7 @@ use Zend\Session\Config\StandardConfig as SessionConfig;
  */
 class Module
 {
+    /** password treatment */
     const CREDENTIAL_TREATMENT = 'MD5(?)';
 
     /** @var array */
@@ -33,12 +35,17 @@ class Module
         /** @var $application \Zend\Mvc\Application */
         $application = $mvcEvent->getApplication();
 
-        /** @var $serviceManager \Zend\ServiceManager\ServiceManager */
+        /** @var $serviceManager ServiceManager */
         $serviceManager = $application->getServiceManager();
 
         Feature\GlobalAdapterFeature::setStaticAdapter(
             $serviceManager->get('Zend\Db\Adapter\Adapter')
         );
+
+        /** @var \Zend\Session\SessionManager $sessionManager */
+        $sessionManager = $serviceManager->get('SessionManager');
+        $sessionManager->start();
+        SessionContainer::setDefaultManager($sessionManager);
 
         /** @var $acl \Application\Acl\Acl */
         $acl = $serviceManager->get('Application\Acl\Acl');
@@ -87,6 +94,7 @@ class Module
     {
         if (null === $this->config) {
             $this->config = array_merge(
+                include __DIR__ . '/config/session.config.php',
                 include __DIR__ . '/config/router.config.php',
                 include __DIR__ . '/config/navigation.config.php',
                 include __DIR__ . '/config/view.config.php',
@@ -145,9 +153,6 @@ class Module
                     return $transport;
                 },
                 'AuthStorage' => function (ServiceManager $serviceManager) {
-                    $config = new SessionConfig();
-                    $config->setName('MNZ');
-                    $config->setCookieLifetime(100);
                     $session = new AuthenticationSessionStorage(
                         null,
                         null,
@@ -156,10 +161,24 @@ class Module
                     return $session;
                 },
                 'SessionManager' => function (ServiceManager $serviceManager) {
-                    $config = new SessionConfig();
+                    $config = $serviceManager->get('Configuration');
+                    $sessionData = $config['session'];
 
-                    $session = new SessionManager($config);
-                    return $session;
+                    $sessionConfig = new SessionConfig();
+                    $sessionConfig->setOptions($sessionData['config']);
+
+                    $sessionManager = new SessionManager($sessionConfig);
+                    $sessionManager->setName($sessionData['config']['name']);
+
+                    /** @var \Zend\Session\ValidatorChain $validationChain */
+                    $validationChain = $sessionManager->getValidatorChain();
+
+                    foreach ($sessionData['validator'] as $i => $validator) {
+                        $validator = new $validator();
+                        $validationChain->attach('session.validate', array($validator, 'isValid'));
+                    }
+
+                    return $sessionManager;
                 },
             )
         );
