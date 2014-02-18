@@ -169,6 +169,7 @@ class Module
 
                     $sessionManager = new SessionManager($sessionConfig);
                     $sessionManager->setName($sessionData['config']['name']);
+                    $sessionManager->rememberMe();
 
                     /** @var \Zend\Session\ValidatorChain $validationChain */
                     $validationChain = $sessionManager->getValidatorChain();
