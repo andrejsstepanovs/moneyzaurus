@@ -160,6 +160,49 @@ class Helper extends AbstractHelper
             ->save();
     }
 
+    /**
+     * @param string $item
+     * @param string $group
+     * @param string $price
+     * @param string $date
+     * @param string $currencyId
+     *
+     * @return \Zend\Db\ResultSet\HydratingResultSet
+     */
+    public function findTransactions($item, $group, $price, $date, $currencyId)
+    {
+        $transactionTable = array('t' => 'transaction');
+
+        $select = new Select();
+        $select->from($transactionTable)
+               ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item_name' => 'name'))
+               ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
+               ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email' => 'email'));
+
+        $where = array();
+        $where[] = $this->getWhere()->equalTo('i.name', $item);
+        $where[] = $this->getWhere()->equalTo('g.name', $group);
+        $where[] = $this->getWhere()->equalTo('t.price', $price);
+        $where[] = $this->getWhere()->equalTo('t.date', $date);
+        $where[] = $this->getWhere()->equalTo('t.id_currency', $currencyId);
+
+        if (count($where)) {
+            $select->where($where);
+        }
+
+        $select = $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
+
+        //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
+
+        $transactionsTable = $this->getTable('transactions');
+        $table = $transactionsTable->getTable();
+        $table->setTable($transactionTable);
+
+        /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
+        $transactionsResults = $table->fetch($select)->buffer();
+
+        return $transactionsResults;
+    }
 
     /**
      * @return \Zend\Db\ResultSet\HydratingResultSet

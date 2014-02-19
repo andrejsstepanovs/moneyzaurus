@@ -28,7 +28,6 @@ Transaction.prototype.getFormData = function()
 {
     if (null === this.formData) {
         var data = {};
-
         if (this.getFormElement() != null) {
             data["item"] = this.getItemElement().val();
             data["group"] = this.getGroupElement().val();
@@ -139,6 +138,13 @@ Transaction.prototype.start = function()
             self.fetchPrediction(self.getPriceElement(), "price");
         }
     });
+
+    this.getPriceElement().bind("input keyup change", function() {
+        self.transactionExist();
+    });
+    this.getDateElement().bind("input keyup change", function() {
+        self.transactionExist();
+    });
 }
 
 Transaction.prototype.bindSubmit = function()
@@ -195,6 +201,32 @@ Transaction.prototype.save = function()
     })
     .fail (function(jqxhr, textStatus, error) {
         self.enableFormElements();
+        var err = textStatus + ", " + error;
+        console.log("Request Failed: " + err);
+    });
+}
+
+Transaction.prototype.transactionExist = function()
+{
+    this.formData = null;
+    console.log(this.getFormData());
+    $.getJSON("/transaction/exist", this.getFormData())
+    .done (function(json) {
+        if (json.success) {
+            var message = "<h3>" + json.message + "</h3>";
+            message += "<ul>";
+            for (i in json.transactions) {
+                var transaction = json.transactions[i];
+                message += "<li>";
+                message += transaction.date_created + "  --  " + transaction.email;
+                message += "</li>";
+            }
+            message += "</ul>";
+
+            popupMessage(message);
+        }
+    })
+    .fail (function(jqxhr, textStatus, error) {
         var err = textStatus + ", " + error;
         console.log("Request Failed: " + err);
     });

@@ -132,6 +132,43 @@ class TransactionController extends AbstractActionController
         );
     }
 
+    public function existAction()
+    {
+        $responseData = array(
+            'success'      => 1,
+            'exist'        => 0,
+            'message'      => '',
+            'transactions' => array(),
+        );
+
+        $transactionId = null;
+        $transactions = $this->getTransactionHelper()->findTransactions(
+            $this->getTransactionHelper()->getItem(),
+            $this->getTransactionHelper()->getGroup(),
+            $this->getTransactionHelper()->getPrice(),
+            $this->getTransactionHelper()->getDate(),
+            $this->getDefaultUserCurrency()
+        );
+
+        $exist = (bool) count($transactions);
+        $responseData['exist'] = $exist;
+        if ($exist) {
+            /** \Application\Db\ActiveRecord */
+            foreach ($transactions as $transaction) {
+                $responseData['transactions'][] = $transaction->getData();
+            }
+
+            /** @var \Zend\I18n\Translator\Translator $translator */
+            $translator = $this->getServiceLocator()->get('Translator');
+            $responseData['message'] = $translator->translate('Transaction already exist!');
+        }
+
+        $response = $this->getResponse();
+        $response->setContent(Json::encode($responseData));
+
+        return $response;
+    }
+
     public function saveAction()
     {
         $script = null;

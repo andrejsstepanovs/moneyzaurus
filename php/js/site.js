@@ -102,3 +102,11 @@ function formToJson (selector) {
     for (var a = 0; a < ary.length; a++) obj[ary[a].name] = ary[a].value;
     return obj;
 }
+
+function popupMessage(message)
+{
+    var popup = $("#popup");
+    if (popup.length) {
+        popup.html("<p>" + message + "</p>").popup("open");
+    }
+}
