@@ -3,6 +3,7 @@ function Transaction(formElement)
     this.formElement = formElement;
     this.data = {};
     this.formData = {};
+    this.parameters = {};
 
     this.itemElement   = null;
     this.groupElement  = null;
@@ -26,14 +27,13 @@ Transaction.prototype.getData = function()
 Transaction.prototype.getFormData = function()
 {
     if (null === this.formData) {
-        var data = this.parameters ? this.parameters : {};
+        var data = {};
 
         if (this.getFormElement() != null) {
-            var formData = this.getFormElement().serializeArray();
-
-            $.map(formData, function(n, i){
-                data[n.name] = n.value;
-            });
+            data["item"] = this.getItemElement().val();
+            data["group"] = this.getGroupElement().val();
+            data["price"] = this.getPriceElement().val();
+            data["date"] = this.getDateElement().val();
         }
 
         this.formData = data;
@@ -181,10 +181,10 @@ Transaction.prototype.resetFormData = function()
 
 Transaction.prototype.save = function()
 {
+    this.formData = null;
+    this.disableFormElements();
     var self = this;
-    self.formData = null;
-    self.disableFormElements();
-    $.getJSON("/transaction/save", self.getFormData())
+    $.getJSON("/transaction/save", this.getFormData())
     .done (function(json) {
         if (json.success) {
             self.resetFormData();
