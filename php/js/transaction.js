@@ -192,6 +192,7 @@ Transaction.prototype.save = function()
             alert("Failed to save. " + json.message);
         }
         self.enableFormElements();
+        self.getItemElement().focus();
     })
     .fail (function(jqxhr, textStatus, error) {
         self.enableFormElements();
