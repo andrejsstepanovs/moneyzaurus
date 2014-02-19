@@ -109,9 +109,9 @@ class Price extends AbstractHelper
         if (!empty($allPricesByDay[$currentDay])) {
             $allPricesInThisDay = $allPricesByDay[$currentDay];
 
-            $sortedPricesInThisDay = array_keys($allPricesInThisDay);
-            $this->addPrediction(array_pop($sortedPricesInThisDay)); // last used in this day
-            $this->addPrediction(array_pop($sortedPricesInThisDay)); // next last used
+            //$sortedPricesInThisDay = array_keys($allPricesInThisDay);
+            //$this->addPrediction(array_pop($sortedPricesInThisDay)); // last used in this day
+            //$this->addPrediction(array_pop($sortedPricesInThisDay)); // next last used
 
             sort($allPricesInThisDay);
             $sortedPricesInThisDay = array_keys($allPricesInThisDay);
