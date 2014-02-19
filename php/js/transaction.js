@@ -193,11 +193,18 @@ Transaction.prototype.save = function()
     .done (function(json) {
         if (json.success) {
             self.resetFormData();
+            popupMessage(json.message, 2000);
         } else {
             alert("Failed to save. " + json.message);
         }
         self.enableFormElements();
         self.getItemElement().focus();
+
+        var focus = setTimeout(
+            function() {
+                self.getItemElement().focus();
+            }, 2100
+        );
     })
     .fail (function(jqxhr, textStatus, error) {
         self.enableFormElements();

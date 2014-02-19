@@ -192,6 +192,10 @@ class TransactionController extends AbstractActionController
             $transaction = $this->saveTransaction($this->getForm());
             $data['id']      = $transaction->getTransactionId();
             $data['success'] = true;
+
+            /** @var \Zend\I18n\Translator\Translator $translator */
+            $translator = $this->getServiceLocator()->get('Translator');
+            $data['message'] = $translator->translate('Saved');
         } catch (\Exception $exc) {
             $data['message'] = $exc->getMessage();
         }

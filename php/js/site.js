@@ -110,10 +110,11 @@ function popupMessage(message)
         popup.html("<p>" + message + "</p>").popup("open");
     }
 
+    var timeout = 2000;
     var popupMessage = setTimeout(
         function() {
             popup.popup("close");
         },
-        2000
+        timeout
     );
 }
