@@ -175,7 +175,6 @@ Transaction.prototype.resetFormData = function()
     this.getItemElement().val("");
     this.getGroupElement().val("");
     this.getPriceElement().val("");
-    this.getDateElement().val("");
     return this;
 }
 
