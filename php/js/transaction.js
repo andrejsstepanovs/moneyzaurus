@@ -4,10 +4,11 @@ function Transaction(formElement)
     this.data = {};
     this.formData = {};
 
-    this.itemElement  = null;
-    this.groupElement = null;
-    this.priceElement = null;
-    this.dateElement  = null;
+    this.itemElement   = null;
+    this.groupElement  = null;
+    this.priceElement  = null;
+    this.dateElement   = null;
+    this.submitElement = null;
     this.minInputLength = 3;
 }
 
@@ -92,6 +93,14 @@ Transaction.prototype.getDateElement = function()
     return this.dateElement;
 }
 
+Transaction.prototype.getSubmitElement = function()
+{
+    if (this.submitElement == null) {
+        this.submitElement = this.getFormElement().find("#submit");
+    }
+    return this.submitElement;
+}
+
 Transaction.prototype.getPredictionId = function(key)
 {
     return "predict-" + key;
@@ -141,6 +150,26 @@ Transaction.prototype.bindSubmit = function()
     });
 }
 
+Transaction.prototype.disableFormElements = function()
+{
+    this.getItemElement().attr("disabled", "disabled");
+    this.getGroupElement().attr("disabled", "disabled");
+    this.getPriceElement().attr("disabled", "disabled");
+    this.getDateElement().attr("disabled", "disabled");
+    this.getSubmitElement().attr("disabled", "disabled");
+    return this;
+}
+
+Transaction.prototype.enableFormElements = function()
+{
+    this.getItemElement().removeAttr("disabled");
+    this.getGroupElement().removeAttr("disabled");
+    this.getPriceElement().removeAttr("disabled");
+    this.getDateElement().removeAttr("disabled");
+    this.getSubmitElement().removeAttr("disabled");
+    return this;
+}
+
 Transaction.prototype.resetFormData = function()
 {
     this.getItemElement().val("");
@@ -154,6 +183,7 @@ Transaction.prototype.save = function()
 {
     var self = this;
     self.formData = null;
+    self.disableFormElements();
     $.getJSON("/transaction/save", self.getFormData())
     .done (function(json) {
         if (json.success) {
@@ -161,8 +191,10 @@ Transaction.prototype.save = function()
         } else {
             alert("Failed to save. " + json.message);
         }
+        self.enableFormElements();
     })
     .fail (function(jqxhr, textStatus, error) {
+        self.enableFormElements();
         var err = textStatus + ", " + error;
         console.log("Request Failed: " + err);
     });
