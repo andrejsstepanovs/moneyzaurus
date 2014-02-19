@@ -109,4 +109,11 @@ function popupMessage(message)
     if (popup.length) {
         popup.html("<p>" + message + "</p>").popup("open");
     }
+
+    var popupMessage = setTimeout(
+        function() {
+            popup.popup("close");
+        },
+        2000
+    );
 }
