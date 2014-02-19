@@ -2,6 +2,7 @@ function Transaction(formElement)
 {
     this.formElement = formElement;
     this.data = {};
+    this.formData = {};
 
     this.itemElement  = null;
     this.groupElement = null;
@@ -19,6 +20,25 @@ Transaction.prototype.setData = function(key, value)
 Transaction.prototype.getData = function()
 {
     return this.data;
+}
+
+Transaction.prototype.getFormData = function()
+{
+    if (null === this.formData) {
+        var data = this.parameters ? this.parameters : {};
+
+        if (this.getFormElement() != null) {
+            var formData = this.getFormElement().serializeArray();
+
+            $.map(formData, function(n, i){
+                data[n.name] = n.value;
+            });
+        }
+
+        this.formData = data;
+    }
+
+    return this.formData;
 }
 
 Transaction.prototype.resetData = function()
@@ -86,6 +106,8 @@ Transaction.prototype.start = function()
 {
     this.getItemElement().focus();
 
+    this.bindSubmit();
+
     var self = this;
     this.getItemElement().bind("input keyup", function() {
         var value = self.getItemElement().val();
@@ -107,6 +129,42 @@ Transaction.prototype.start = function()
             self.setData("group", $(this).val());
             self.fetchPrediction(self.getPriceElement(), "price");
         }
+    });
+}
+
+Transaction.prototype.bindSubmit = function()
+{
+    var self = this;
+    this.getFormElement().bind('submit', function() {
+        self.save();
+        return false;
+    });
+}
+
+Transaction.prototype.resetFormData = function()
+{
+    this.getItemElement().val("");
+    this.getGroupElement().val("");
+    this.getPriceElement().val("");
+    this.getDateElement().val("");
+    return this;
+}
+
+Transaction.prototype.save = function()
+{
+    var self = this;
+    self.formData = null;
+    $.getJSON("/transaction/save", self.getFormData())
+    .done (function(json) {
+        if (json.success) {
+            self.resetFormData();
+        } else {
+            alert("Failed to save. " + json.message);
+        }
+    })
+    .fail (function(jqxhr, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("Request Failed: " + err);
     });
 }
 

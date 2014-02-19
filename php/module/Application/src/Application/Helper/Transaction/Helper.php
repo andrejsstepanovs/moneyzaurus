@@ -63,6 +63,28 @@ class Helper extends AbstractHelper
     /**
      * @return string
      */
+    public function getPrice()
+    {
+        $params = $this->getParams();
+        $price = $params->fromQuery('price');
+
+        return $price;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDate()
+    {
+        $params = $this->getParams();
+        $date = $params->fromQuery('date');
+
+        return $date;
+    }
+
+    /**
+     * @return string
+     */
     public function getOrderBy()
     {
         return 'transaction_id';

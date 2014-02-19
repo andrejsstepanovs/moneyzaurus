@@ -126,21 +126,43 @@ class TransactionController extends AbstractActionController
      */
     public function indexAction()
     {
-        $form = $this->getForm();
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            try {
-                $this->saveTransaction($form, $request);
-            } catch (\Exception $exc) {
-                $this->showMessage($exc->getMessage());
-            }
-        }
-
         return array(
-            'form'     => $form,
+            'form'     => $this->getForm(),
             'datalist' => $this->getDataList(),
         );
+    }
+
+    public function saveAction()
+    {
+        $script = null;
+        $data = array(
+            'success' => 0,
+            'id'      => 0,
+            'message' => null,
+            'script'  => $script
+        );
+
+        $this->getForm()->setData(
+             array(
+                 'item'  => $this->getTransactionHelper()->getItem(),
+                 'group' => $this->getTransactionHelper()->getGroup(),
+                 'price' => $this->getTransactionHelper()->getPrice(),
+                 'date'  => $this->getTransactionHelper()->getDate()
+             )
+        );
+
+        try {
+            $transaction = $this->saveTransaction($this->getForm());
+            $data['id']      = $transaction->getTransactionId();
+            $data['success'] = true;
+        } catch (\Exception $exc) {
+            $data['message'] = $exc->getMessage();
+        }
+
+        $response = $this->getResponse();
+        $response->setContent(Json::encode($data));
+
+        return $response;
     }
 
     public function predictAction()
@@ -180,18 +202,14 @@ class TransactionController extends AbstractActionController
     }
 
     /**
-     * @param TransactionForm                   $form
-     * @param \Zend\Http\PhpEnvironment\Request $request
+     * @param TransactionForm $form
      *
+     * @return \Application\Db\Transaction
      * @throws \RuntimeException
      */
-    protected function saveTransaction(
-        TransactionForm $form,
-        Request $request
-    ) {
+    protected function saveTransaction(TransactionForm $form)
+    {
         $form->setInputFilter($this->getValidator()->getInputFilter());
-        $form->setData($request->getPost());
-
         if (!$form->isValid()) {
             throw new \RuntimeException('Wrong data');
         }
@@ -199,7 +217,7 @@ class TransactionController extends AbstractActionController
         $data = $form->getData();
         $data['currency'] = $this->getDefaultUserCurrency();
 
-        $transactionId = $request->getPost()->get('transaction_id');
+        $transactionId = null;
         $transaction = $this->getTransactionHelper()->saveTransaction(
             $this->getUserId(),
             $transactionId,
@@ -213,8 +231,9 @@ class TransactionController extends AbstractActionController
         if ($transaction->getId()) {
             $this->showMessage('Saved');
             $this->unsetFormData();
+            return $transaction;
         } else {
-            $this->showMessage('Failed to save');
+            throw new \RuntimeException('Failed to save');
         }
     }
 

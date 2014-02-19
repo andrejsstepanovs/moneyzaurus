@@ -11,7 +11,7 @@ use Zend\Form\Form;
  */
 class Transaction extends Form
 {
-    public function __construct($name = 'login', $options = array())
+    public function __construct($name = 'transaction', $options = array())
     {
         parent::__construct($name, $options);
 
