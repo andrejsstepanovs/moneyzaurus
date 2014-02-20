@@ -219,7 +219,7 @@ Transaction.prototype.transactionExist = function()
     console.log(this.getFormData());
     $.getJSON("/transaction/exist", this.getFormData())
     .done (function(json) {
-        if (json.success) {
+        if (json.success && json.exist) {
             var message = "<h3>" + json.message + "</h3>";
             message += "<ul>";
             for (i in json.transactions) {

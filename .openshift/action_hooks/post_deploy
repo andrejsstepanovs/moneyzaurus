@@ -6,3 +6,5 @@ echo "install-scripts update"
 cd app-root/runtime/repo/php
 
 /usr/bin/php index.php install-scripts update
+
+rm -rf data/cache/config/*

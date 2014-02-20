@@ -106,15 +106,15 @@ function formToJson (selector) {
 function popupMessage(message)
 {
     var popup = $("#popup");
-    if (popup.length) {
+    if (popup.length && message.length) {
         popup.html("<p>" + message + "</p>").popup("open");
-    }
 
-    var timeout = 2000;
-    var popupMessage = setTimeout(
-        function() {
-            popup.popup("close");
-        },
-        timeout
-    );
+        var timeout = 2000;
+        var popupMessage = setTimeout(
+            function() {
+                popup.popup("close");
+            },
+            timeout
+        );
+    }
 }
