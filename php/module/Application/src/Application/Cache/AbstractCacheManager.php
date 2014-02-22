@@ -10,10 +10,10 @@ use Zend\Cache\Storage\Adapter\Apc as CacheStorage;
  *
  * @package Application\Cache
  *
- * @method Manager setCache(CacheStorage $cache)
- * @method CacheStorage getCache()
- * @method CacheStorage setUserId(int $userId)
- * @method int          getUserId()
+ * @method AbstractCacheManager setCacheStorage(CacheStorage $cache)
+ * @method CacheStorage         getCacheStorage()
+ * @method CacheStorage         setUserId(int $userId)
+ * @method int                  getUserId()
  */
 abstract class AbstractCacheManager extends AbstractHelper
 {
@@ -39,7 +39,7 @@ abstract class AbstractCacheManager extends AbstractHelper
         if ($lifetime) {
             $this->setLifetime($lifetime);
         }
-        return $this->getCache()->addItem($key, $value);
+        return $this->getCacheStorage()->addItem($key, $value);
     }
 
     /**
@@ -49,7 +49,7 @@ abstract class AbstractCacheManager extends AbstractHelper
      */
     protected function get($key)
     {
-        return $this->getCache()->getItem($key);
+        return $this->getCacheStorage()->getItem($key);
     }
 
     /**
@@ -59,7 +59,7 @@ abstract class AbstractCacheManager extends AbstractHelper
      */
     protected function exist($key)
     {
-        return $this->getCache()->hasItem($key);
+        return $this->getCacheStorage()->hasItem($key);
     }
 
     /**
@@ -69,7 +69,7 @@ abstract class AbstractCacheManager extends AbstractHelper
      */
     protected function remove($key)
     {
-        return $this->getCache()->removeItem($key);
+        return $this->getCacheStorage()->removeItem($key);
     }
 
     /**
@@ -78,7 +78,7 @@ abstract class AbstractCacheManager extends AbstractHelper
     protected function setLifetime($lifetime)
     {
         /** @var \Zend\Cache\Storage\Adapter\ApcOptions $options */
-        $options = $this->getCache()->getOptions();
+        $options = $this->getCacheStorage()->getOptions();
         if ($options->getTtl() != $lifetime) {
             $options->setTtl($lifetime);
         }

@@ -202,7 +202,7 @@ class Module
                     $apc = $serviceManager->get('Apc');
 
                     $cacheManager = new CacheManager();
-                    $cacheManager->setCache($apc);
+                    $cacheManager->setCacheStorage($apc);
                     return $cacheManager;
                 },
             )

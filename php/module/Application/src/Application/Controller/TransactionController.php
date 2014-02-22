@@ -89,9 +89,9 @@ class TransactionController extends AbstractActionController
      */
     public function getDataList()
     {
-        $cache = $this->getAbstractHelper()->getCache();
+        $cacheManager = $this->getAbstractHelper()->getCacheManager();
 
-        $dataList = $cache->transactionList();
+        $dataList = $cacheManager->transactionList();
         if (!$dataList) {
             $dataList = array();
             $dataListElements = array('item', 'group');
@@ -107,7 +107,7 @@ class TransactionController extends AbstractActionController
                 $dataList[$name] = $dataValues;
             }
 
-            $cache->transactionList($dataList);
+            $cacheManager->transactionList($dataList);
         }
 
         return $dataList;

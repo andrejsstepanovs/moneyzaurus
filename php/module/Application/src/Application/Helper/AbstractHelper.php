@@ -108,7 +108,7 @@ class AbstractHelper extends AbstractModel
     /**
      * @return CacheManager
      */
-    public function getCache()
+    public function getCacheManager()
     {
         if (null === $this->cacheManager) {
             /** @var CacheManager $cacheManager */
@@ -119,5 +119,4 @@ class AbstractHelper extends AbstractModel
 
         return $this->cacheManager;
     }
-
 }
