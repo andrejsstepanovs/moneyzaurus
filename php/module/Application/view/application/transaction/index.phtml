@@ -10,11 +10,8 @@ echo $this->form()->openTag($form);
 
 /** @var \Zend\Form\Element $element */
 foreach ($form as $element) {
-    $formElementErrors = $this->formElementErrors($element);
-
     ?>
-    <div data-role="fieldcontain" <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
-
+    <div data-role="fieldcontain">
         <?php
         echo $this->formElement($element);
         ?>
@@ -23,22 +20,11 @@ foreach ($form as $element) {
             data-inset="true"
             class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
         </ul>
-        <?php
-        if ($formElementErrors) {
-            ?>
-            <span class="help-inline">
-                <?php echo $formElementErrors; ?>
-            </span>
-            <?php
-        }
-        ?>
     </div>
     <?php
 }
 
 echo $this->form()->closeTag();
-
-
 
 ?>
 
