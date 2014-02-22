@@ -14,18 +14,25 @@ use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\Db\Sql;
+use Application\Cache\Manager as CacheManager;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * Class AbstractHelper
  *
  * @package Application\Helper
+ * @method ServiceManager getServiceLocator()
+ * @method ServiceManager setServiceLocator(ServiceManager $serviceManager)
+ * @method ServiceManager setUserId(int $userId)
+ * @method int            getUserId()
  */
 class AbstractHelper extends AbstractModel
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $activeRecords;
+
+    /** @var CacheManager */
+    protected $cacheManager;
 
     /**
      * @param  string           $table
@@ -96,6 +103,21 @@ class AbstractHelper extends AbstractModel
         $select->where->addPredicate($where);
 
         return $select;
+    }
+
+    /**
+     * @return CacheManager
+     */
+    public function getCache()
+    {
+        if (null === $this->cacheManager) {
+            /** @var CacheManager $cacheManager */
+            $cacheManager = $this->getServiceLocator()->get('CacheManager');
+            $cacheManager->setUserId($this->getUserId());
+            $this->cacheManager = $cacheManager;
+        }
+
+        return $this->cacheManager;
     }
 
 }

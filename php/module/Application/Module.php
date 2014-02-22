@@ -13,7 +13,9 @@ use Zend\Authentication\Storage\Session as AuthenticationSessionStorage;
 use Zend\Session\SessionManager;
 use Zend\Session\Config\StandardConfig as SessionConfig;
 use Zend\Session\Storage\SessionArrayStorage as SessionStorage;
-use \Application\Exception\AclResourceNotAllowedException;
+use Application\Exception\AclResourceNotAllowedException;
+use Zend\Cache\StorageFactory as CacheStorageFactory;
+use Application\Cache\Manager as CacheManager;
 
 /**
  * Class Module
@@ -189,6 +191,19 @@ class Module
                     }
 
                     return $sessionManager;
+                },
+                'Apc' => function (ServiceManager $serviceManager) {
+                    /** @var \Zend\Cache\Storage\Adapter\Apc $cache */
+                    $cache = CacheStorageFactory::factory(array('adapter' => 'apc'));
+                    return $cache;
+                },
+                'CacheManager' => function (ServiceManager $serviceManager) {
+                    /** @var \Zend\Cache\Storage\Adapter\Apc $apc */
+                    $apc = $serviceManager->get('Apc');
+
+                    $cacheManager = new CacheManager();
+                    $cacheManager->setCache($apc);
+                    return $cacheManager;
                 },
             )
         );

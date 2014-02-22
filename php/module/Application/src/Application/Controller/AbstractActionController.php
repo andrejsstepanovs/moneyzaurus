@@ -95,24 +95,14 @@ class AbstractActionController extends ZendAbstractActionController
     }
 
     /**
-     * @param AbstractHelper $helper
-     *
-     * @return $this
-     */
-    protected function setHelper(AbstractHelper $helper)
-    {
-        $this->helper = $helper;
-
-        return $this;
-    }
-
-    /**
      * @return AbstractHelper
      */
     protected function getAbstractHelper()
     {
         if (null === $this->helper) {
             $this->helper = new AbstractHelper();
+            $this->helper->setServiceLocator($this->getServiceLocator());
+            $this->helper->setUserId($this->getUserId());
         }
 
         return $this->helper;
