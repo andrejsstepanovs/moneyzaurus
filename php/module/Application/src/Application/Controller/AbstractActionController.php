@@ -102,7 +102,10 @@ class AbstractActionController extends ZendAbstractActionController
         if (null === $this->helper) {
             $this->helper = new AbstractHelper();
             $this->helper->setServiceLocator($this->getServiceLocator());
-            $this->helper->setUserId($this->getUserId());
+
+            if ($this->getAuthService()->hasIdentity()) {
+                $this->helper->setUserId($this->getUserId());
+            }
         }
 
         return $this->helper;

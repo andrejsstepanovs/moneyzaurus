@@ -100,6 +100,7 @@ class LoginController extends AbstractActionController
         $authAdapter->setIdentity($request->getPost('email'))
                     ->setCredential($request->getPost('password'));
 
+        /** @var \Zend\Authentication\Result $result */
         $result = $authAdapter->authenticate();
 
         if (!$result->isValid()) {
@@ -113,7 +114,7 @@ class LoginController extends AbstractActionController
         try {
             /** @var \Application\Db\User $user */
             $user = $this->getAbstractHelper()->getTable('user');
-            $userData = $user->setEmail($request->getPost('email'))
+            $userData = $user->setEmail($result->getIdentity())
                  ->load()
                  ->unsPassword()
                  ->toArray();
