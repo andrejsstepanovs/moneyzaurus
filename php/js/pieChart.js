@@ -2,6 +2,7 @@ function PieChart(parameters)
 {
     this.parameters = parameters ? parameters : {};
     this.formElement = null;
+    this.ajax        = null;
     this.resetData();
 }
 
@@ -38,8 +39,12 @@ PieChart.prototype.getData = function()
 
 PieChart.prototype.request = function()
 {
+    if (this.ajax) {
+        this.ajax.abort();
+    }
+
     loadingOpen("Loading");
-    $.getJSON("pie/ajax", this.getData())
+    this.ajax = $.getJSON("pie/ajax", this.getData())
     .done (function(json) {
         loadingClose();
         if (json.success) {

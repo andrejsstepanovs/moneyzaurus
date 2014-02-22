@@ -2,6 +2,7 @@ function TransactionsList(parameters)
 {
     this.parameters = parameters ? parameters : {};
     this.formElement = null;
+    this.ajax        = null;
     this.i = 0;
     this.resetData();
     this.rowClass = "transaction-row";
@@ -87,8 +88,13 @@ TransactionsList.prototype.buildTable = function(data)
 TransactionsList.prototype.request = function()
 {
     var self = this;
+
+    if (this.ajax) {
+        this.ajax.abort();
+    }
+
     loadingOpen("Loading...");
-    $.getJSON("/list/ajax", this.getData())
+    this.ajax = $.getJSON("/list/ajax", this.getData())
     .done (function(json) {
         loadingClose();
         if (json.success) {

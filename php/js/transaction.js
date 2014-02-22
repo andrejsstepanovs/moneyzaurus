@@ -5,12 +5,13 @@ function Transaction(formElement)
     this.formData = {};
     this.parameters = {};
 
-    this.itemElement   = null;
-    this.groupElement  = null;
-    this.priceElement  = null;
-    this.dateElement   = null;
-    this.submitElement = null;
+    this.itemElement    = null;
+    this.groupElement   = null;
+    this.priceElement   = null;
+    this.dateElement    = null;
+    this.submitElement  = null;
     this.minInputLength = 3;
+    this.ajaxExist      = null
 }
 
 Transaction.prototype.setData = function(key, value)
@@ -223,7 +224,12 @@ Transaction.prototype.save = function()
 Transaction.prototype.transactionExist = function()
 {
     this.formData = null;
-    $.getJSON("/transaction/exist", this.getFormData())
+
+    if (this.ajaxExist) {
+        this.ajaxExist.abort();
+    }
+
+    this.ajaxExist = $.getJSON("/transaction/exist", this.getFormData())
     .done (function(json) {
         if (json.success && json.exist) {
             var message = "<h3>" + json.message + "</h3>";
