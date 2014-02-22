@@ -140,10 +140,10 @@ Transaction.prototype.start = function()
         }
     });
 
-    this.getPriceElement().bind("input keyup change", function() {
+    this.getPriceElement().bind("input keyup change focus", function() {
         self.transactionExist();
     });
-    this.getDateElement().bind("input keyup change", function() {
+    this.getDateElement().bind("input keyup change focus", function() {
         self.transactionExist();
     });
 }
@@ -226,6 +226,10 @@ Transaction.prototype.save = function()
 
 Transaction.prototype.transactionExist = function()
 {
+    if (!this.getPriceElement().val() || !this.getDateElement().val() || !this.getGroupElement().val()) {
+        return;
+    }
+
     this.formData = null;
 
     if (this.ajaxExist) {
