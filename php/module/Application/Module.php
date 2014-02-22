@@ -13,6 +13,7 @@ use Zend\Authentication\Storage\Session as AuthenticationSessionStorage;
 use Zend\Session\SessionManager;
 use Zend\Session\Config\StandardConfig as SessionConfig;
 use Zend\Session\Storage\SessionArrayStorage as SessionStorage;
+use \Application\Exception\AclResourceNotAllowedException;
 
 /**
  * Class Module
@@ -60,8 +61,16 @@ class Module
         $eventManager->attach(
             MvcEvent::EVENT_DISPATCH_ERROR,
             function(MvcEvent $mvcEvent) use ($serviceManager) {
-                if ($mvcEvent->getParam('exception')) {
+                $exception = $mvcEvent->getParam('exception');
+                if ($exception) {
                     $serviceManager->get('Zend\Log\Logger')->crit($mvcEvent->getParam('exception'));
+                    if ($exception instanceof AclResourceNotAllowedException) {
+                        /** @var \Zend\Http\PhpEnvironment\Response $response */
+                        $url = $mvcEvent->getRouter()->assemble(array(), array('name' => 'moneyzaurus'));
+                        $response = $mvcEvent->getResponse();
+                        $response->getHeaders()->addHeaderLine('Location', $url);
+                        $response->setStatusCode(302)->sendHeaders();
+                    }
                 }
             },
             -999
