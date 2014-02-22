@@ -192,17 +192,28 @@ class Module
 
                     return $sessionManager;
                 },
-                'Apc' => function (ServiceManager $serviceManager) {
-                    /** @var \Zend\Cache\Storage\Adapter\Apc $cache */
-                    $cache = CacheStorageFactory::factory(array('adapter' => 'apc'));
+                'CacheStorageAdapter' => function (ServiceManager $serviceManager) {
+                    /** @var \Zend\Cache\Storage\Adapter\Filesystem $cache */
+                    $cache = CacheStorageFactory::factory(
+                        array(
+                            'adapter' => 'filesystem',
+                            'options' => array(
+                                'cache_dir' => __DIR__ . '/../../data/cache/data/',
+                                'ttl'       => 600,
+                                'namespace' => __NAMESPACE__,
+                            ),
+                        )
+                    );
+
                     return $cache;
                 },
                 'CacheManager' => function (ServiceManager $serviceManager) {
-                    /** @var \Zend\Cache\Storage\Adapter\Apc $apc */
-                    $apc = $serviceManager->get('Apc');
+
+                    /** @var \Zend\Cache\Storage\Adapter\Filesystem $cacheStorage */
+                    $cacheStorage = $serviceManager->get('CacheStorageAdapter');
 
                     $cacheManager = new CacheManager();
-                    $cacheManager->setCacheStorage($apc);
+                    $cacheManager->setCacheStorage($cacheStorage)->setLifetime(600);
                     return $cacheManager;
                 },
             )

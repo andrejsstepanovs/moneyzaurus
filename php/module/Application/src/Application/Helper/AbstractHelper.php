@@ -23,7 +23,7 @@ use Zend\ServiceManager\ServiceManager;
  * @package Application\Helper
  * @method ServiceManager getServiceLocator()
  * @method ServiceManager setServiceLocator(ServiceManager $serviceManager)
- * @method ServiceManager setUserId(int $userId)
+ * @method AbstractHelper setUserId(int $userId)
  * @method int            getUserId()
  */
 class AbstractHelper extends AbstractModel

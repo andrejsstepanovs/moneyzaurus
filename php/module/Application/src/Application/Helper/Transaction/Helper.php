@@ -12,6 +12,7 @@ use Zend\Http\PhpEnvironment\Request;
 use Application\Helper\Transaction\Helper as TransactionHelper;
 use Zend\Mvc\Controller\Plugin\Params as PluginParams;
 use Application\Db\Transaction as DbTransaction;
+use Application\Cache\Manager as CacheManager;
 
 /**
  * @method Request getRequest()
@@ -127,6 +128,8 @@ class Helper extends AbstractHelper
                          ->setId($currencyId)
                          ->load();
 
+        $cacheManager = $this->getAbstractHelper()->getCacheManager();
+
         /** @var \Application\Db\Item $item */
         $item = $this->getAbstractHelper()->getTable('item');
         try {
@@ -134,6 +137,7 @@ class Helper extends AbstractHelper
                  ->setIdUser($userId)
                  ->load();
         } catch (ModelNotFoundException $exc) {
+            $cacheManager->trigger(array('transaction_list'), CacheManager::ACTION_INSERT);
             $item->save();
         }
 
@@ -144,6 +148,7 @@ class Helper extends AbstractHelper
                   ->setIdUser($userId)
                   ->load();
         } catch (ModelNotFoundException $exc) {
+            $cacheManager->trigger(array('transaction_list'), CacheManager::ACTION_INSERT);
             $group->save();
         }
 

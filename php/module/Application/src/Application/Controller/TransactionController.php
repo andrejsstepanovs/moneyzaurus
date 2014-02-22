@@ -6,7 +6,6 @@ use Application\Form\Form\Transaction as TransactionForm;
 use Application\Helper\Transaction\Predict\Price as PredictPrice;
 use Application\Helper\Transaction\Helper as TransactionHelper;
 use Zend\Json\Json;
-use Zend\Http\PhpEnvironment\Request;
 
 /**
  * Class TransactionController
@@ -91,10 +90,13 @@ class TransactionController extends AbstractActionController
     {
         $cacheManager = $this->getAbstractHelper()->getCacheManager();
 
-        $dataList = $cacheManager->transactionList();
+        $cacheNamespaces = array('item', 'group');
+        $cacheKey = 'transaction_list';
+
+        $dataList = $cacheManager->data($cacheNamespaces, $cacheKey);
         if (!$dataList) {
             $dataList = array();
-            $dataListElements = array('item', 'group');
+            $dataListElements = array('transaction_list');
             $elements = $this->getForm()->getElements();
             foreach (array_keys($elements) as $name) {
                 if (!in_array($name, $dataListElements)) {
@@ -107,7 +109,7 @@ class TransactionController extends AbstractActionController
                 $dataList[$name] = $dataValues;
             }
 
-            $cacheManager->transactionList($dataList);
+            $cacheManager->data($cacheNamespaces, $cacheKey, $dataList);
         }
 
         return $dataList;
