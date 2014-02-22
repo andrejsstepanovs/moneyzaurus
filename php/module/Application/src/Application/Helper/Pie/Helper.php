@@ -3,6 +3,7 @@
 namespace Application\Helper\Pie;
 
 use Application\Helper\AbstractHelper;
+use Zend\Db\Sql\Select;
 use Zend\Http\PhpEnvironment\Request;
 use HighchartsPHP\Highcharts as HighchartsPHPHighcharts;
 use Application\Helper\Pie\Highchart as PieHighchart;
@@ -48,6 +49,23 @@ class Helper extends AbstractHelper
 
     /** @var int */
     protected $otherGroupCount = 4;
+
+    /**
+     * @return Select
+     */
+    public function getTransactionsSelect()
+    {
+        $transactionTable = array('t' => 'transaction');
+
+        $select = new Select();
+        $select->from($transactionTable)
+               ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item_name' => 'name'))
+               ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
+               ->join(array('c' => 'currency'), 't.id_currency = c.currency_id', array('currency_html' => 'html'))
+               ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email'));
+
+        return $select;
+    }
 
     /**
      * @return array
