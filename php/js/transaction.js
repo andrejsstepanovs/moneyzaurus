@@ -152,6 +152,9 @@ Transaction.prototype.bindSubmit = function()
 {
     var self = this;
     this.getFormElement().bind('submit', function() {
+        if ($.active) {
+            self.ajaxExist.abort();
+        }
         self.save();
         return false;
     });
