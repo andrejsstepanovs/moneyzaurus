@@ -192,10 +192,12 @@ Transaction.prototype.save = function()
 {
     this.formData = null;
     this.disableFormElements();
+    loadingOpen("Saving...");
     var self = this;
     $.getJSON("/transaction/save", this.getFormData())
     .done (function(json) {
         if (json.success) {
+            loadingClose();
             self.resetFormData();
             popupMessage(json.message, 2000);
         } else {
@@ -211,6 +213,7 @@ Transaction.prototype.save = function()
         );
     })
     .fail (function(jqxhr, textStatus, error) {
+        loadingClose();
         self.enableFormElements();
         var err = textStatus + ", " + error;
         console.log("Request Failed: " + err);
@@ -220,7 +223,6 @@ Transaction.prototype.save = function()
 Transaction.prototype.transactionExist = function()
 {
     this.formData = null;
-    console.log(this.getFormData());
     $.getJSON("/transaction/exist", this.getFormData())
     .done (function(json) {
         if (json.success && json.exist) {

@@ -87,8 +87,10 @@ TransactionsList.prototype.buildTable = function(data)
 TransactionsList.prototype.request = function()
 {
     var self = this;
+    loadingOpen("Loading...");
     $.getJSON("/list/ajax", this.getData())
     .done (function(json) {
+        loadingClose();
         if (json.success) {
             if (json.script) {
                 jQuery.globalEval(json.script);
@@ -97,6 +99,7 @@ TransactionsList.prototype.request = function()
         }
     })
     .fail (function(jqxhr, textStatus, error) {
+        loadingClose();
         var err = textStatus + ", " + error;
         console.log("Request Failed: " + err);
     });

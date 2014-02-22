@@ -38,14 +38,17 @@ PieChart.prototype.getData = function()
 
 PieChart.prototype.request = function()
 {
+    loadingOpen("Loading");
     $.getJSON("pie/ajax", this.getData())
-        .done (function(json) {
-            if (json.success) {
-                jQuery.globalEval(json.script);
-            }
-        })
-        .fail (function(jqxhr, textStatus, error) {
-            var err = textStatus + ", " + error;
-            console.log("Request Failed: " + err);
-        });
+    .done (function(json) {
+        loadingClose();
+        if (json.success) {
+            jQuery.globalEval(json.script);
+        }
+    })
+    .fail (function(jqxhr, textStatus, error) {
+        loadingClose();
+        var err = textStatus + ", " + error;
+        console.log("Request Failed: " + err);
+    });
 }

@@ -120,3 +120,20 @@ function popupMessage(message)
         );
     }
 }
+
+function loadingOpen(msgText)
+{
+    $.mobile.loading(
+        "show",
+        {
+            text:        msgText,
+            textVisible: true,
+            theme:       "b"
+        }
+    );
+}
+
+function loadingClose()
+{
+    $.mobile.loading("hide");
+}
