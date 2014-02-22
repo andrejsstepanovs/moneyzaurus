@@ -89,8 +89,11 @@ class TransactionController extends AbstractActionController
      */
     public function getDataList()
     {
-        if (null === $this->dataList) {
-            $this->dataList = array();
+        $cache = $this->getAbstractHelper()->getCache();
+
+        $dataList = $cache->transactionList();
+        if (!$dataList) {
+            $dataList = array();
             $dataListElements = array('item', 'group');
             $elements = $this->getForm()->getElements();
             foreach (array_keys($elements) as $name) {
@@ -101,11 +104,13 @@ class TransactionController extends AbstractActionController
                     ->getTransactionHelper()
                     ->getDistinctTransactionValues($name);
 
-                $this->dataList[$name] = $dataValues;
+                $dataList[$name] = $dataValues;
             }
+
+            $cache->transactionList($dataList);
         }
 
-        return $this->dataList;
+        return $dataList;
     }
 
     /**
