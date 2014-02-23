@@ -96,7 +96,7 @@ class TransactionController extends AbstractActionController
         $dataList = $cacheManager->data($cacheNamespaces, $cacheKey);
         if (!$dataList) {
             $dataList = array();
-            $dataListElements = array('transaction_list');
+            $dataListElements = array('item', 'group');
             $elements = $this->getForm()->getElements();
             foreach (array_keys($elements) as $name) {
                 if (!in_array($name, $dataListElements)) {

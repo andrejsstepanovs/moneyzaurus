@@ -113,7 +113,8 @@ class Module
                 include __DIR__ . '/config/controllers.config.php',
                 include __DIR__ . '/config/service_manager.config.php',
                 include __DIR__ . '/config/di.config.php',
-                include __DIR__ . '/config/acl.config.php'
+                include __DIR__ . '/config/acl.config.php',
+                include __DIR__ . '/config/cache.config.php'
             );
         }
 
@@ -193,17 +194,11 @@ class Module
                     return $sessionManager;
                 },
                 'CacheStorageAdapter' => function (ServiceManager $serviceManager) {
+                    $config = $serviceManager->get('Config');
+                    $dataCache = $config['data_cache'];
+
                     /** @var \Zend\Cache\Storage\Adapter\Filesystem $cache */
-                    $cache = CacheStorageFactory::factory(
-                        array(
-                            'adapter' => 'filesystem',
-                            'options' => array(
-                                'cache_dir' => __DIR__ . '/../../data/cache/data/',
-                                'ttl'       => 600,
-                                'namespace' => __NAMESPACE__,
-                            ),
-                        )
-                    );
+                    $cache = CacheStorageFactory::factory($dataCache);
 
                     return $cache;
                 },
