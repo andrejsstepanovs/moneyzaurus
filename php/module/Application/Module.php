@@ -16,6 +16,7 @@ use Zend\Session\Storage\SessionArrayStorage as SessionStorage;
 use Application\Exception\AclResourceNotAllowedException;
 use Zend\Cache\StorageFactory as CacheStorageFactory;
 use Application\Cache\Manager as CacheManager;
+use StrokerCache\Event\CacheEvent;
 
 /**
  * Class Module
@@ -53,6 +54,7 @@ class Module
         /** @var $acl \Application\Acl\Acl */
         $acl = $serviceManager->get('Application\Acl\Acl');
 
+        /** @var \Zend\EventManager\EventManager $eventManager */
         $eventManager = $application->getEventManager();
         $eventManager->attach(
             MvcEvent::EVENT_ROUTE,
@@ -76,6 +78,33 @@ class Module
                 }
             },
             -999
+        );
+
+        $this->initFrontendCacheListener($serviceManager);
+    }
+
+    /**
+     * @param ServiceManager $serviceManager
+     */
+    private function initFrontendCacheListener(ServiceManager $serviceManager)
+    {
+        $cacheService = $serviceManager->get('strokercache_service');
+        $cacheService->getEventManager()->attach(
+            CacheEvent::EVENT_LOAD,
+            function(CacheEvent $mvcEvent) use ($serviceManager) {
+                /** @var \Zend\Http\PhpEnvironment\Request $request */
+                $request = $serviceManager->get('Request');
+                switch ($request->getRequestUri()) {
+                    case '/':
+                        /** @var \Zend\Authentication\AuthenticationService $authService */
+                        $authService = $serviceManager->get('AuthService');
+                        if ($authService->hasIdentity()) {
+                            $mvcEvent->setAbort(true);
+                        }
+                        break;
+                }
+            },
+            1000
         );
     }
 

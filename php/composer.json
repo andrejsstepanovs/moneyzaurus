@@ -15,7 +15,8 @@
         "wormhit/PHPConfig": "*",
         "wormhit/InstallScripts": "*",
         "wormhit/jQueryMobileMenu": "*",
-        "wormhit/Db": "*"
+        "wormhit/Db": "*",
+        "stroker/cache": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"

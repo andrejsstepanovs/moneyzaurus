@@ -8,3 +8,5 @@ cd app-root/runtime/repo/php
 /usr/bin/php index.php install-scripts update
 
 rm -rf data/cache/config/*
+rm -rf data/cache/data/*
+rm -rf data/cache/output/*
