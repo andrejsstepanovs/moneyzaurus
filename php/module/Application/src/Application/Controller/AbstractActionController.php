@@ -140,13 +140,22 @@ class AbstractActionController extends ZendAbstractActionController
      */
     public function getCurrencyValueOptions()
     {
-        $currency = $this->getAbstractHelper()->getTable('currency');
-        $currencies = $currency->getTable()->fetchAll();
+        $cacheManager = $this->getAbstractHelper()->getCacheManager();
 
-        $valueOptions = array();
-        /** @var \Application\Db\Currency $currency */
-        foreach ($currencies as $currency) {
-            $valueOptions[$currency->getId()] = $currency->getName();
+        $cacheNamespaces = array('currency');
+        $cacheKey = 'currency_value_options';
+        $valueOptions = $cacheManager->data($cacheNamespaces, $cacheKey);
+        if (!$valueOptions) {
+            $currency = $this->getAbstractHelper()->getTable('currency');
+            $currencies = $currency->getTable()->fetchAll();
+
+            $valueOptions = array();
+            /** @var \Application\Db\Currency $currency */
+            foreach ($currencies as $currency) {
+                $valueOptions[$currency->getId()] = $currency->getName();
+            }
+
+            $cacheManager->data($cacheNamespaces, $cacheKey, $valueOptions);
         }
 
         return $valueOptions;

@@ -134,6 +134,7 @@ class Module
     {
         if (null === $this->config) {
             $this->config = array_merge(
+                include __DIR__ . '/config/cache.config.php',
                 include __DIR__ . '/config/session.config.php',
                 include __DIR__ . '/config/router.config.php',
                 include __DIR__ . '/config/navigation.config.php',
@@ -142,8 +143,7 @@ class Module
                 include __DIR__ . '/config/controllers.config.php',
                 include __DIR__ . '/config/service_manager.config.php',
                 include __DIR__ . '/config/di.config.php',
-                include __DIR__ . '/config/acl.config.php',
-                include __DIR__ . '/config/cache.config.php'
+                include __DIR__ . '/config/acl.config.php'
             );
         }
 
