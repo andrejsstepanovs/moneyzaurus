@@ -1,0 +1,24 @@
+CACHE MANIFEST
+
+CACHE:
+
+/img/favicon.ico
+/css/site.css
+http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.css
+http://code.highcharts.com/modules/exporting.js
+http://code.highcharts.com/highcharts.js
+/js/jqm.autoComplete-1.5.2.js
+http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js
+/js/transactionsList.js
+/js/transaction.js
+/js/pieChart.js
+/js/pieChartData.js
+/js/pieChartRender.js
+/js/site.js
+http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
+http://code.jquery.com/mobile/1.4.0/images/ajax-loader.gif
+http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.map
+http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.map
+
+NETWORK:
+*
