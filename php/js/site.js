@@ -18,6 +18,12 @@ $(document).bind("pageinit", function(){
         });
     }
 
+    var loginFormElement = $("form[name=login-form]");
+    if (loginFormElement.length) {
+        var Login = new LoginClass(loginFormElement);
+        Login.start();
+    }
+
     var listFormElement = $("form[name=list]");
 
     if (listFormElement.length) {

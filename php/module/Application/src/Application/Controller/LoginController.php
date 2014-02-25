@@ -4,6 +4,7 @@ namespace Application\Controller;
 use Application\Form\Form\Login as LoginForm;
 use Application\Form\Validator\Login as LoginValidator;
 use Db\Exception\ModelNotFoundException;
+use Zend\Json\Json;
 
 /**
  * Class LoginController
@@ -28,7 +29,7 @@ class LoginController extends AbstractActionController
     {
         if (null === $this->loginForm) {
             $this->loginForm = new LoginForm();
-            $this->loginForm->setAttribute('data-ajax', 'false');
+            //$this->loginForm->setAttribute('data-ajax', 'false');
         }
 
         return $this->loginForm;
@@ -57,6 +58,18 @@ class LoginController extends AbstractActionController
             return $this->redirect()->toRoute('transaction');
         }
 
+        return array(
+            'form' => $this->getLoginForm()
+        );
+    }
+
+    public function authenticateAction()
+    {
+        $data = array(
+            'success' => 1,
+            'url'     => null
+        );
+
         $form = $this->getLoginForm();
 
         /** @var \Zend\Http\PhpEnvironment\Request $request */
@@ -69,23 +82,28 @@ class LoginController extends AbstractActionController
 
             if ($form->isValid()) {
 
-                $response = $this->authenticate();
-                if ($response) {
-                    return $response;
+                try {
+                    $user = $this->authenticate();
+                    $data['message'] = 'Welcome ' . $user->getEmail() . '!';
+                    $data['url'] = $this->url()->fromRoute('transaction');
+                } catch (\InvalidArgumentException $exc) {
+                    $data['message'] = $exc->getMessage();
                 }
 
             } else {
-                $this->flashmessenger()->addMessage('Wrong data');
+                $data['message'] = 'Invalid username or password.';
             }
         }
 
-        return array(
-            'form' => $this->getLoginForm()
-        );
+        $response = $this->getResponse();
+        $response->setContent(Json::encode($data));
+
+        return $response;
     }
 
     /**
-     * @return null|\Zend\Http\PhpEnvironment\Response
+     * @return \Application\Db\User
+     * @throws \InvalidArgumentException
      */
     protected function authenticate()
     {
@@ -104,11 +122,7 @@ class LoginController extends AbstractActionController
         $result = $authAdapter->authenticate();
 
         if (!$result->isValid()) {
-            foreach ($result->getMessages() as $message) {
-                $this->flashmessenger()->addMessage($message);
-            }
-
-            return null;
+            throw new \InvalidArgumentException(implode(' | ', $result->getMessages()));
         }
 
         try {
@@ -120,11 +134,11 @@ class LoginController extends AbstractActionController
                  ->toArray();
 
         } catch (ModelNotFoundException $exc) {
-            return $this->redirect()->toRoute('login');
+            throw new \InvalidArgumentException('Invalid username or password.');
         }
 
         $authService->getStorage()->write($userData);
 
-        return $this->redirect()->toRoute('transaction');
+        return $user;
     }
 }

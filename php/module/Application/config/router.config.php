@@ -16,7 +16,10 @@ return array(
             'login' => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/login',
+                    'route'    => '/login[/:action]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Login',
                         'action'     => 'index',
