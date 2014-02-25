@@ -199,9 +199,16 @@ Page.prototype.getTimestamp = function()
 Page.prototype.getFormattedDate = function()
 {
     var date = new Date();
+    var year  = date.getFullYear();
     var month = date.getMonth() + 1;
     var day   = date.getDate();
-    var year  = date.getYear();
 
-    return year + '-' + month + '-' + day;
+    var output = "";
+    output += year;
+    output += '-';
+    output += month < 10 ? "0" + month : month;
+    output += '-';
+    output += day < 10 ? "0" + day : day;
+
+    return output;
 }

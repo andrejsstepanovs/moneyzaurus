@@ -114,6 +114,7 @@ Transaction.prototype.getPredictionElement = function(key)
 Transaction.prototype.start = function()
 {
     this.getItemElement().focus();
+    this.getDateElement().val(site.getFormattedDate());
 
     this.bindSubmit();
 

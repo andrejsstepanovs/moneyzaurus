@@ -60,12 +60,6 @@ class TransactionController extends AbstractActionController
             $this->form->remove('id_user');
             $this->form->remove('currency');
             $this->form->setAttribute('id', 'transactionForm');
-
-            $formElements = $this->form->getElements();
-
-            /** @var \Zend\Form\Element $dateElement */
-            $dateElement = $formElements['date'];
-            $dateElement->setValue(date('Y-m-d'));
         }
 
         return $this->form;
