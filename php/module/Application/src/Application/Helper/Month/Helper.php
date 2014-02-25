@@ -51,10 +51,9 @@ class Helper extends AbstractHelper
         if (null === $this->getMonthRequestValueValue()) {
             $value = $this->getRequest()->getQuery()->get('month');
 
-            if (empty($value)) {
-                $value = date('Y-m');
+            if (!empty($value)) {
+                $this->setMonthRequestValueValue($value);
             }
-            $this->setMonthRequestValueValue($value);
         }
 
         return $this->getMonthRequestValueValue();

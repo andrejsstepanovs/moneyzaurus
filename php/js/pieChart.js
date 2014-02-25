@@ -1,8 +1,9 @@
 function PieChart(parameters)
 {
     this.parameters = parameters ? parameters : {};
-    this.formElement = null;
-    this.ajax        = null;
+    this.formElement  = null;
+    this.monthElement = null;
+    this.ajax         = null;
     this.resetData();
 }
 
@@ -12,9 +13,36 @@ PieChart.prototype.setFormElement = function(formElement)
     return this;
 }
 
+PieChart.prototype.getFormElement = function()
+{
+    return this.formElement;
+}
+
+PieChart.prototype.getMonthElement = function()
+{
+    if (null === this.monthElement) {
+        this.monthElement = this.getFormElement().find("input[name=month]");
+    }
+    return this.monthElement;
+}
+
 PieChart.prototype.resetData = function()
 {
     this.data = null;
+    return this;
+}
+
+PieChart.prototype.start = function()
+{
+    var date = site.getFormattedDate().substring(0, 7);
+    this.getMonthElement().val(date);
+    this.getMonthElement().attr("max", date);
+
+    this.getMonthElement().bind("input keyup change", function() {
+        primaryChart.resetData().request();
+        return false;
+    });
+
     return this;
 }
 
@@ -23,8 +51,8 @@ PieChart.prototype.getData = function()
     if (null === this.data) {
         var data = this.parameters ? this.parameters : {};
 
-        if (this.formElement != null) {
-            var formData = this.formElement.serializeArray();
+        if (this.getFormElement() != null) {
+            var formData = this.getFormElement().serializeArray();
 
             $.map(formData, function(n, i){
                 data[n.name] = n.value;

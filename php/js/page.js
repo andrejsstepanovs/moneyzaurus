@@ -115,13 +115,7 @@ Page.prototype.initPie = function(formElement)
     if (formElement.length) {
         var parameters = {"targetElement":"primaryPieChart", level:0};
         var primaryChart = new PieChart(parameters);
-        primaryChart.setFormElement(formElement).request();
-
-        var monthElement = formElement.find("input[name=month]");
-        monthElement.bind("input keyup change", function() {
-            primaryChart.resetData().request();
-            return false;
-        });
+        primaryChart.setFormElement(formElement).start().request();
     }
 }
 
