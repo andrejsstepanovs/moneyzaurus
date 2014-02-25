@@ -108,7 +108,7 @@ LoginClass.prototype.login = function()
 {
     this.formData = null;
     this.disableFormElements();
-    loadingOpen("Loggin in...");
+    site.loadingOpen("Loggin in...");
     var self = this;
 
     console.log(this.getFormData());
@@ -117,7 +117,7 @@ LoginClass.prototype.login = function()
         "/login/authenticate",
         this.getFormData(),
         function(json, textStatus) {
-            loadingClose();
+            site.loadingClose();
             self.enableFormElements();
             self.resetFormData();
 

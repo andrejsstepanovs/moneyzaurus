@@ -148,3 +148,20 @@ Page.prototype.popupMessage = function(message)
         );
     }
 }
+
+Page.prototype.loadingOpen = function(msgText)
+{
+    $.mobile.loading(
+        "show",
+        {
+            text:        msgText,
+            textVisible: true,
+            theme:       "b"
+        }
+    );
+}
+
+Page.prototype.loadingClose = function()
+{
+    $.mobile.loading("hide");
+}

@@ -43,16 +43,16 @@ PieChart.prototype.request = function()
         this.ajax.abort();
     }
 
-    loadingOpen("Loading");
+    site.loadingOpen("Loading");
     this.ajax = $.getJSON("pie/ajax", this.getData())
     .done (function(json) {
-        loadingClose();
+        site.loadingClose();
         if (json.success) {
             jQuery.globalEval(json.script);
         }
     })
     .fail (function(jqxhr, textStatus, error) {
-        loadingClose();
+        site.loadingClose();
         var err = textStatus + ", " + error;
         console.log("Request Failed: " + err);
     });

@@ -196,12 +196,12 @@ Transaction.prototype.save = function()
 {
     this.formData = null;
     this.disableFormElements();
-    loadingOpen("Saving...");
+    site.loadingOpen("Saving...");
     var self = this;
     $.getJSON("/transaction/save", this.getFormData())
     .done (function(json) {
         if (json.success) {
-            loadingClose();
+            site.loadingClose();
             self.resetFormData();
             site.popupMessage(json.message, 2000);
         } else {
@@ -217,7 +217,7 @@ Transaction.prototype.save = function()
         );
     })
     .fail (function(jqxhr, textStatus, error) {
-        loadingClose();
+        site.loadingClose();
         self.enableFormElements();
         var err = textStatus + ", " + error;
         console.log("Request Failed: " + err);

@@ -11,20 +11,3 @@ $(document).bind("pageinit", function(){
 $(document).on('pageshow', function(){
     site.pageshow();
 });
-
-function loadingOpen(msgText)
-{
-    $.mobile.loading(
-        "show",
-        {
-            text:        msgText,
-            textVisible: true,
-            theme:       "b"
-        }
-    );
-}
-
-function loadingClose()
-{
-    $.mobile.loading("hide");
-}
