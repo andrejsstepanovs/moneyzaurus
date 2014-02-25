@@ -111,15 +111,13 @@ LoginClass.prototype.login = function()
     site.loadingOpen("Loggin in...");
     var self = this;
 
-    console.log(this.getFormData());
-
     $.post(
         "/login/authenticate",
         this.getFormData(),
         function(json, textStatus) {
             site.loadingClose();
             self.enableFormElements();
-            self.resetFormData();
+            //self.resetFormData();
 
             if (textStatus != "success") {
                 alert("Uh, dam! Something went wrong. Please refresh and try again. Sorry!");

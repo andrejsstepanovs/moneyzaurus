@@ -17,65 +17,76 @@ Page.prototype.pageinit = function()
     this.formatLoginForm($("#login-submit"));
 }
 
+Page.prototype.initListBindSubmit = function(listFormElement)
+{
+    var listParameters = {"targetElement":"listResults"};
+    var TransactionList = new TransactionsList(listParameters);
+    TransactionList.setFormElement(listFormElement).request();
+
+    listFormElement.bind('submit', function() {
+        TransactionList.resetData().request();
+        return false;
+    });
+
+    var formElements = listFormElement.find(":input");
+    formElements.each(
+        function(){
+            $(this).keyup(function () {
+                listFormElement.submit();
+            });
+        }
+    );
+}
+
+Page.prototype.initListEditSubmit = function(listFormElement, editForm)
+{
+    var self = this;
+    editForm.bind('submit', function() {
+        var action = $(this).attr("action");
+        var params = self.formToJson($(this));
+
+        $.getJSON(action, params)
+            .done (function(json) {
+            if (json.success) {
+                $("#editTransaction").popup("close");
+                listFormElement.submit();
+            } else {
+                alert(json.error);
+            }
+        });
+
+        return false;
+    });
+}
+
+Page.prototype.initListEditDelete = function(listFormElement, deleteTransactionButton)
+{
+    deleteTransactionButton.bind('click', function() {
+        var action = $(this).attr("data-action");
+
+        var transactionId = $("#editTransaction form :input[name=transaction_id]").val();
+        var params = {transaction_id: transactionId};
+
+        $.getJSON(action, params)
+            .done (function(json) {
+            if (json.success) {
+                $("#editTransaction").popup("close");
+                listFormElement.submit();
+            } else {
+                alert(json.error);
+            }
+        });
+
+        return false;
+    });
+}
+
 Page.prototype.initList = function(listFormElement)
 {
     if (listFormElement.length) {
-        var listParameters = {"targetElement":"listResults"};
-        var TransactionList = new TransactionsList(listParameters);
-        TransactionList.setFormElement(listFormElement).request();
-
-        listFormElement.bind('submit', function() {
-            TransactionList.resetData().request();
-            return false;
-        });
-
-        var formElements = listFormElement.find(":input");
-        formElements.each(
-            function(){
-                $(this).keyup(function () {
-                    listFormElement.submit();
-                });
-            }
-        );
-
-        var editForm = $("#editTransaction form");
-
-        var self = this;
-        editForm.bind('submit', function() {
-            var action = $(this).attr("action");
-            var params = self.formToJson($(this));
-
-            $.getJSON(action, params)
-                .done (function(json) {
-                if (json.success) {
-                    $("#editTransaction").popup("close");
-                    listFormElement.submit();
-                } else {
-                    alert(json.error);
-                }
-            });
-
-            return false;
-        });
-
-        $("#deleteTransactionButton").bind('click', function() {
-            var action = $(this).attr("data-action");
-
-            var transactionId = $("#editTransaction form :input[name=transaction_id]").val();
-            var params = {transaction_id: transactionId};
-
-            $.getJSON(action, params)
-                .done (function(json) {
-                if (json.success) {
-                    $("#editTransaction").popup("close");
-                    listFormElement.submit();
-                } else {
-                    alert(json.error);
-                }
-            });
-
-            return false;
-        });
+        this.initListBindSubmit(listFormElement);
+        this.initListEditSubmit(listFormElement, $("#editTransaction form"));
+        this.initListEditDelete(listFormElement, $("#deleteTransactionButton"));
     }
 }
 
