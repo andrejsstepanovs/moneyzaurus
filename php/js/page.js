@@ -10,27 +10,15 @@ Page.prototype.mobileinit = function()
 
 Page.prototype.pageinit = function()
 {
-    var formElement = $("form.pie");
-    if (formElement.length) {
-        var parameters = {"targetElement":"primaryPieChart",level:0};
-        var primaryChart = new PieChart(parameters);
-        primaryChart.setFormElement(formElement).request();
+    this.initPie($("form.pie"));
+    this.initLogin($("form[name=login-form]"));
+    this.initList($("form[name=list]"));
+    this.initTransaction($("#transactionForm"));
+    this.formatLoginForm($("#login-submit"));
+}
 
-        var monthElement = formElement.find("input[name=month]");
-        monthElement.bind("input keyup change", function() {
-            primaryChart.resetData().request();
-            return false;
-        });
-    }
-
-    var loginFormElement = $("form[name=login-form]");
-    if (loginFormElement.length) {
-        var Login = new LoginClass(loginFormElement);
-        Login.start();
-    }
-
-    var listFormElement = $("form[name=list]");
-
+Page.prototype.initList = function(listFormElement)
+{
     if (listFormElement.length) {
         var listParameters = {"targetElement":"listResults"};
         var TransactionList = new TransactionsList(listParameters);
@@ -89,16 +77,43 @@ Page.prototype.pageinit = function()
             return false;
         });
     }
+}
 
-    var transactionForm = $("#transactionForm");
+Page.prototype.formatLoginForm = function(loginSubmitInputElement)
+{
+    loginSubmitInputElement.parent().addClass('ui-btn-active');
+    loginSubmitInputElement.parent().css({'padding':'.785em 1em','margin-right':'0'});
+}
+
+Page.prototype.initTransaction = function(transactionForm)
+{
     if (transactionForm.length) {
         transaction = new Transaction(transactionForm);
         transaction.start();
     }
+}
 
-    var loginSubmitInputElement = $("#login-submit");
-    loginSubmitInputElement.parent().addClass('ui-btn-active');
-    loginSubmitInputElement.parent().css({'padding':'.785em 1em','margin-right':'0'});
+Page.prototype.initLogin = function(loginFormElement)
+{
+    if (loginFormElement.length) {
+        var Login = new LoginClass(loginFormElement);
+        Login.start();
+    }
+}
+
+Page.prototype.initPie = function(formElement)
+{
+    if (formElement.length) {
+        var parameters = {"targetElement":"primaryPieChart", level:0};
+        var primaryChart = new PieChart(parameters);
+        primaryChart.setFormElement(formElement).request();
+
+        var monthElement = formElement.find("input[name=month]");
+        monthElement.bind("input keyup change", function() {
+            primaryChart.resetData().request();
+            return false;
+        });
+    }
 }
 
 Page.prototype.pageshow = function()
