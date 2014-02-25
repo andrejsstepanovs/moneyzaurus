@@ -146,6 +146,8 @@ Transaction.prototype.start = function()
     this.getDateElement().bind("input keyup change focus", function() {
         self.transactionExist();
     });
+
+    this.initAutocompleteData();
 }
 
 Transaction.prototype.bindSubmit = function()
@@ -222,6 +224,32 @@ Transaction.prototype.save = function()
         var err = textStatus + ", " + error;
         console.log("Request Failed: " + err);
     });
+}
+
+Transaction.prototype.initAutocompleteData = function()
+{
+    var self = this;
+
+    $.post(
+        "/transaction/data",
+        this.getFormData(),
+        function(json, textStatus) {
+            self.autocompleteInput(
+                $("#item"),
+                $('#suggestions-item'),
+                json.item,
+                $('#group')
+            );
+
+            self.autocompleteInput(
+                $("#group"),
+                $('#suggestions-group'),
+                json.group,
+                $('#price')
+            );
+        },
+        "json"
+    );
 }
 
 Transaction.prototype.transactionExist = function()
@@ -316,4 +344,20 @@ Transaction.prototype.buildPredictedButtons = function(data, element, key)
     });
 
     $("#" + predictId).show();
+}
+
+Transaction.prototype.autocompleteInput = function(element, target, data, nextElement)
+{
+    var elementId = element.attr('id');
+    var targetId  = target.attr('id');
+    var nextElementId = nextElement.attr('id');
+    element.autocomplete({
+        target: target,
+        source: data,
+        link: '$(\'#' + elementId + '\').val(\'%s\');'
+            + '$(\'#' + elementId + '\').trigger(\'input\');'
+            + '$(\'#' + targetId + '\')[0].innerHTML=\'\';'
+            + '$(\'#' + nextElementId + '\').focus();',
+        minLength: 1
+    });
 }

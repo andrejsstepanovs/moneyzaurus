@@ -134,9 +134,21 @@ class TransactionController extends AbstractActionController
     public function indexAction()
     {
         return array(
-            'form'     => $this->getForm(),
-            'datalist' => $this->getDataList(),
+            'form' => $this->getForm()
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function dataAction()
+    {
+        $responseData = $this->getDataList();
+
+        $response = $this->getResponse();
+        $response->setContent(Json::encode($responseData));
+
+        return $response;
     }
 
     public function existAction()

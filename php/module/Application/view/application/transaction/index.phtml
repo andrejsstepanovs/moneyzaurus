@@ -25,38 +25,3 @@ foreach ($form as $element) {
 }
 
 echo $this->form()->closeTag();
-
-?>
-
-
-<script>
-    autocompleteInput(
-        $("#item"),
-        $('#suggestions-item'),
-        <?php echo json_encode($this->datalist['item']); ?>,
-        $('#group')
-    );
-
-    autocompleteInput(
-        $("#group"),
-        $('#suggestions-group'),
-        <?php echo json_encode($this->datalist['group']); ?>,
-        $('#price')
-    );
-
-    function autocompleteInput(element, target, data, nextElement)
-    {
-        var elementId = element.attr('id');
-        var targetId  = target.attr('id');
-        var nextElementId = nextElement.attr('id');
-        element.autocomplete({
-            target: target,
-            source: data,
-            link: '$(\'#' + elementId + '\').val(\'%s\');'
-                + '$(\'#' + elementId + '\').trigger(\'input\');'
-                + '$(\'#' + targetId + '\')[0].innerHTML=\'\';'
-                + '$(\'#' + nextElementId + '\').focus();',
-            minLength: 1
-        });
-    }
-</script>
