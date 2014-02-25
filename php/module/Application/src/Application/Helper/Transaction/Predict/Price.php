@@ -45,6 +45,7 @@ class Price extends AbstractHelper
     protected function addPrediction($price)
     {
         $this->predictions[] = $price;
+
         return $this;
     }
 
@@ -101,7 +102,6 @@ class Price extends AbstractHelper
         // add most popular prices by usage count
         $this->addPrediction(array_pop($allPricesSortedByCount));
         $this->addPrediction(array_pop($allPricesSortedByCount));
-
 
         $allPricesByDay = $data[self::BY_DAY];
         $currentDay     = $this->getCurrentDay();
@@ -163,6 +163,7 @@ class Price extends AbstractHelper
     protected function getTransactions()
     {
         $transactions = $this->getData('transactions');
+
         return $transactions ? $transactions : array();
     }
 

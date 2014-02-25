@@ -285,6 +285,7 @@ class TransactionController extends AbstractActionController
         if ($transaction->getId()) {
             $this->showMessage('Saved');
             $this->unsetFormData();
+
             return $transaction;
         } else {
             throw new \RuntimeException('Failed to save');

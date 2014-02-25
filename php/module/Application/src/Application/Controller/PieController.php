@@ -78,6 +78,7 @@ class PieController extends AbstractActionController
     protected function getPieChartElement($key)
     {
         $pieChartElements = $this->getPieChartElements();
+
         return $pieChartElements[$key];
     }
 

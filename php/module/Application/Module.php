@@ -12,11 +12,9 @@ use Zend\Session\Container as SessionContainer;
 use Zend\Authentication\Storage\Session as AuthenticationSessionStorage;
 use Zend\Session\SessionManager;
 use Zend\Session\Config\StandardConfig as SessionConfig;
-use Zend\Session\Storage\SessionArrayStorage as SessionStorage;
 use Application\Exception\AclResourceNotAllowedException;
 use Zend\Cache\StorageFactory as CacheStorageFactory;
 use Application\Cache\Manager as CacheManager;
-use StrokerCache\Event\CacheEvent;
 
 /**
  * Class Module
@@ -64,7 +62,7 @@ class Module
 
         $eventManager->attach(
             MvcEvent::EVENT_DISPATCH_ERROR,
-            function(MvcEvent $mvcEvent) use ($serviceManager) {
+            function (MvcEvent $mvcEvent) use ($serviceManager) {
                 $exception = $mvcEvent->getParam('exception');
                 if ($exception) {
                     $serviceManager->get('Zend\Log\Logger')->crit($mvcEvent->getParam('exception'));
@@ -172,6 +170,7 @@ class Module
                         null,
                         $serviceManager->get('SessionManager')
                     );
+
                     return $session;
                 },
                 'SessionManager' => function (ServiceManager $serviceManager) {
@@ -211,6 +210,7 @@ class Module
 
                     $cacheManager = new CacheManager();
                     $cacheManager->setCacheStorage($cacheStorage)->setLifetime(600);
+
                     return $cacheManager;
                 },
             )

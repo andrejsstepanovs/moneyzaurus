@@ -165,7 +165,7 @@ class ResendPasswordController extends AbstractActionController
     }
 
     /**
-     * @param string $newPassword
+     * @param  string                                  $newPassword
      * @return null|\Zend\Http\PhpEnvironment\Response
      */
     private function resendPassword($newPassword)

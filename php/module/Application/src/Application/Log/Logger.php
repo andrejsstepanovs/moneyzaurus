@@ -55,6 +55,7 @@ class Logger implements FactoryInterface
     protected function _getLogger()
     {
         $logger = new ZendLogger;
+
         return $logger;
     }
 }

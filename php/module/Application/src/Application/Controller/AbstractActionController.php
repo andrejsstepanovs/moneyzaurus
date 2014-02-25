@@ -80,7 +80,7 @@ class AbstractActionController extends ZendAbstractActionController
             foreach ($messages as $message) {
                 $this->getViewHelperPlugin('inlineScript')->appendScript(
                     '$(document).ready(function () {
-                        $(document).on("pageshow", function() {
+                        $(document).on("pageshow", function () {
                             var message = "'.str_replace('"', "'", $message).'";
                             site.popupMessage(message);
                         });

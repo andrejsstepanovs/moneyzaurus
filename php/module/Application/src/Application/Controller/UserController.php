@@ -138,6 +138,7 @@ class UserController extends AbstractActionController
         }
 
         $connections = $this->getConnectionHelper()->getUserConnections($this->getUserId());
+
         return array(
             'form'        => $userForm,
             'connections' => $connections,

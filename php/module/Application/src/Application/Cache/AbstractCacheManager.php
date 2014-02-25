@@ -48,7 +48,7 @@ abstract class AbstractCacheManager extends AbstractHelper
     /**
      * @param string   $namespace
      * @param string   $key
-     * @param mixed   $value
+     * @param mixed    $value
      * @param null|int $lifetime
      *
      * @return bool
@@ -61,6 +61,7 @@ abstract class AbstractCacheManager extends AbstractHelper
         }
 
         $serialized = $this->serialize($value);
+
         return $this->getCacheStorage()->setItem($key, $serialized);
     }
 
@@ -78,6 +79,7 @@ abstract class AbstractCacheManager extends AbstractHelper
 
         $serialized = $this->getCacheStorage()->getItem($key);
         $data = $this->unserialize($serialized);
+
         return $data;
     }
 
@@ -119,6 +121,7 @@ abstract class AbstractCacheManager extends AbstractHelper
     protected function removeNamespace($namespace)
     {
         $namespaceValue = $this->setNamespace($namespace)->getNamespace($namespace);
+
         return $this->getCacheStorage()->clearByNamespace($namespaceValue);
     }
 

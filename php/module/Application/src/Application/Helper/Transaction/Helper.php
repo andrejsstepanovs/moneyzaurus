@@ -100,13 +100,13 @@ class Helper extends AbstractHelper
     }
 
     /**
-     * @param  int    $userId
-     * @param  int    $transactionId
-     * @param  string $itemName
-     * @param  string $groupName
-     * @param  float  $price
-     * @param  string $currencyId
-     * @param  string $date
+     * @param int    $userId
+     * @param int    $transactionId
+     * @param string $itemName
+     * @param string $groupName
+     * @param float  $price
+     * @param string $currencyId
+     * @param string $date
      *
      * @return DbTransaction transaction
      */
@@ -154,6 +154,7 @@ class Helper extends AbstractHelper
 
         /** @var \Application\Db\Transaction $transaction */
         $transaction = $this->getAbstractHelper()->getTable('transaction');
+
         return $transaction
             ->setTransactionId($transactionId)
             ->setPrice($price)

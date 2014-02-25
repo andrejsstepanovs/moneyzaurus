@@ -73,7 +73,6 @@ class AbstractHelper extends AbstractModel
         return $this->activeRecords[$key];
     }
 
-
     /**
      * @param Select $select
      * @param int    $userId
