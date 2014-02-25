@@ -10,11 +10,7 @@ Page.prototype.mobileinit = function()
 
 Page.prototype.pageinit = function()
 {
-    this.initPie($("form.pie"));
-    this.initLogin($("form[name=login-form]"));
-    this.initList($("form[name=list]"));
-    this.initTransaction($("#transactionForm"));
-    this.formatLoginForm($("#login-submit"));
+
 }
 
 Page.prototype.initListBindSubmit = function(listFormElement)
@@ -99,6 +95,8 @@ Page.prototype.formatLoginForm = function(loginSubmitInputElement)
 Page.prototype.initTransaction = function(transactionForm)
 {
     if (transactionForm.length) {
+        transactionForm.find("input[name=item]").focus();
+
         transaction = new Transaction(transactionForm);
         transaction.start();
     }
@@ -129,10 +127,11 @@ Page.prototype.initPie = function(formElement)
 
 Page.prototype.pageshow = function()
 {
-    var transactionForm = $("#transactionForm");
-    if (transactionForm.length) {
-        transactionForm.find("input[name=item]").focus();
-    }
+    this.initPie($("form.pie"));
+    this.initLogin($("form[name=login-form]"));
+    this.initList($("form[name=list]"));
+    this.initTransaction($("#transactionForm"));
+    this.formatLoginForm($("#login-submit"));
 }
 
 Page.prototype.init = function(key, value)

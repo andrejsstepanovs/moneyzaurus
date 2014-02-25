@@ -96,13 +96,13 @@ TransactionsList.prototype.request = function()
     site.loadingOpen("Loading...");
     this.ajax = $.getJSON("/list/ajax", this.getData())
     .done (function(json) {
-        site.loadingClose();
         if (json.success) {
             if (json.script) {
                 jQuery.globalEval(json.script);
             }
             self.buildTable(json.data);
         }
+        site.loadingClose();
     })
     .fail (function(jqxhr, textStatus, error) {
         site.loadingClose();
