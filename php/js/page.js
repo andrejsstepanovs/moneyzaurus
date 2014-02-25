@@ -5,7 +5,7 @@ function Page()
 
 Page.prototype.mobileinit = function()
 {
-    this.useAjax(true);
+    this.useAjax(false);
 }
 
 Page.prototype.pageinit = function()

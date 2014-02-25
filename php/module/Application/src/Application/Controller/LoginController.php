@@ -85,7 +85,7 @@ class LoginController extends AbstractActionController
                 try {
                     $user = $this->authenticate();
                     $data['message'] = 'Welcome ' . $user->getEmail() . '!';
-                    $data['url'] = $this->url()->fromRoute('transaction');
+                    $data['url'] = $this->url()->fromRoute('transaction') . '/index';
                 } catch (\InvalidArgumentException $exc) {
                     $data['message'] = $exc->getMessage();
                 }
