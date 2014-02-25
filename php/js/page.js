@@ -190,3 +190,18 @@ Page.prototype.loadingClose = function()
 {
     $.mobile.loading("hide");
 }
+
+Page.prototype.getTimestamp = function()
+{
+    return Math.round(new Date().getTime() / 1000)
+}
+
+Page.prototype.getFormattedDate = function()
+{
+    var date = new Date();
+    var month = date.getMonth() + 1;
+    var day   = date.getDate();
+    var year  = date.getYear();
+
+    return year + '-' + month + '-' + day;
+}

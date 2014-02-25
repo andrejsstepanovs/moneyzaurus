@@ -245,6 +245,10 @@ Transaction.prototype.autocompleteFetchData = function()
 Transaction.prototype.autocompleteStart = function()
 {
     var data = this.autocompleteLoadStorageData();
+    if (!data || !data.timestamp || 60 < site.getTimestamp() - data.timestamp) {
+        this.autocompleteFetchData();
+    }
+
     if (data) {
         this.autocompleteInput(
             $("#item"),
@@ -259,8 +263,6 @@ Transaction.prototype.autocompleteStart = function()
             data.group,
             $('#price')
         );
-    } else {
-        this.autocompleteFetchData();
     }
 
     return this;
@@ -268,7 +270,11 @@ Transaction.prototype.autocompleteStart = function()
 
 Transaction.prototype.autocompleteSaveData = function(item, group)
 {
-    var data = {"item": item, "group": group};
+    var data = {
+        "timestamp": site.getTimestamp(),
+        "item"     : item,
+        "group"    : group
+    };
     localStorage.setItem('autocomplete_data', JSON.stringify(data));
     return this;
 }
