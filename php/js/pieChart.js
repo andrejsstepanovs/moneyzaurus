@@ -38,8 +38,9 @@ PieChart.prototype.start = function()
     this.getMonthElement().val(date);
     this.getMonthElement().attr("max", date);
 
+    var self = this;
     this.getMonthElement().bind("input keyup change", function() {
-        primaryChart.resetData().request();
+        self.resetData().request();
         return false;
     });
 
