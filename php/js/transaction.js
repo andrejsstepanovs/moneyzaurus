@@ -147,7 +147,7 @@ Transaction.prototype.start = function()
         self.transactionExist();
     });
 
-    this.initAutocompleteData();
+    this.autocompleteStart();
 }
 
 Transaction.prototype.bindSubmit = function()
@@ -226,30 +226,61 @@ Transaction.prototype.save = function()
     });
 }
 
-Transaction.prototype.initAutocompleteData = function()
+Transaction.prototype.autocompleteFetchData = function()
 {
     var self = this;
-
     $.post(
         "/transaction/data",
         this.getFormData(),
         function(json, textStatus) {
-            self.autocompleteInput(
-                $("#item"),
-                $('#suggestions-item'),
-                json.item,
-                $('#group')
-            );
-
-            self.autocompleteInput(
-                $("#group"),
-                $('#suggestions-group'),
-                json.group,
-                $('#price')
-            );
+            if (textStatus == "success") {
+                self.autocompleteSaveData(json.item, json.group)
+                    .autocompleteStart();
+            }
         },
         "json"
     );
+}
+
+Transaction.prototype.autocompleteStart = function()
+{
+    var data = this.autocompleteLoadStorageData();
+    if (data) {
+        this.autocompleteInput(
+            $("#item"),
+            $('#suggestions-item'),
+            data.item,
+            $('#group')
+        );
+
+        this.autocompleteInput(
+            $("#group"),
+            $('#suggestions-group'),
+            data.group,
+            $('#price')
+        );
+    } else {
+        this.autocompleteFetchData();
+    }
+
+    return this;
+}
+
+Transaction.prototype.autocompleteSaveData = function(item, group)
+{
+    var data = {"item": item, "group": group};
+    localStorage.setItem('autocomplete_data', JSON.stringify(data));
+    return this;
+}
+
+Transaction.prototype.autocompleteLoadStorageData = function()
+{
+    var data = false;
+    var dataString = localStorage.getItem('autocomplete_data');
+    if (dataString) {
+        data = $.parseJSON(dataString);
+    }
+    return data;
 }
 
 Transaction.prototype.transactionExist = function()
