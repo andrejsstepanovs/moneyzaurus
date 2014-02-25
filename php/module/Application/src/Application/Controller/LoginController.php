@@ -54,7 +54,7 @@ class LoginController extends AbstractActionController
     public function indexAction()
     {
         if ($this->getAuthService()->hasIdentity()) {
-            return $this->redirect()->toRoute('moneyzaurus');
+            return $this->redirect()->toRoute('transaction');
         }
 
         $form = $this->getLoginForm();
@@ -120,11 +120,11 @@ class LoginController extends AbstractActionController
                  ->toArray();
 
         } catch (ModelNotFoundException $exc) {
-            return $this->redirect()->toRoute('moneyzaurus');
+            return $this->redirect()->toRoute('login');
         }
 
         $authService->getStorage()->write($userData);
 
-        return $this->redirect()->toRoute('moneyzaurus');
+        return $this->redirect()->toRoute('transaction');
     }
 }
