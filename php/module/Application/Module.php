@@ -79,33 +79,6 @@ class Module
             },
             -999
         );
-
-        $this->initFrontendCacheListener($serviceManager);
-    }
-
-    /**
-     * @param ServiceManager $serviceManager
-     */
-    private function initFrontendCacheListener(ServiceManager $serviceManager)
-    {
-        $cacheService = $serviceManager->get('strokercache_service');
-        $cacheService->getEventManager()->attach(
-            CacheEvent::EVENT_LOAD,
-            function(CacheEvent $mvcEvent) use ($serviceManager) {
-                /** @var \Zend\Http\PhpEnvironment\Request $request */
-                $request = $serviceManager->get('Request');
-                switch ($request->getRequestUri()) {
-                    case '/':
-                        /** @var \Zend\Authentication\AuthenticationService $authService */
-                        $authService = $serviceManager->get('AuthService');
-                        if ($authService->hasIdentity()) {
-                            $mvcEvent->setAbort(true);
-                        }
-                        break;
-                }
-            },
-            1000
-        );
     }
 
     /**

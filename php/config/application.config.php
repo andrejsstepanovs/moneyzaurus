@@ -6,8 +6,7 @@ return array(
         'Db',
         'PHPConfig',
         'HighchartsPHP',
-        'InstallScripts',
-        'StrokerCache',
+        'InstallScripts'
     ),
 
     'module_listener_options' => array(
