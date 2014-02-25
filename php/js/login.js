@@ -125,7 +125,7 @@ LoginClass.prototype.login = function()
                 alert("Uh, dam! Something went wrong. Please refresh and try again. Sorry!");
             } else {
                 if (json.message) {
-                    popupMessage(json.message, 2000);
+                    site.popupMessage(json.message, 2000);
                 }
 
                 if (json.success && json.url) {

@@ -203,7 +203,7 @@ Transaction.prototype.save = function()
         if (json.success) {
             loadingClose();
             self.resetFormData();
-            popupMessage(json.message, 2000);
+            site.popupMessage(json.message, 2000);
         } else {
             alert("Failed to save. " + json.message);
         }
@@ -249,7 +249,7 @@ Transaction.prototype.transactionExist = function()
             }
             message += "</ul>";
 
-            popupMessage(message);
+            site.popupMessage(message);
         }
     })
     .fail (function(jqxhr, textStatus, error) {

@@ -130,3 +130,21 @@ Page.prototype.formToJson = function(selector)
     for (var a = 0; a < ary.length; a++) obj[ary[a].name] = ary[a].value;
     return obj;
 }
+
+Page.prototype.popupMessage = function(message)
+{
+    if (message.length) {
+        var popup = $("#popup");
+        if (popup.length) {
+            popup.html("<p>" + message + "</p>").popup("open");
+        }
+
+        var timeout = 2000;
+        var popupMessage = setTimeout(
+            function() {
+                popup.popup("close");
+            },
+            timeout
+        );
+    }
+}
