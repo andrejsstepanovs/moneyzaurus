@@ -46,7 +46,12 @@ TransactionsList.prototype.getData = function()
 
 TransactionsList.prototype.getRowHtml = function(row, columns)
 {
-    var dataId = "data-id=\"" + row["transaction_id"] + "\"";
+    if (!row) {
+        return "";
+    }
+
+    var transactionId = row.hasOwnProperty("transaction_id") ? row["transaction_id"] : 0;
+    var dataId = "data-id=\"" + transactionId + "\"";
     var html = "<tr class=\"" + this.rowClass + "\" " + dataId + ">";
     for (var i in columns) {
         if (columns.hasOwnProperty(i)) {
@@ -141,7 +146,6 @@ TransactionsList.prototype.makeRequest = function(callback)
                 }
                 self.buildTable(json.data);
 
-                console.log(typeof(callback));
                 if (typeof(callback) == "function") {
                     callback(json.data);
                 }

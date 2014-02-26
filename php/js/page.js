@@ -12,11 +12,28 @@ Page.prototype.pageinit = function()
 {
     if (!this.isOnline()) {
         this.initOfflineMode();
+    } else {
+        this.saveLocalTransactions();
     }
 
     var data = this.authenticatedLoadStorageData();
     if (!data || !data.timestamp || 60 < site.getTimestamp() - data.timestamp) {
         this.isLoggedIn(this.authenticatedSaveToStorage);
+    }
+}
+
+Page.prototype.saveLocalTransactions = function()
+{
+    var transaction = new Transaction();
+    var transactionsList = new TransactionsList();
+    var listData = transactionsList.loadListDataFromStorage();
+    if (listData && listData.data && listData.data.rows && listData.data.rows.length) {
+        for (i in listData.data.rows) {
+            var transactionObj = listData.data.rows[i];
+            if (transactionObj && transactionObj.not_saved) {
+                transaction.makeSaveRequest(transactionObj, i);
+            }
+        }
     }
 }
 

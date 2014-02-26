@@ -199,8 +199,8 @@ Transaction.prototype.resetFormData = function()
 Transaction.prototype.save = function()
 {
     var formData = this.getFormData();
-    if (!site.isOnline()) {
-        this.saveRequest(formData, this.addTransactionToStorage);
+    if (site.isOnline()) {
+        this.saveRequest(formData, this.addTransactionToStorage, true);
     } else {
         this.addTransactionToStorage(formData, true);
     }
@@ -259,17 +259,35 @@ Transaction.prototype.saveRequest = function(transactionData, callback)
                     site.popupMessage("Failed to save. " + json.message, 5000);
                 }
 
-                self.getItemElement().focus();
-
-                var focus = setTimeout(
-                    function() {
-                        self.getItemElement().focus();
-                    }, 2100
-                );
             }
         },
         "json"
     );
+}
+
+Transaction.prototype.makeSaveRequest = function(transactionData, rowId)
+{
+    var self = this;
+    $.post(
+        "/transaction/save",
+        transactionData,
+        function(json, textStatus) {
+            if (textStatus == "success" && json.success) {
+                self.updateListData(json.transaction, rowId);
+            }
+        },
+        "json"
+    );
+}
+
+Transaction.prototype.updateListData = function(rowData, rowId)
+{
+    var transactionsList = new TransactionsList();
+    var listData = transactionsList.loadListDataFromStorage();
+    if (listData && listData.data && listData.data.rows && listData.data.rows.length) {
+        listData.data.rows[rowId] = rowData;
+    }
+    transactionsList.listDataSaveToStorage(listData.data);
 }
 
 Transaction.prototype.autocompleteFetchData = function()
