@@ -119,21 +119,24 @@ Page.prototype.getTransactionList = function()
 Page.prototype.initListBindSubmit = function(listFormElement)
 {
     var transactionList = this.getTransactionList();
+
+    var formElements = listFormElement.find(":input");
+    if (formElements.length) {
+        formElements.each(
+            function() {
+                $(this).keyup(function () {
+                    listFormElement.submit();
+                });
+            }
+        );
+    }
+
     transactionList.setFormElement(listFormElement).request(false);
 
     listFormElement.bind('submit', function() {
-        transactionList.resetData().request();
+        transactionList.resetData().request(true);
         return false;
     });
-
-    var formElements = listFormElement.find(":input");
-    formElements.each(
-        function(){
-            $(this).keyup(function () {
-                listFormElement.submit();
-            });
-        }
-    );
 }
 
 Page.prototype.initListEditSubmit = function(listFormElement, editForm)
