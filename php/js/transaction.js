@@ -1,17 +1,18 @@
 function Transaction(formElement)
 {
     this.formElement = formElement;
-    this.data = {};
-    this.formData = {};
+
+    this.data       = {};
+    this.formData   = {};
     this.parameters = {};
 
-    this.itemElement    = null;
-    this.groupElement   = null;
-    this.priceElement   = null;
-    this.dateElement    = null;
-    this.submitElement  = null;
-    this.minInputLength = 3;
-    this.ajaxExist      = null
+    this.itemElement      = null;
+    this.groupElement     = null;
+    this.priceElement     = null;
+    this.dateElement      = null;
+    this.submitElement    = null;
+    this.minInputLength   = 3;
+    this.ajaxExist        = null;
 }
 
 Transaction.prototype.setData = function(key, value)
@@ -197,6 +198,31 @@ Transaction.prototype.resetFormData = function()
 
 Transaction.prototype.save = function()
 {
+    var formData = this.getFormData();
+    if (!site.isOnline()) {
+        this.saveRequest(formData, this.addTransactionToStorage);
+    } else {
+        this.addTransactionToStorage(formData, true);
+    }
+}
+
+Transaction.prototype.addTransactionToStorage = function(transactionData, notSaved)
+{
+    var transactionsList = new TransactionsList();
+    listData = transactionsList.loadListDataFromStorage();
+    if (notSaved) {
+        transactionData.not_saved     = notSaved;
+        transactionData.item_name     = transactionData.item;
+        transactionData.group_name    = transactionData.group;
+        transactionData.currency_html = "";
+    }
+    site.array_unshift(listData.data.rows, transactionData)
+
+    transactionsList.listDataSaveToStorage(listData.data);
+}
+
+Transaction.prototype.saveRequest = function(transactionData, callback)
+{
     this.formData = null;
     this.disableFormElements();
     site.loadingOpen("Saving...");
@@ -204,7 +230,7 @@ Transaction.prototype.save = function()
 
     $.post(
         "/transaction/save",
-        this.getFormData(),
+        transactionData,
         function(json, textStatus) {
             site.loadingClose();
             self.enableFormElements();
@@ -212,6 +238,9 @@ Transaction.prototype.save = function()
             if (textStatus == "success") {
                 if (json.success) {
                     self.resetFormData();
+                    if (typeof(callback) == "function") {
+                        callback(json.transaction, false);
+                    }
                     site.popupMessage(json.message, 2000);
                 } else {
                     site.popupMessage("Failed to save. " + json.message, 5000);

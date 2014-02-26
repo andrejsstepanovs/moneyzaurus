@@ -204,6 +204,16 @@ class TransactionController extends AbstractActionController
         try {
             $transaction = $this->saveTransaction($this->getForm());
             $data['id']      = $transaction->getTransactionId();
+
+            $helper = $this->getAbstractHelper();
+            $data['transaction']    = $transaction->getData();
+            $appendData = array(
+                'item_name'     => $this->getTransactionHelper()->getItem(),
+                'group_name'    => $this->getTransactionHelper()->getGroup(),
+                'currency_html' => $helper->getTable('currency')->load($transaction->getIdCurrency())->getHtml(),
+                'email'         => $helper->getTable('user')->load($this->getUserId())->getEmail(),
+            );
+            $data['transaction'] = array_merge($data['transaction'], $appendData);
             $data['success'] = true;
 
             /** @var \Zend\I18n\Translator\Translator $translator */

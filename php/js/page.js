@@ -1,6 +1,6 @@
 function Page()
 {
-
+    this.transactionList = null;
 }
 
 Page.prototype.mobileinit = function()
@@ -89,14 +89,23 @@ Page.prototype.isLoggedIn = function(callback)
     }
 }
 
+Page.prototype.getTransactionList = function()
+{
+    if (this.transactionList === null) {
+        var listParameters = {"targetElement":"listResults"};
+        this.transactionList = new TransactionsList(listParameters);
+    }
+
+    return this.transactionList;
+}
+
 Page.prototype.initListBindSubmit = function(listFormElement)
 {
-    var listParameters = {"targetElement":"listResults"};
-    var TransactionList = new TransactionsList(listParameters);
-    TransactionList.setFormElement(listFormElement).request();
+    var transactionList = this.getTransactionList();
+    transactionList.setFormElement(listFormElement).request();
 
     listFormElement.bind('submit', function() {
-        TransactionList.resetData().request();
+        transactionList.resetData().request();
         return false;
     });
 
@@ -172,7 +181,6 @@ Page.prototype.initTransaction = function(transactionForm)
 {
     if (transactionForm.length) {
         transactionForm.find("input[name=item]").focus();
-
         transaction = new Transaction(transactionForm);
         transaction.start();
     }
@@ -283,4 +291,15 @@ Page.prototype.getFormattedDate = function()
     output += day < 10 ? "0" + day : day;
 
     return output;
+}
+
+Page.prototype.array_unshift = function(array)
+{
+    var i = arguments.length;
+
+    while (--i !== 0) {
+        arguments[0].unshift(arguments[i]);
+    }
+
+    return arguments[0].length;
 }
