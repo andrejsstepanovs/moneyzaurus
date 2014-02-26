@@ -292,7 +292,11 @@ Transaction.prototype.autocompleteLoadStorageData = function()
 
 Transaction.prototype.transactionExist = function()
 {
-    if (!this.getPriceElement().val() || !this.getDateElement().val() || !this.getGroupElement().val()) {
+    if (!site.isOnline()
+        || !this.getPriceElement().val()
+        || !this.getDateElement().val()
+        || !this.getGroupElement().val()
+    ) {
         return;
     }
 
