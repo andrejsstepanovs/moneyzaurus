@@ -10,7 +10,30 @@ Page.prototype.mobileinit = function()
 
 Page.prototype.pageinit = function()
 {
-    this.isLoggedIn();
+    var data = this.authenticatedLoadStorageData();
+    if (!data || !data.timestamp || 60 < site.getTimestamp() - data.timestamp) {
+        this.isLoggedIn(this.authenticatedSaveToStorage);
+    }
+}
+
+Page.prototype.authenticatedSaveToStorage = function(authenticated)
+{
+    var data = {
+        "timestamp"    : site.getTimestamp(),
+        "authenticated": authenticated
+    };
+    localStorage.setItem('authenticated', JSON.stringify(data));
+    return this;
+}
+
+Page.prototype.authenticatedLoadStorageData = function()
+{
+    var data = false;
+    var dataString = localStorage.getItem('authenticated');
+    if (dataString) {
+        data = $.parseJSON(dataString);
+    }
+    return data;
 }
 
 Page.prototype.showOfflineMessage = function()
@@ -21,23 +44,28 @@ Page.prototype.showOfflineMessage = function()
     site.popupMessage(message, 10000);
 }
 
-Page.prototype.isLoggedIn = function()
+Page.prototype.isLoggedIn = function(callback)
 {
-    var self = this;
-    $.post(
-        "/authenticated",
-        null,
-        function(json, textStatus) {
-            var authenticated = false;
-            if (textStatus == "success" && json.success == true && json.authenticated == true) {
-                authenticated = true;
-            }
-            if (!authenticated) {
-                $.mobile.changePage(json.url);
-            }
-        },
-        "json"
-    );
+    if (this.isOnline()) {
+        $.post(
+            "/authenticated",
+            null,
+            function(json, textStatus) {
+                var authenticated = false;
+                if (textStatus == "success" && json.success == true && json.authenticated == true) {
+                    authenticated = true;
+                }
+                if (typeof(callback) == "function") {
+                    callback(authenticated);
+                } else {
+                    if (!authenticated) {
+                        $.mobile.changePage(json.url);
+                    }
+                }
+            },
+            "json"
+        );
+    }
 }
 
 Page.prototype.initListBindSubmit = function(listFormElement)
