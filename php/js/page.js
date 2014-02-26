@@ -152,10 +152,7 @@ Page.prototype.initListEditSubmit = function(listFormElement, editForm)
                 }
                 if (json.success) {
                     $("#editTransaction").popup("close");
-
-                    var listParameters = {"targetElement":"listResults"};
-                    var transactionList = new TransactionsList(listParameters);
-                    transactionList.request(true);
+                    self.getTransactionList().request(true);
                 } else {
                     alert(json.error);
                 }
@@ -169,21 +166,30 @@ Page.prototype.initListEditSubmit = function(listFormElement, editForm)
 
 Page.prototype.initListEditDelete = function(listFormElement, deleteTransactionButton)
 {
+    var self = this;
     deleteTransactionButton.bind('click', function() {
         var action = $(this).attr("data-action");
 
         var transactionId = $("#editTransaction form :input[name=transaction_id]").val();
         var params = {transaction_id: transactionId};
 
-        $.getJSON(action, params)
-            .done (function(json) {
-            if (json.success) {
-                $("#editTransaction").popup("close");
-                listFormElement.submit();
-            } else {
-                alert(json.error);
-            }
-        });
+        $.post(
+            action,
+            params,
+            function(json, textStatus) {
+                if (textStatus != "success") {
+                    site.popupMessage("Dam! Something went wrong. Please refresh page and try again.");
+                    return true;
+                }
+                if (json.success) {
+                    $("#editTransaction").popup("close");
+                    self.getTransactionList().request(true);
+                } else {
+                    alert(json.error);
+                }
+            },
+            "json"
+        );
 
         return false;
     });

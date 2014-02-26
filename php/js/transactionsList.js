@@ -121,7 +121,6 @@ TransactionsList.prototype.request = function(force)
     if (site.isOnline()
         || (force || !dataList || !dataList.timestamp || 60 < site.getTimestamp() - dataList.timestamp)
     ) {
-        console.log("makeRequest");
         this.makeRequest(self.listDataSaveToStorage());
     }
 }
