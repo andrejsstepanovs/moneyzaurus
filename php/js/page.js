@@ -119,7 +119,7 @@ Page.prototype.getTransactionList = function()
 Page.prototype.initListBindSubmit = function(listFormElement)
 {
     var transactionList = this.getTransactionList();
-    transactionList.setFormElement(listFormElement).request();
+    transactionList.setFormElement(listFormElement).request(false);
 
     listFormElement.bind('submit', function() {
         transactionList.resetData().request();

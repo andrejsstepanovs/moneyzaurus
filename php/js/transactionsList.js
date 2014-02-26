@@ -116,12 +116,16 @@ TransactionsList.prototype.request = function(force)
     if (dataList && dataList.data) {
         this.buildTable(dataList.data);
     }
-    var self = this;
 
-    if (site.isOnline()
-        || (force || !dataList || !dataList.timestamp || 60 < site.getTimestamp() - dataList.timestamp)
-    ) {
-        this.makeRequest(self.listDataSaveToStorage());
+    var self = this;
+    if (site.isOnline()) {
+        if (force
+            || !dataList
+            || !dataList.timestamp
+            || 60 < site.getTimestamp() - dataList.timestamp
+        ) {
+            this.makeRequest(self.listDataSaveToStorage);
+        }
     }
 }
 
@@ -161,6 +165,10 @@ TransactionsList.prototype.makeRequest = function(callback)
 
 TransactionsList.prototype.bindRowClick = function(rows)
 {
+    if (!site.isOnline()) {
+        return this;
+    }
+
     $("tr." + this.rowClass).each(function(){
         $(this).click(function(){
             var transactionId = $(this).attr("data-id");

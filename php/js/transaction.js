@@ -198,6 +198,7 @@ Transaction.prototype.resetFormData = function()
 
 Transaction.prototype.save = function()
 {
+    this.formData = null;
     var formData = this.getFormData();
     if (site.isOnline()) {
         this.saveRequest(formData, this.addTransactionToStorage, true);
@@ -286,8 +287,8 @@ Transaction.prototype.updateListData = function(rowData, rowId)
     var listData = transactionsList.loadListDataFromStorage();
     if (listData && listData.data && listData.data.rows && listData.data.rows.length) {
         listData.data.rows[rowId] = rowData;
+        transactionsList.listDataSaveToStorage(listData.data);
     }
-    transactionsList.listDataSaveToStorage(listData.data);
 }
 
 Transaction.prototype.autocompleteFetchData = function()
@@ -309,8 +310,10 @@ Transaction.prototype.autocompleteFetchData = function()
 Transaction.prototype.autocompleteStart = function()
 {
     var data = this.autocompleteLoadStorageData();
-    if (!data || !data.timestamp || 60 < site.getTimestamp() - data.timestamp) {
-        this.autocompleteFetchData();
+    if (site.isOnline()) {
+        if (!data || !data.timestamp || 60 < site.getTimestamp() - data.timestamp) {
+            this.autocompleteFetchData();
+        }
     }
 
     if (data) {
@@ -393,6 +396,10 @@ Transaction.prototype.transactionExist = function()
 
 Transaction.prototype.fetchPrediction = function(element, key)
 {
+    if (!site.isOnline()) {
+        return;
+    }
+
     var self = this;
     this.setData("predict", key);
 
