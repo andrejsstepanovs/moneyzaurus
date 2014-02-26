@@ -268,6 +268,7 @@ Transaction.prototype.saveRequest = function(transactionData, callback)
 
 Transaction.prototype.makeSaveRequest = function(transactionData, rowId)
 {
+    localStorage.setItem("saving", 1);
     var self = this;
     $.post(
         "/transaction/save",
@@ -276,6 +277,7 @@ Transaction.prototype.makeSaveRequest = function(transactionData, rowId)
             if (textStatus == "success" && json.success) {
                 self.updateListData(json.transaction, rowId);
             }
+            localStorage.removeItem("saving");
         },
         "json"
     );

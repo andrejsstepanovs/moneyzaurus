@@ -24,6 +24,11 @@ Page.prototype.pageinit = function()
 
 Page.prototype.saveLocalTransactions = function()
 {
+    var saving = localStorage.getItem("saving");
+    if (saving) {
+        return;
+    }
+
     var transaction = new Transaction();
     var transactionsList = new TransactionsList();
     var listData = transactionsList.loadListDataFromStorage();
