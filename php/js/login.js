@@ -76,7 +76,12 @@ LoginClass.prototype.bindSubmit = function()
         if ($.active) {
             self.ajaxExist.abort();
         }
-        self.login();
+        if (site.isOnline()) {
+            self.login();
+        } else {
+            site.showOfflineMessage();
+        }
+
         return false;
     });
 }

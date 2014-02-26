@@ -13,6 +13,14 @@ Page.prototype.pageinit = function()
 
 }
 
+Page.prototype.showOfflineMessage = function()
+{
+    var message = "Looks like you're offline. ";
+    message += "If you are sure that you have online, ";
+    message += "please, refresh page.";
+    site.popupMessage(message, 10000);
+}
+
 Page.prototype.initListBindSubmit = function(listFormElement)
 {
     var listParameters = {"targetElement":"listResults"};
@@ -121,6 +129,9 @@ Page.prototype.initPie = function(formElement)
 
 Page.prototype.pageshow = function()
 {
+    if (!this.isOnline()) {
+        $("#offline-mode-message").show();
+    }
     this.initPie($("form.pie"));
     this.initLogin($("form[name=login-form]"));
     this.initList($("form[name=list]"));
@@ -150,7 +161,7 @@ Page.prototype.formToJson = function(selector)
     return obj;
 }
 
-Page.prototype.popupMessage = function(message)
+Page.prototype.popupMessage = function(message, timeout)
 {
     if (message.length) {
         var popup = $("#popup");
@@ -158,7 +169,6 @@ Page.prototype.popupMessage = function(message)
             popup.html("<p>" + message + "</p>").popup("open");
         }
 
-        var timeout = 2000;
         var popupMessage = setTimeout(
             function() {
                 popup.popup("close");

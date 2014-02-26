@@ -315,7 +315,7 @@ Transaction.prototype.transactionExist = function()
             }
             message += "</ul>";
 
-            site.popupMessage(message);
+            site.popupMessage(message, 3000);
         }
     })
     .fail (function(jqxhr, textStatus, error) {

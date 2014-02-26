@@ -71,6 +71,19 @@ $basePath = $this->basePath();
         </div>
         <?php echo $this->inlineScript() ?>
 
+        <div id="offline-mode-message"
+             data-role="footer"
+             data-position="fixed"
+             class="ui-footer ui-footer-fixed slideup ui-bar-b"
+             onclick="location.reload();"
+             title="<?php echo $this->translate('Refresh'); ?>">
+                <span>
+                    <?php
+                    echo $this->translate('Offline mode');
+                    ?>
+                </span>
+        </div>
+
     </body>
 
 </html>

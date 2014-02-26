@@ -82,7 +82,7 @@ class AbstractActionController extends ZendAbstractActionController
                     '$(document).ready(function () {
                         $(document).on("pageshow", function () {
                             var message = "'.str_replace('"', "'", $message).'";
-                            site.popupMessage(message);
+                            site.popupMessage(message, 3000);
                         });
                     });'
                 );
