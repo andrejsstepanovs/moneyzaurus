@@ -20,7 +20,7 @@ class Helper extends AbstractHelper
     public function getOrderBy()
     {
         $params = $this->getParams();
-        $orderBy = $params->fromRoute('order_by') ? $params->fromRoute('order_by') : 'transaction_id';
+        $orderBy = $params->fromPost('order_by') ? $params->fromPost('order_by') : 'transaction_id';
 
         return $orderBy;
     }
@@ -31,7 +31,7 @@ class Helper extends AbstractHelper
     public function getOrder()
     {
         $params = $this->getParams();
-        $order  = $params->fromRoute('order') ? $params->fromRoute('order') : Select::ORDER_DESCENDING;
+        $order  = $params->fromPost('order') ? $params->fromPost('order') : Select::ORDER_DESCENDING;
 
         return $order;
     }
@@ -50,7 +50,7 @@ class Helper extends AbstractHelper
     public function getItem()
     {
         $params = $this->getParams();
-        $item   = $params->fromQuery('item');
+        $item   = $params->fromPost('item');
 
         return $item;
     }
@@ -61,7 +61,7 @@ class Helper extends AbstractHelper
     public function getGroup()
     {
         $params = $this->getParams();
-        $group   = $params->fromQuery('group');
+        $group   = $params->fromPost('group');
 
         return $group;
     }
@@ -72,7 +72,7 @@ class Helper extends AbstractHelper
     public function getPrice()
     {
         $params = $this->getParams();
-        $price  = $params->fromQuery('price');
+        $price  = $params->fromPost('price');
 
         return $price;
     }
@@ -83,7 +83,7 @@ class Helper extends AbstractHelper
     public function getTransactionId()
     {
         $params = $this->getParams();
-        $transactionId  = $params->fromQuery('transaction_id');
+        $transactionId  = $params->fromPost('transaction_id');
 
         return $transactionId;
     }
@@ -94,7 +94,7 @@ class Helper extends AbstractHelper
     public function getDate()
     {
         $params = $this->getParams();
-        $date   = $params->fromQuery('date');
+        $date   = $params->fromPost('date');
 
         return $date;
     }
@@ -105,7 +105,7 @@ class Helper extends AbstractHelper
     public function getCurrencyId()
     {
         $params = $this->getParams();
-        $currency = $params->fromQuery('currency');
+        $currency = $params->fromPost('currency');
 
         return $currency;
     }
@@ -116,7 +116,7 @@ class Helper extends AbstractHelper
     public function getIdUser()
     {
         $params = $this->getParams();
-        $idUser = $params->fromQuery('id_user');
+        $idUser = $params->fromPost('id_user');
 
         return (int) $idUser;
     }

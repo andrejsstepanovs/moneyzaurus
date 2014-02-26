@@ -94,21 +94,23 @@ TransactionsList.prototype.request = function()
     }
 
     site.loadingOpen("Loading...");
-    this.ajax = $.getJSON("/list/ajax", this.getData())
-    .done (function(json) {
-        if (json.success) {
-            if (json.script) {
-                jQuery.globalEval(json.script);
+    $.post(
+        "/list/ajax",
+        this.getData(),
+        function(json, textStatus) {
+            if (textStatus != "success") {
+                site.popupMessage("Request Failed: " + textStatus + ", " + error);
             }
-            self.buildTable(json.data);
-        }
-        site.loadingClose();
-    })
-    .fail (function(jqxhr, textStatus, error) {
-        site.loadingClose();
-        var err = textStatus + ", " + error;
-        console.log("Request Failed: " + err);
-    });
+            if (json.success) {
+                if (json.script) {
+                    jQuery.globalEval(json.script);
+                }
+                self.buildTable(json.data);
+            }
+            site.loadingClose();
+        },
+        "json"
+    );
 }
 
 TransactionsList.prototype.bindRowClick = function(rows)
