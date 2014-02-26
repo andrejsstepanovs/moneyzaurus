@@ -206,7 +206,7 @@ class TransactionController extends AbstractActionController
             $data['id']      = $transaction->getTransactionId();
 
             $helper = $this->getAbstractHelper();
-            $data['transaction']    = $transaction->getData();
+            $data['transaction'] = $transaction->getData();
             $appendData = array(
                 'item_name'     => $this->getTransactionHelper()->getItem(),
                 'group_name'    => $this->getTransactionHelper()->getGroup(),

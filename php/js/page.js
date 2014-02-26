@@ -108,7 +108,7 @@ Page.prototype.isLoggedIn = function(callback)
 
 Page.prototype.getTransactionList = function()
 {
-    if (this.transactionList === null) {
+    if (this.transactionList == null) {
         var listParameters = {"targetElement":"listResults"};
         this.transactionList = new TransactionsList(listParameters);
     }
@@ -143,15 +143,25 @@ Page.prototype.initListEditSubmit = function(listFormElement, editForm)
         var action = $(this).attr("action");
         var params = self.formToJson($(this));
 
-        $.getJSON(action, params)
-            .done (function(json) {
-            if (json.success) {
-                $("#editTransaction").popup("close");
-                listFormElement.submit();
-            } else {
-                alert(json.error);
-            }
-        });
+        $.post(
+            action,
+            params,
+            function(json, textStatus) {
+                if (textStatus != "success") {
+                    site.popupMessage("Request Failed: " + textStatus + ", " + error);
+                }
+                if (json.success) {
+                    $("#editTransaction").popup("close");
+
+                    var listParameters = {"targetElement":"listResults"};
+                    var transactionList = new TransactionsList(listParameters);
+                    transactionList.request(true);
+                } else {
+                    alert(json.error);
+                }
+            },
+            "json"
+        );
 
         return false;
     });

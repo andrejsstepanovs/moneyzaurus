@@ -48,6 +48,7 @@ class ListController extends AbstractActionController
         if (null === $this->transactionHelper) {
             $this->transactionHelper = new TransactionHelper();
             $this->transactionHelper->setAbstractHelper($this->getAbstractHelper());
+            $this->transactionHelper->setParams($this->getParams());
         }
 
         return $this->transactionHelper;
@@ -254,9 +255,19 @@ class ListController extends AbstractActionController
         );
 
         $data = array(
-            'success' => $transaction->getTransactionId(),
-            'error'   => ''
+            'success'     => $transaction->getTransactionId(),
+            'error'       => '',
+            'transaction' => $transaction->getData()
         );
+
+        $helper = $this->getAbstractHelper();
+        $appendData = array(
+            'item_name'     => $this->getListerHelper()->getItem(),
+            'group_name'    => $this->getListerHelper()->getGroup(),
+            'currency_html' => $helper->getTable('currency')->load($transaction->getIdCurrency())->getHtml(),
+            'email'         => $helper->getTable('user')->load($this->getUserId())->getEmail(),
+        );
+        $data['transaction'] = array_merge($data['transaction'], $appendData);
 
         $response = $this->getResponse();
         $response->setContent(Json::encode($data));

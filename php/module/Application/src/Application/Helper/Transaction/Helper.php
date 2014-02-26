@@ -15,13 +15,14 @@ use Application\Db\Transaction as DbTransaction;
 use Application\Cache\Manager as CacheManager;
 
 /**
- * @method Request getRequest()
+ * @method Request           getRequest()
+ * @method TransactionHelper setRequest(Request $request)
  * @method TransactionHelper setParams(PluginParams $params)
  * @method TransactionHelper setAbstractHelper(AbstractHelper $abstractHelper)
  * @method TransactionHelper setUserId(int $userId)
- * @method PluginParams getParams()
- * @method AbstractHelper getAbstractHelper()
- * @method int getUserId()
+ * @method PluginParams      getParams()
+ * @method AbstractHelper    getAbstractHelper()
+ * @method int               getUserId()
  */
 class Helper extends AbstractHelper
 {

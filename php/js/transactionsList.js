@@ -75,8 +75,8 @@ TransactionsList.prototype.buildTable = function(data)
     var target = this.getTargetElement();
 
     var el = $("#" + target);
-
     var html = "";
+    el.html(html);
 
     var rows = data.rows;
     for (var i in rows) {
@@ -110,17 +110,19 @@ TransactionsList.prototype.loadListDataFromStorage = function()
     return listData;
 }
 
-TransactionsList.prototype.request = function()
+TransactionsList.prototype.request = function(force)
 {
     var dataList = this.loadListDataFromStorage();
     if (dataList && dataList.data) {
         this.buildTable(dataList.data);
     }
+    var self = this;
 
     if (site.isOnline()
-        && (!dataList || !dataList.timestamp || 60 < site.getTimestamp() - dataList.timestamp)
+        || (force || !dataList || !dataList.timestamp || 60 < site.getTimestamp() - dataList.timestamp)
     ) {
-        this.makeRequest(this.listDataSaveToStorage);
+        console.log("makeRequest");
+        this.makeRequest(self.listDataSaveToStorage());
     }
 }
 
@@ -139,13 +141,15 @@ TransactionsList.prototype.makeRequest = function(callback)
         function(json, textStatus) {
             if (textStatus != "success") {
                 site.popupMessage("Request Failed: " + textStatus + ", " + error);
+                site.loadingClose();
+                return false;
             }
             if (json.success) {
                 if (json.script) {
                     jQuery.globalEval(json.script);
                 }
-                self.buildTable(json.data);
 
+                self.buildTable(json.data);
                 if (typeof(callback) == "function") {
                     callback(json.data);
                 }
