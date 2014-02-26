@@ -39,6 +39,7 @@ Page.prototype.authenticatedLoadStorageData = function()
 Page.prototype.showOfflineMessage = function()
 {
     var message = "Looks like you're offline. ";
+    message += "This functionality is not available in offline mode. ";
     message += "If you are sure that you have online, ";
     message += "please, refresh page.";
     site.popupMessage(message, 10000);

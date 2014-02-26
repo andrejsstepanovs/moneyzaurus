@@ -68,6 +68,11 @@ PieChart.prototype.getData = function()
 
 PieChart.prototype.request = function()
 {
+    if (!site.isOnline()) {
+        site.showOfflineMessage();
+        return false;
+    }
+
     if (this.ajax) {
         this.ajax.abort();
     }
