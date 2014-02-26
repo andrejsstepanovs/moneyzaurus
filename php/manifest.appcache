@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# Version: 0.0.1
+# Version: 0.0.2
 
 
 CACHE:
@@ -44,3 +44,6 @@ NETWORK:
 /transaction/exist
 /transaction/save
 /transaction/index
+
+FALLBACK:
+/js/online.js /js/offline.js

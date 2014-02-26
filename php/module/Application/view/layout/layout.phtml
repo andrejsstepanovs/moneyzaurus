@@ -34,6 +34,7 @@ $basePath = $this->basePath();
              ->prependFile($basePath . '/js/pieChartRender.js')
              ->prependFile($basePath . '/js/site.js')
              ->prependFile($basePath . '/js/login.js')
+             ->prependFile($basePath . '/js/online.js') // manifest will load offline if not possible to get online
              ->prependFile($basePath . '/js/page.js')
              ->prependFile('http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js');
 
