@@ -13,6 +13,16 @@ return array(
                     ),
                 ),
             ),
+            'authenticated' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/authenticated',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action'     => 'authenticated',
+                    ),
+                ),
+            ),
             'login' => array(
                 'type'    => 'segment',
                 'options' => array(

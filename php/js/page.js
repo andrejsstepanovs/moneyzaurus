@@ -10,7 +10,7 @@ Page.prototype.mobileinit = function()
 
 Page.prototype.pageinit = function()
 {
-
+    this.isLoggedIn();
 }
 
 Page.prototype.showOfflineMessage = function()
@@ -19,6 +19,25 @@ Page.prototype.showOfflineMessage = function()
     message += "If you are sure that you have online, ";
     message += "please, refresh page.";
     site.popupMessage(message, 10000);
+}
+
+Page.prototype.isLoggedIn = function()
+{
+    var self = this;
+    $.post(
+        "/authenticated",
+        null,
+        function(json, textStatus) {
+            var authenticated = false;
+            if (textStatus == "success" && json.success == true && json.authenticated == true) {
+                authenticated = true;
+            }
+            if (!authenticated) {
+                $.mobile.changePage(json.url);
+            }
+        },
+        "json"
+    );
 }
 
 Page.prototype.initListBindSubmit = function(listFormElement)
