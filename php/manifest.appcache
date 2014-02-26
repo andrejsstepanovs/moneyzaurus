@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# Version: 0.0.2
+# Version: 0.0.5
 
 
 CACHE:
@@ -40,10 +40,12 @@ NETWORK:
 /pie/ajax
 /list/ajax
 /list/save
+/list/delete
 /transaction/predict
 /transaction/exist
 /transaction/save
 /transaction/index
+/authenticated
 
 FALLBACK:
 /js/online.js /js/offline.js
