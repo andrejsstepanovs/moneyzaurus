@@ -208,6 +208,10 @@ Transaction.prototype.save = function()
 
 Transaction.prototype.addTransactionToStorage = function(transactionData, notSaved)
 {
+    var self = this;
+    this.disableFormElements();
+    site.loadingOpen("Saving locally...");
+
     var transactionsList = new TransactionsList();
     listData = transactionsList.loadListDataFromStorage();
     if (notSaved) {
@@ -219,6 +223,15 @@ Transaction.prototype.addTransactionToStorage = function(transactionData, notSav
     site.array_unshift(listData.data.rows, transactionData)
 
     transactionsList.listDataSaveToStorage(listData.data);
+
+    var enableForm = setTimeout(
+        function() {
+            self.enableFormElements();
+            self.resetFormData();
+            site.loadingClose();
+            self.getItemElement().focus();
+        }, 1500
+    );
 }
 
 Transaction.prototype.saveRequest = function(transactionData, callback)
