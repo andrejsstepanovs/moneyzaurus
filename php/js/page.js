@@ -10,6 +10,16 @@ Page.prototype.mobileinit = function()
 
 Page.prototype.pageinit = function()
 {
+    if (!this.isOnline()) {
+        var menu = ["pie", "user"];
+        for (i in menu) {
+            var menuElement = $("#menu-nav-" + menu[i]);
+            if (menuElement.length) {
+                menuElement.parent().hide();
+            }
+        }
+    }
+
     var data = this.authenticatedLoadStorageData();
     if (!data || !data.timestamp || 60 < site.getTimestamp() - data.timestamp) {
         this.isLoggedIn(this.authenticatedSaveToStorage);
