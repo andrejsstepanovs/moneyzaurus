@@ -34,7 +34,7 @@ class Helper extends AbstractHelper
     public function getPredict()
     {
         $params = $this->getParams();
-        $predict = $params->fromQuery('predict');
+        $predict = $params->fromPost('predict');
 
         return $predict;
     }
@@ -45,7 +45,7 @@ class Helper extends AbstractHelper
     public function getItem()
     {
         $params = $this->getParams();
-        $item = $params->fromQuery('item');
+        $item = $params->fromPost('item');
 
         return $item;
     }
@@ -56,7 +56,7 @@ class Helper extends AbstractHelper
     public function getGroup()
     {
         $params = $this->getParams();
-        $group = $params->fromQuery('group');
+        $group = $params->fromPost('group');
 
         return $group;
     }
@@ -67,7 +67,7 @@ class Helper extends AbstractHelper
     public function getPrice()
     {
         $params = $this->getParams();
-        $price = $params->fromQuery('price');
+        $price = $params->fromPost('price');
 
         return $price;
     }
@@ -78,7 +78,7 @@ class Helper extends AbstractHelper
     public function getDate()
     {
         $params = $this->getParams();
-        $date = $params->fromQuery('date');
+        $date = $params->fromPost('date');
 
         return $date;
     }
@@ -320,8 +320,8 @@ class Helper extends AbstractHelper
     private function getWhereFilter()
     {
         if (null === $this->whereFilter) {
-            $item   = $this->getItem();
-            $group  = $this->getGroup();
+            $item  = $this->getItem();
+            $group = $this->getGroup();
 
             $where = array();
 

@@ -201,30 +201,33 @@ Transaction.prototype.save = function()
     this.disableFormElements();
     site.loadingOpen("Saving...");
     var self = this;
-    $.getJSON("/transaction/save", this.getFormData())
-    .done (function(json) {
-        if (json.success) {
-            site.loadingClose();
-            self.resetFormData();
-            site.popupMessage(json.message, 2000);
-        } else {
-            alert("Failed to save. " + json.message);
-        }
-        self.enableFormElements();
-        self.getItemElement().focus();
 
-        var focus = setTimeout(
-            function() {
+    $.post(
+        "/transaction/save",
+        this.getFormData(),
+        function(json, textStatus) {
+            site.loadingClose();
+            self.enableFormElements();
+
+            if (textStatus == "success") {
+                if (json.success) {
+                    self.resetFormData();
+                    site.popupMessage(json.message, 2000);
+                } else {
+                    site.popupMessage("Failed to save. " + json.message, 5000);
+                }
+
                 self.getItemElement().focus();
-            }, 2100
-        );
-    })
-    .fail (function(jqxhr, textStatus, error) {
-        site.loadingClose();
-        self.enableFormElements();
-        var err = textStatus + ", " + error;
-        console.log("Request Failed: " + err);
-    });
+
+                var focus = setTimeout(
+                    function() {
+                        self.getItemElement().focus();
+                    }, 2100
+                );
+            }
+        },
+        "json"
+    );
 }
 
 Transaction.prototype.autocompleteFetchData = function()
@@ -306,38 +309,43 @@ Transaction.prototype.transactionExist = function()
         this.ajaxExist.abort();
     }
 
-    this.ajaxExist = $.getJSON("/transaction/exist", this.getFormData())
-    .done (function(json) {
-        if (json.success && json.exist) {
-            var message = "<h3>" + json.message + "</h3>";
-            message += "<ul>";
-            for (i in json.transactions) {
-                var transaction = json.transactions[i];
-                message += "<li>";
-                message += transaction.date_created + "  --  " + transaction.email;
-                message += "</li>";
-            }
-            message += "</ul>";
+    this.ajaxExist = $.post(
+        "/transaction/exist",
+        this.getFormData(),
+        function(json, textStatus) {
+            if (textStatus == "success" && json.success && json.exist) {
+                var message = "<h3>" + json.message + "</h3>";
+                message += "<ul>";
+                for (i in json.transactions) {
+                    var transaction = json.transactions[i];
+                    message += "<li>";
+                    message += transaction.date_created + "  --  " + transaction.email;
+                    message += "</li>";
+                }
+                message += "</ul>";
 
-            site.popupMessage(message, 3000);
-        }
-    })
-    .fail (function(jqxhr, textStatus, error) {
-        var err = textStatus + ", " + error;
-        console.log("Request Failed: " + err);
-    });
+                site.popupMessage(message, 3000);
+            }
+        },
+        "json"
+    );
 }
 
 Transaction.prototype.fetchPrediction = function(element, key)
 {
     var self = this;
     this.setData("predict", key);
-    $.getJSON("/transaction/predict", this.getData())
-        .done (function(json) {
-            if (json.success) {
+
+    $.post(
+        "/transaction/predict",
+        this.getData(),
+        function(json, textStatus) {
+            if (textStatus == "success" && json.success) {
                 self.buildPredictedButtons(json.data, element, key);
             }
-        });
+        },
+        "json"
+    );
 }
 
 Transaction.prototype.buildPredictedButtons = function(data, element, key)
