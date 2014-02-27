@@ -41,7 +41,7 @@ class Module
         $serviceManager = $application->getServiceManager();
 
         Feature\GlobalAdapterFeature::setStaticAdapter(
-            $serviceManager->get('Zend\Db\Adapter\Adapter')
+            $serviceManager->get('DbAdapter')
         );
 
         /** @var \Zend\Session\SessionManager $sessionManager */
@@ -134,7 +134,7 @@ class Module
             'factories' => array(
                 'AuthService' => function (ServiceManager $serviceManager) {
                     /** @var \Zend\Db\Adapter\Adapter $dbAdapter */
-                    $dbAdapter = $serviceManager->get('Zend\Db\Adapter\Adapter');
+                    $dbAdapter = $serviceManager->get('DbAdapter');
                     $tableName           = 'user';
                     $identityColumn      = 'email';
                     $credentialColumn    = 'password';
