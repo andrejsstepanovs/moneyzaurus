@@ -38,7 +38,7 @@ class AbstractHelper extends AbstractModel
      * @param  string           $table
      * @return \Db\ActiveRecord
      */
-    public function getTable($table = null)
+    public function getModel($table = null)
     {
         $key = !$table ? 'null' : $table;
         if (!isset($this->activeRecords[$table])) {

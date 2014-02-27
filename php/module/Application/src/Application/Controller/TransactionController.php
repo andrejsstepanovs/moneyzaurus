@@ -210,8 +210,8 @@ class TransactionController extends AbstractActionController
             $appendData = array(
                 'item_name'     => $this->getTransactionHelper()->getItem(),
                 'group_name'    => $this->getTransactionHelper()->getGroup(),
-                'currency_html' => $helper->getTable('currency')->load($transaction->getIdCurrency())->getHtml(),
-                'email'         => $helper->getTable('user')->load($this->getUserId())->getEmail(),
+                'currency_html' => $helper->getModel('currency')->load($transaction->getIdCurrency())->getHtml(),
+                'email'         => $helper->getModel('user')->load($this->getUserId())->getEmail(),
             );
             $data['transaction'] = array_merge($data['transaction'], $appendData);
             $data['success'] = true;

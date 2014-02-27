@@ -144,7 +144,7 @@ class AbstractActionController extends ZendAbstractActionController
         $cacheKey = 'currency_value_options';
         $valueOptions = $cacheManager->data($cacheNamespaces, $cacheKey);
         if (!$valueOptions) {
-            $currency = $this->getAbstractHelper()->getTable('currency');
+            $currency = $this->getAbstractHelper()->getModel('currency');
             $currencies = $currency->getTable()->fetchAll();
 
             $valueOptions = array();

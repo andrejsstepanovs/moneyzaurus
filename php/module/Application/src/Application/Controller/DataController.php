@@ -86,7 +86,7 @@ class DataController extends AbstractActionController
         );
         $select->where($where);
 
-        $transactions = $this->getAbstractHelper()->getTable('transactions');
+        $transactions = $this->getAbstractHelper()->getModel('transactions');
         $table = $transactions->getTable();
         $table->setTable($transactionTable);
 

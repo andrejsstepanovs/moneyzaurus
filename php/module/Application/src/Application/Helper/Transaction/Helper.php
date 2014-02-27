@@ -125,14 +125,14 @@ class Helper extends AbstractHelper
         }
 
         /** @var \Application\Db\Currency $currency*/
-        $currency = $this->getAbstractHelper()->getTable('currency')
+        $currency = $this->getAbstractHelper()->getModel('currency')
                          ->setId($currencyId)
                          ->load();
 
         $cacheManager = $this->getAbstractHelper()->getCacheManager();
 
         /** @var \Application\Db\Item $item */
-        $item = $this->getAbstractHelper()->getTable('item');
+        $item = $this->getAbstractHelper()->getModel('item');
         try {
             $item->setName($itemName)
                  ->setIdUser($userId)
@@ -143,7 +143,7 @@ class Helper extends AbstractHelper
         }
 
         /** @var \Application\Db\Group $group */
-        $group = $this->getAbstractHelper()->getTable('group');
+        $group = $this->getAbstractHelper()->getModel('group');
         try {
             $group->setName($groupName)
                   ->setIdUser($userId)
@@ -154,7 +154,7 @@ class Helper extends AbstractHelper
         }
 
         /** @var \Application\Db\Transaction $transaction */
-        $transaction = $this->getAbstractHelper()->getTable('transaction');
+        $transaction = $this->getAbstractHelper()->getModel('transaction');
 
         return $transaction
             ->setTransactionId($transactionId)
@@ -201,7 +201,7 @@ class Helper extends AbstractHelper
 
         //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
-        $transactionsTable = $this->getTable('transactions');
+        $transactionsTable = $this->getModel('transactions');
         $table = $transactionsTable->getTable();
         $table->setTable($transactionTable);
 
@@ -236,7 +236,7 @@ class Helper extends AbstractHelper
 
         //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
-        $transactionsTable = $this->getTable('transactions');
+        $transactionsTable = $this->getModel('transactions');
         $table = $transactionsTable->getTable();
         $table->setTable($transactionTable);
 
@@ -270,7 +270,7 @@ class Helper extends AbstractHelper
 
         //\DEBUG::dump(@$select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
-        $transactions = $this->getAbstractHelper()->getTable('transactions');
+        $transactions = $this->getAbstractHelper()->getModel('transactions');
         $table = $transactions->getTable();
         $table->setTable($transactionTable);
 
@@ -300,7 +300,7 @@ class Helper extends AbstractHelper
 
         //\DEBUG::dump(@$select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
-        $transactions = $this->getAbstractHelper()->getTable('transactions');
+        $transactions = $this->getAbstractHelper()->getModel('transactions');
         $table = $transactions->getTable();
         $table->setTable($transactionTable);
 

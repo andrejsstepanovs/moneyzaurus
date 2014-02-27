@@ -148,7 +148,7 @@ class ListController extends AbstractActionController
         }
         $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
 
-        $transactions = $this->getAbstractHelper()->getTable('transactions');
+        $transactions = $this->getAbstractHelper()->getModel('transactions');
         $table = $transactions->getTable();
         $table->setTable($transactionTable);
 
@@ -221,7 +221,7 @@ class ListController extends AbstractActionController
             array('total' => new Expression('FOUND_ROWS()'))
         );
 
-        $sql = $this->getAbstractHelper()->getTable('transactions')->getTable()->getSql();
+        $sql = $this->getAbstractHelper()->getModel('transactions')->getTable()->getSql();
         $statement = $sql->prepareStatementForSqlObject($selectTotal);
 
         $result2 = $statement->execute();
@@ -264,8 +264,8 @@ class ListController extends AbstractActionController
         $appendData = array(
             'item_name'     => $this->getListerHelper()->getItem(),
             'group_name'    => $this->getListerHelper()->getGroup(),
-            'currency_html' => $helper->getTable('currency')->load($transaction->getIdCurrency())->getHtml(),
-            'email'         => $helper->getTable('user')->load($this->getUserId())->getEmail(),
+            'currency_html' => $helper->getModel('currency')->load($transaction->getIdCurrency())->getHtml(),
+            'email'         => $helper->getModel('user')->load($this->getUserId())->getEmail(),
         );
         $data['transaction'] = array_merge($data['transaction'], $appendData);
 
@@ -307,7 +307,7 @@ class ListController extends AbstractActionController
     protected function deleteTransaction($transactionId)
     {
         /** @var \Application\Db\Transaction $transaction */
-        $transaction = $this->getAbstractHelper()->getTable('transaction');
+        $transaction = $this->getAbstractHelper()->getModel('transaction');
         $transaction->setTransactionId($transactionId);
         $transaction->load();
 

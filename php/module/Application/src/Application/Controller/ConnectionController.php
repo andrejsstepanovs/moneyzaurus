@@ -101,7 +101,7 @@ class ConnectionController extends AbstractActionController
         $id = $this->getParam('id');
 
         /** @var DbConnection $connection */
-        $connection = $this->getAbstractHelper()->getTable('connection');
+        $connection = $this->getAbstractHelper()->getModel('connection');
         $connection->setConnectionId($id)->setIdUser($this->getUserId())->load();
         $connection->setState(DbConnection::STATE_ACCEPTED)->save();
 
@@ -113,7 +113,7 @@ class ConnectionController extends AbstractActionController
         $id = $this->getParam('id');
 
         /** @var DbConnection $connection */
-        $connection = $this->getAbstractHelper()->getTable('connection');
+        $connection = $this->getAbstractHelper()->getModel('connection');
         $connection->setConnectionId($id);
         try {
             $connection->setIdUser($this->getUserId())->load();
@@ -140,7 +140,7 @@ class ConnectionController extends AbstractActionController
         $translator = $this->getServiceLocator()->get('Translator');
         $config     = $this->getServiceLocator()->get('Config');
         try {
-            $parentUser = clone $this->getAbstractHelper()->getTable('user');
+            $parentUser = clone $this->getAbstractHelper()->getModel('user');
             $parentUser->clear();
             $parentUser->load($this->getUserId());
 
@@ -177,7 +177,7 @@ class ConnectionController extends AbstractActionController
     protected function saveConnection(DbUser $user)
     {
         /** @var \Application\Db\Connection $connection */
-        $connection = $this->getAbstractHelper()->getTable('connection');
+        $connection = $this->getAbstractHelper()->getModel('connection');
         $connection->setIdUser($user->getUserId())
             ->setIdUserParent($this->getUserId());
 
@@ -202,7 +202,7 @@ class ConnectionController extends AbstractActionController
     protected function findUser($email)
     {
         /** @var \Application\Db\User $user */
-        $user = $this->getAbstractHelper()->getTable('user');
+        $user = $this->getAbstractHelper()->getModel('user');
         $user->setEmail($email);
 
         try {

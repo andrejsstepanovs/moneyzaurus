@@ -254,7 +254,7 @@ class PieController extends AbstractActionController
      */
     private function fetchTransactions(Select $select)
     {
-        $transactions = $this->getAbstractHelper()->getTable('transactions');
+        $transactions = $this->getAbstractHelper()->getModel('transactions');
         $table = $transactions->getTable();
         $table->setTable(array('t' => 'transaction'));
 

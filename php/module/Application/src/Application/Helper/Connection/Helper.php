@@ -40,7 +40,7 @@ class Helper extends AbstractHelper
 
         //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
-        $connectionsTable = $this->getAbstractHelper()->getTable('connection');
+        $connectionsTable = $this->getAbstractHelper()->getModel('connection');
         $table = $connectionsTable->getTable();
         $table->setTable($connectionTable);
 
