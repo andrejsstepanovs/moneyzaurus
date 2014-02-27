@@ -221,7 +221,7 @@ class Helper extends AbstractHelper
 
         $select = new Select();
         $select->from($transactionTable)
-               ->columns(array('price', 'times_used' => new Expression("COUNT(*)")))
+               ->columns(array('price', 'times_used' => new Expression('COUNT(*)')))
                ->join(array('i' => 'item'), 't.id_item = i.item_id', array())
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array())
                ->group('g.name')
@@ -257,11 +257,11 @@ class Helper extends AbstractHelper
 
         $select = new Select();
         $select->from($transactionTable)
-               ->columns(array('times_used' => new Expression("COUNT(*)")))
+               ->columns(array('times_used' => new Expression('COUNT(*)')))
                ->join(array('i' => 'item'), 't.id_item = i.item_id', array())
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
                ->group('g.name')
-               ->order(new Expression("COUNT(*) DESC"))
+               ->order(new Expression('COUNT(*) ' . Select::ORDER_DESCENDING))
                ->limit(5);
 
         $where = $this->getWhereFilter();
@@ -293,10 +293,10 @@ class Helper extends AbstractHelper
 
         $select = new Select();
         $select->from($transactionTable)
-               ->columns(array('label' => 'name', 'value' => new Expression("COUNT(*)")))
+               ->columns(array('label' => 'name', 'value' => new Expression('COUNT(*)')))
                ->join(array('t' => 'transaction'), 't.id_' . $tableName . ' = i.' . $tableName . '_id', array())
                ->group('i.name')
-               ->order(new Expression("COUNT(*) DESC"));
+               ->order(new Expression('COUNT(*) ' . Select::ORDER_DESCENDING));
 
         $select = $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
 
