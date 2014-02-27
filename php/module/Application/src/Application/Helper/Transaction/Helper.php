@@ -221,17 +221,18 @@ class Helper extends AbstractHelper
 
         $select = new Select();
         $select->from($transactionTable)
-               ->columns(array('price', 'day_of_the_week' => new Expression('DAYOFWEEK(t.date)')))
+               ->columns(array('price', 'times_used' => new Expression("COUNT(*)")))
                ->join(array('i' => 'item'), 't.id_item = i.item_id', array())
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array())
-               ->order($this->getOrderBy() . ' ' . $this->getOrder())
-            //->limit(100)
-        ;
+               ->group('g.name')
+               ->having(new Expression('COUNT(*) > 1'))
+               ->order(new Expression('COUNT(*) ' . Select::ORDER_DESCENDING))
+               ->order('t.date_created ' . Select::ORDER_DESCENDING)
+               ->limit(3);
 
         $where = $this->getWhereFilter();
-        if (count($where)) {
-            $select->where($where);
-        }
+        $where[] = $this->getWhere()->greaterThan('t.date', date('Y-m-d H:i:s', strtotime('-1 year')));
+        $select->where($where);
 
         $select = $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
 
@@ -264,9 +265,7 @@ class Helper extends AbstractHelper
                ->limit(5);
 
         $where = $this->getWhereFilter();
-        if (count($where)) {
-            $select->where($where);
-        }
+        $select->where($where);
         $select = $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
 
         //\DEBUG::dump(@$select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
@@ -340,8 +339,6 @@ class Helper extends AbstractHelper
             if (!empty($group)) {
                 $where[] = $this->getWhere()->equalTo('g.name', $group);
             }
-
-            //$where[] = $this->getWhere()->greaterThan('t.date', date('Y-m-d H:i:s', strtotime('-1 year')));
 
             $this->whereFilter = $where;
         }
