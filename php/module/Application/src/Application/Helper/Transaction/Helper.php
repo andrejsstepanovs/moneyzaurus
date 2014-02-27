@@ -201,12 +201,13 @@ class Helper extends AbstractHelper
 
         //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
-        $transactionsTable = $this->getModel('transactions');
-        $table = $transactionsTable->getTable();
-        $table->setTable($transactionTable);
-
         /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
-        $transactionsResults = $table->fetch($select)->buffer();
+        $transactionsResults = $this
+            ->getModel('transaction')
+            ->getTable()
+            ->setTable($transactionTable)
+            ->fetch($select)
+            ->buffer();
 
         return $transactionsResults;
     }
@@ -236,12 +237,12 @@ class Helper extends AbstractHelper
 
         //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
-        $transactionsTable = $this->getModel('transactions');
-        $table = $transactionsTable->getTable();
-        $table->setTable($transactionTable);
-
-        /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
-        $transactionsResults = $table->fetch($select)->buffer();
+        $transactionsResults = $this
+            ->getModel('transaction')
+            ->getTable()
+            ->setTable($transactionTable)
+            ->fetch($select)
+            ->buffer();
 
         return $transactionsResults;
     }
@@ -270,12 +271,14 @@ class Helper extends AbstractHelper
 
         //\DEBUG::dump(@$select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
-        $transactions = $this->getAbstractHelper()->getModel('transactions');
-        $table = $transactions->getTable();
-        $table->setTable($transactionTable);
-
         /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
-        $transactionsResults = $table->fetch($select)->buffer();
+        $transactionsResults = $this
+            ->getAbstractHelper()
+            ->getModel('transaction')
+            ->getTable()
+            ->setTable($transactionTable)
+            ->fetch($select)
+            ->buffer();
 
         return $transactionsResults;
     }
@@ -300,14 +303,18 @@ class Helper extends AbstractHelper
 
         //\DEBUG::dump(@$select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
-        $transactions = $this->getAbstractHelper()->getModel('transactions');
-        $table = $transactions->getTable();
-        $table->setTable($transactionTable);
 
         /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
         /** @var $transactionsResults \Db\AbstractModel */
         $data = array();
-        $transactionsResults = $table->fetch($select)->buffer();
+        $transactionsResults = $this
+            ->getAbstractHelper()
+            ->getModel('transaction')
+            ->getTable()
+            ->setTable($transactionTable)
+            ->fetch($select)
+            ->buffer();
+
         foreach ($transactionsResults as $model) {
             $data[] = $model->getData();
         }

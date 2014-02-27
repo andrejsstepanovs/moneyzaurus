@@ -86,12 +86,14 @@ class DataController extends AbstractActionController
         );
         $select->where($where);
 
-        $transactions = $this->getAbstractHelper()->getModel('transactions');
-        $table = $transactions->getTable();
-        $table->setTable($transactionTable);
-
         /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
-        $transactionsResults = $table->fetch($select)->buffer();
+        $transactionsResults = $this
+            ->getAbstractHelper()
+            ->getModel('transaction')
+            ->getTable()
+            ->setTable($transactionTable)
+            ->fetch($select)
+            ->buffer();
 
         return $transactionsResults;
     }

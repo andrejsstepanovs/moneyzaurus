@@ -35,13 +35,15 @@ class AbstractHelper extends AbstractModel
     protected $cacheManager;
 
     /**
-     * @param  string           $table
+     * @param string $table
+     *
      * @return \Db\ActiveRecord
+     * @throws \InvalidArgumentException
      */
-    public function getModel($table = null)
+    public function getModel($table)
     {
-        $key = !$table ? 'null' : $table;
-        if (!isset($this->activeRecords[$table])) {
+        $key = $table;
+        if (!isset($this->activeRecords[$key])) {
 
             switch ($table) {
                 case 'transaction':
@@ -63,9 +65,11 @@ class AbstractHelper extends AbstractModel
                     $activeRecord = new Connection;
                     break;
                 default:
-                    $activeRecord = new ActiveRecord($table);
+                    throw new \InvalidArgumentException('Model with name "' . $table . '" not found');
                     break;
             }
+
+            $activeRecord->getTable()->getTable()->setTable($table);
 
             $this->activeRecords[$key] = $activeRecord;
         }

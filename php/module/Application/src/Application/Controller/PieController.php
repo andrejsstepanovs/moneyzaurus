@@ -254,12 +254,13 @@ class PieController extends AbstractActionController
      */
     private function fetchTransactions(Select $select)
     {
-        $transactions = $this->getAbstractHelper()->getModel('transactions');
-        $table = $transactions->getTable();
-        $table->setTable(array('t' => 'transaction'));
-
         /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
-        $transactionsResults = $table->fetch($select);
+        $transactionsResults = $this
+            ->getAbstractHelper()
+            ->getModel('transaction')
+            ->getTable()
+            ->setTable(array('t' => 'transaction'))
+            ->fetch($select);
 
         return $transactionsResults;
     }

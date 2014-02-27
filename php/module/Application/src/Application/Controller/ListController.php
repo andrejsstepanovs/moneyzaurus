@@ -148,12 +148,14 @@ class ListController extends AbstractActionController
         }
         $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
 
-        $transactions = $this->getAbstractHelper()->getModel('transactions');
-        $table = $transactions->getTable();
-        $table->setTable($transactionTable);
-
         /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
-        $transactionsResults = $table->fetch($select)->buffer();
+        $transactionsResults = $this
+            ->getAbstractHelper()
+            ->getModel('transaction')
+            ->getTable()
+            ->setTable($transactionTable)
+            ->fetch($select)
+            ->buffer();
 
         return $transactionsResults;
     }
@@ -221,7 +223,7 @@ class ListController extends AbstractActionController
             array('total' => new Expression('FOUND_ROWS()'))
         );
 
-        $sql = $this->getAbstractHelper()->getModel('transactions')->getTable()->getSql();
+        $sql = $this->getAbstractHelper()->getModel('transaction')->getTable()->getSql();
         $statement = $sql->prepareStatementForSqlObject($selectTotal);
 
         $result2 = $statement->execute();
