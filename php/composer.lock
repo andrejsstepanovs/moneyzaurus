@@ -892,7 +892,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wormhit/Db.git",
-                "reference": "b799860b66ff86779165e1df1a81c70db87d999d"
+                "reference": "95148ede69605f209240c1d41996be593a245cd2"
             },
             "require": {
                 "php": ">=5.3",
@@ -926,7 +926,7 @@
                 "zend framework 2",
                 "zf2"
             ],
-            "time": "2014-02-16 11:09:28"
+            "time": "2014-02-27 16:09:26"
         },
         {
             "name": "wormhit/HighchartsPHP",
