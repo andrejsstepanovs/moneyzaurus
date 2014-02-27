@@ -17,7 +17,11 @@ Page.prototype.pageinit = function()
     }
 
     var data = this.authenticatedLoadStorageData();
-    if (!data || !data.timestamp || 60 < site.getTimestamp() - data.timestamp) {
+    if (!data
+        || !data.timestamp
+        || 60 < site.getTimestamp() - data.timestamp
+        || !data.authenticated
+    ) {
         this.isLoggedIn(this.authenticatedSaveToStorage);
     }
 }
@@ -100,10 +104,9 @@ Page.prototype.isLoggedIn = function(callback)
                 }
                 if (typeof(callback) == "function") {
                     callback(authenticated);
-                } else {
-                    if (!authenticated) {
-                        $.mobile.changePage(json.url);
-                    }
+                }
+                if (!authenticated && json.url) {
+                    $.mobile.changePage(json.url);
                 }
             },
             "json"
