@@ -117,18 +117,31 @@
 
 		if (e) {
 			if (e.keyCode === 38) { // up
-				$('.ui-btn-active', $(settings.target))
-					.removeClass('ui-btn-active').prevAll('li.ui-btn:eq(0)')
-					.addClass('ui-btn-active').length ||
-						$('.ui-btn:last', $(settings.target)).addClass('ui-btn-active');
-			} else if (e.keyCode === 40) {
-				$('.ui-btn-active', $(settings.target))
-					.removeClass('ui-btn-active').nextAll('li.ui-btn:eq(0)')
-					.addClass('ui-btn-active').length ||
-						$('.ui-btn:first', $(settings.target)).addClass('ui-btn-active');
+                var predictionEl = $(settings.target);
+                var currentActiveEl = predictionEl.find('.ui-btn-active');
+                if (!currentActiveEl.length) {
+                    predictionEl.find('.ui-btn:first').addClass('ui-btn-active');
+                } else {
+                    currentActiveEl.removeClass('ui-btn-active');
+                    currentActiveEl.parent().prevAll('li:eq(0)').find("a").addClass('ui-btn-active');
+                }
+			} else if (e.keyCode === 40) { // down
+                var predictionEl = $(settings.target);
+                var currentActiveEl = predictionEl.find('.ui-btn-active');
+                if (!currentActiveEl.length) {
+                    predictionEl.find('.ui-btn:first').addClass('ui-btn-active');
+                } else {
+                    currentActiveEl.removeClass('ui-btn-active');
+                    currentActiveEl.parent().nextAll('li:eq(0)').find("a").addClass('ui-btn-active');
+                }
 			} else if (e.keyCode === 13 && settings.forceFirstChoiceOnEnterKey) {
-				$('.ui-btn-active a', $(settings.target)).click().length  ||
-					$('.ui-btn:first a', $(settings.target)).click();
+                var predictionEl = $(settings.target);
+                var currentActiveEl = predictionEl.find('.ui-btn-active');
+                if (currentActiveEl.length) {
+                    currentActiveEl.click();
+                } else {
+                    return false;
+                }
 			}
 		}
 		if (settings) {
@@ -254,8 +267,8 @@
 			var el = this;
 			el.jqmData("autocomplete", $.extend({}, defaults, options));
 			var settings = el.jqmData("autocomplete");
-			return el.unbind("keyup.autocomplete")
-						.bind("keyup.autocomplete", handleInput)
+			return el.unbind("keydown.autocomplete")
+						.bind("keydown.autocomplete", handleInput)
 						.next('.ui-input-clear')
 						.bind('click', function(){
 							clearTarget(el, $(settings.target));
