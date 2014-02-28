@@ -35,7 +35,6 @@
         builder: null,
         dataHandler : null,
         klass: null,
-        forceFirstChoiceOnEnterKey : true,
         transformResponse: null
     },
     openXHR = {},
@@ -115,32 +114,29 @@
             };
         }
 
-        if (e) {
-            if (e.keyCode === 38) { // up
-                var predictionEl = $(settings.target);
-                var currentActiveEl = predictionEl.find('.ui-btn-active');
-                if (!currentActiveEl.length) {
-                    predictionEl.find('.ui-btn:first').addClass('ui-btn-active');
-                } else {
-                    currentActiveEl.removeClass('ui-btn-active');
-                    currentActiveEl.parent().prevAll('li:eq(0)').find("a").addClass('ui-btn-active');
-                }
-            } else if (e.keyCode === 40) { // down
-                var predictionEl = $(settings.target);
-                var currentActiveEl = predictionEl.find('.ui-btn-active');
+        if (e && (e.keyCode === 40 || e.keyCode === 13 || e.keyCode === 38)) {
+            var predictionEl = $(settings.target);
+            var currentActiveEl = predictionEl.find('.ui-btn-active');
+
+            if (e.keyCode === 40) { // down
                 if (!currentActiveEl.length) {
                     predictionEl.find('.ui-btn:first').addClass('ui-btn-active');
                 } else {
                     currentActiveEl.removeClass('ui-btn-active');
                     currentActiveEl.parent().nextAll('li:eq(0)').find("a").addClass('ui-btn-active');
                 }
-            } else if (e.keyCode === 13 && settings.forceFirstChoiceOnEnterKey) {
-                var predictionEl = $(settings.target);
-                var currentActiveEl = predictionEl.find('.ui-btn-active');
+            } else if (e.keyCode === 13) { // enter
                 if (currentActiveEl.length) {
                     currentActiveEl.click();
                 } else {
                     return false;
+                }
+            } else if (e.keyCode === 38) { // up
+                if (!currentActiveEl.length) {
+                    predictionEl.find('.ui-btn:first').addClass('ui-btn-active');
+                } else {
+                    currentActiveEl.removeClass('ui-btn-active');
+                    currentActiveEl.parent().prevAll('li:eq(0)').find("a").addClass('ui-btn-active');
                 }
             }
         }
