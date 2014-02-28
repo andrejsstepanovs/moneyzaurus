@@ -70,7 +70,6 @@
                 if (currentActiveEl.length) {
                     currentActiveEl.click();
                 }
-                return false;
             } else if (e.keyCode === 38) { // up
                 if (!currentActiveEl.length) {
                     predictionEl.find(".ui-btn:first").addClass("ui-btn-active");
@@ -79,6 +78,7 @@
                     currentActiveEl.parent().prevAll("li:eq(0)").find("a").addClass("ui-btn-active");
                 }
             }
+            return false;
         }
     },
     handleInputKeyUp = function (e) {
@@ -143,6 +143,13 @@
                 });
 
                 buildItems($this, data, settings);
+            }
+
+            // select first element
+            var predictionEl = $(settings.target);
+            var currentActiveEl = predictionEl.find(".ui-btn-active");
+            if (!currentActiveEl.length) {
+                predictionEl.find(".ui-btn:first").addClass("ui-btn-active");
             }
         }
     },
