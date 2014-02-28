@@ -106,14 +106,9 @@
             $target.html('').listview('refresh').closest("fieldset").removeClass("ui-search-active");
             $this.trigger("targetCleared.autocomplete");
         },
-        handleInput = function (e) {
+        handleInputKeyDown = function (e) {
             var $this = $(this),
-                id = $this.attr("id"),
-                text,
-                data,
-                settings = $this.jqmData("autocomplete"),
-                element_text,
-                re;
+                settings = $this.jqmData("autocomplete");
 
             // Fix For IE8 and earlier versions.
             if (!Date.now) {
@@ -148,130 +143,134 @@
                     }
                 }
             }
+        },
+        handleInputKeyUp = function (e) {
+            var $this = $(this),
+                id = $this.attr("id"),
+                text,
+                data,
+                settings = $this.jqmData("autocomplete"),
+                element_text,
+                re;
 
-            if (settings) {
-                // get the current text of the input field
-                text = $this.val();
+            if (!settings) {
+                return;
+            }
 
-                // check if it's the same as the last one
-                if (settings._lastText === text) {
-                    return;
-                }
+            // get the current text of the input field
+            text = $this.val();
 
-                // store last text
-                settings._lastText = text;
+            // check if it's the same as the last one
+            if (settings._lastText === text) {
+                return;
+            }
 
-                // reset the timeout...
-                if (settings._retryTimeout) {
-                    window.clearTimeout(settings._retryTimeout);
-                    settings._retryTimeout = null;
-                }
+            // store last text
+            settings._lastText = text;
 
-                // dont change the result the user is browsing...
-                if (e && (e.keyCode === 13 || e.keyCode === 38 || e.keyCode === 40)) {
-                    return;
-                }
+            // reset the timeout...
+            if (settings._retryTimeout) {
+                window.clearTimeout(settings._retryTimeout);
+                settings._retryTimeout = null;
+            }
 
-                // if we don't have enough text zero out the target
-                console.log(text.length);
-                if (text.length < settings.minLength) {
-                    clearTarget($this, $(settings.target));
-                } else {
-                    if (settings.interval && Date.now() - settings._lastRequest < settings.interval) {
-                        settings._retryTimeout = window.setTimeout($.proxy(handleInput, this), settings.interval - Date.now() + settings._lastRequest);
-                        return;
-                    }
-                    settings._lastRequest = Date.now();
+            // dont change the result the user is browsing...
+            if (e && (e.keyCode === 13 || e.keyCode === 38 || e.keyCode === 40)) {
+                return;
+            }
 
-                    // are we looking at a source array or remote data?
-                    if ($.isArray(settings.source)) {
-                        // this function allows meta characters like +, to be searched for.
-                        // Example would be C++
-                        var escape = function (value) {
-                            return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
-                        };
-                        data = settings.source.sort().filter(function (element) {
-                            // matching from start, or anywhere in the string?
-                            if (settings.matchFromStart) {
-                                // from start
-                                element_text, re = new RegExp('^' + escape(text), 'i');
-                            } else {
-                                // anywhere
-                                element_text, re = new RegExp(escape(text), 'i');
-                            }
-                            if ($.isPlainObject(element)) {
-                                element_text = element.label;
-                            } else {
-                                element_text = element;
-                            }
-                            return re.test(element_text);
-                        });
-                        buildItems($this, data, settings);
-                    }
-
-                    // Accept a function as source.
-                    // Function needs to call the callback, which is the first parameter.
-                    // source:function(text,callback) { mydata = [1,2]; callback(mydata); }
-                    else if (typeof settings.source === 'function') {
-                        settings.source(text, function (data) {
-                            buildItems($this, data, settings);
-                        });
-                    } else {
-                        var ajax = {
-                            type: settings.method,
-                            data: settings.data,
-                            dataType: 'json',
-                            beforeSend: function (jqXHR) {
-                                if (settings.cancelRequests) {
-                                    if (openXHR[id]) {
-                                        // If we have an open XML HTTP Request for this autoComplete ID, abort it
-                                        openXHR[id].abort();
-                                    } else {}
-                                    // Set this request to the open XML HTTP Request list for this ID
-                                    openXHR[id] = jqXHR;
-                                }
-
-                                if (settings.onLoading && settings.onLoadingFinished) {
-                                    settings.onLoading();
-                                }
-
-                                if (settings.loadingHtml) {
-                                    // Set a loading indicator as a temporary stop-gap to the response time issue
-                                    $(settings.target).html(settings.loadingHtml).listview('refresh');
-                                    $(settings.target).closest("fieldset").addClass("ui-search-active");
-                                }
-                            },
-                            success: function (data) {
-                                buildItems($this, data, settings);
-                            },
-                            complete: function () {
-                                // Clear this ID's open XML HTTP Request from the list
-                                if (settings.cancelRequests) {
-                                    openXHR[id] = null;
-                                }
-                                if (settings.onLoadingFinished) {
-                                    settings.onLoadingFinished();
-                                }
-                            }
-                        };
-
-                        if ($.isPlainObject(settings.source)) {
-                            if (settings.source.callback) {
-                                settings.source.callback(text, ajax);
-                            }
-                            for (var k in settings.source) {
-                                if (k !== 'callback') {
-                                    ajax[k] = settings.source[k];
-                                }
-                            }
+            // if we don't have enough text zero out the target
+            if (text.length < settings.minLength) {
+                clearTarget($this, $(settings.target));
+            } else {
+                // are we looking at a source array or remote data?
+                if ($.isArray(settings.source)) {
+                    // this function allows meta characters like +, to be searched for.
+                    // Example would be C++
+                    var escape = function (value) {
+                        return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
+                    };
+                    data = settings.source.sort().filter(function (element) {
+                        // matching from start, or anywhere in the string?
+                        if (settings.matchFromStart) {
+                            // from start
+                            element_text, re = new RegExp('^' + escape(text), 'i');
                         } else {
-                            ajax.url = settings.source;
+                            // anywhere
+                            element_text, re = new RegExp(escape(text), 'i');
                         }
-                        if (settings.termParam) {
-                            ajax.data[settings.termParam] = text;
+                        if ($.isPlainObject(element)) {
+                            element_text = element.label;
+                        } else {
+                            element_text = element;
                         }
-                        $.ajax(ajax);
+                        return re.test(element_text);
+                    });
+                    buildItems($this, data, settings);
+                }
+
+                // Accept a function as source.
+                // Function needs to call the callback, which is the first parameter.
+                // source:function(text,callback) { mydata = [1,2]; callback(mydata); }
+                else if (typeof settings.source === 'function') {
+                    settings.source(text, function (data) {
+                        buildItems($this, data, settings);
+                    });
+                } else {
+                    var ajax = {
+                        type: settings.method,
+                        data: settings.data,
+                        dataType: 'json',
+                        beforeSend: function (jqXHR) {
+                            if (settings.cancelRequests) {
+                                if (openXHR[id]) {
+                                    // If we have an open XML HTTP Request for this autoComplete ID, abort it
+                                    openXHR[id].abort();
+                                } else {}
+                                // Set this request to the open XML HTTP Request list for this ID
+                                openXHR[id] = jqXHR;
+                            }
+
+                            if (settings.onLoading && settings.onLoadingFinished) {
+                                settings.onLoading();
+                            }
+
+                            if (settings.loadingHtml) {
+                                // Set a loading indicator as a temporary stop-gap to the response time issue
+                                $(settings.target).html(settings.loadingHtml).listview('refresh');
+                                $(settings.target).closest("fieldset").addClass("ui-search-active");
+                            }
+                        },
+                        success: function (data) {
+                            buildItems($this, data, settings);
+                        },
+                        complete: function () {
+                            // Clear this ID's open XML HTTP Request from the list
+                            if (settings.cancelRequests) {
+                                openXHR[id] = null;
+                            }
+                            if (settings.onLoadingFinished) {
+                                settings.onLoadingFinished();
+                            }
+                        }
+                    };
+
+                    if ($.isPlainObject(settings.source)) {
+                        if (settings.source.callback) {
+                            settings.source.callback(text, ajax);
+                        }
+                        for (var k in settings.source) {
+                            if (k !== 'callback') {
+                                ajax[k] = settings.source[k];
+                            }
+                        }
+                    } else {
+                        ajax.url = settings.source;
                     }
+                    if (settings.termParam) {
+                        ajax.data[settings.termParam] = text;
+                    }
+                    $.ajax(ajax);
                 }
             }
         },
@@ -281,7 +280,8 @@
                 el.jqmData("autocomplete", $.extend({}, defaults, options));
                 var settings = el.jqmData("autocomplete");
                 return el.unbind("keydown.autocomplete")
-                    .bind("keydown.autocomplete", handleInput)
+                    .bind("keydown.autocomplete", handleInputKeyDown)
+                    .bind("keyup.autocomplete", handleInputKeyUp)
                     .next('.ui-input-clear')
                     .bind('click', function () {
                         clearTarget(el, $(settings.target));
