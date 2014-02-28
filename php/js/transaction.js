@@ -476,7 +476,6 @@ Transaction.prototype.autocompleteInput = function(element, target, data, nextEl
         link: '$(\'#' + elementId + '\').val(\'%s\');'
             + '$(\'#' + elementId + '\').trigger(\'input\');'
             + '$(\'#' + targetId + '\')[0].innerHTML=\'\';'
-            + '$(\'#' + nextElementId + '\').focus();',
-        minLength: 1
+            + '$(\'#' + nextElementId + '\').focus();'
     });
 }

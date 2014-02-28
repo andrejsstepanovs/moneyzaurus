@@ -1,81 +1,51 @@
-/*
- Name: autoComplete
- Authors:
- Andy Matthews: @commadelimited
- Raymond Camden: @cfjedimaster
-
- Website: http://andyMatthews.net
- Version: 1.5.2
- GA: Add data: {} and change data: {}, to data: settings.data, so can pass in variables.
- : data-icon="none" >> data-icon="false" jqm 1.4
+/**
+ * author: @commadelimited, @cfjedimaster
  */
 (function ($) {
 
     "use strict";
 
     var defaults = {
-        method: 'GET',
         icon: 'arrow-r',
-        cancelRequests: false,
         target: $(),
         source: null,
-        callback: null,
         link: null,
         data: {},
-        minLength: 0,
+        minLength: 1,
         transition: 'fade',
-        matchFromStart: true,
-        labelHTML: function (value) {
-            return value;
-        },
-        termParam: 'term',
-        loadingHtml: '<li data-icon="false"><a href="#">Searching...</a></li>',
-        interval: 0,
-        builder: null,
-        dataHandler: null
+        matchFromStart: true
     },
     buildItems = function ($this, data, settings) {
-        var str,
-            vclass = '';
-        if (settings.builder) {
-            str = settings.builder.apply($this.eq(0), [data, settings]);
-        } else {
-            str = [];
-            if (data) {
-                if (settings.dataHandler) {
-                    data = settings.dataHandler(data);
+        var str = [];
+        if (data) {
+            $.each(data, function (index, value) {
+                if ($.isPlainObject(value)) {
+                    var hrefValue = settings.link.replace("%s", value.label);
+                    str.push(
+                        '<li data-icon="' + settings.icon + '">' +
+                            '<a href="javascript:void(0)" ' +
+                                'onclick="' + hrefValue + '" ' +
+                                'data-transition="' + settings.transition + '" ' +
+                                'data-autocomplete=\'' + JSON.stringify(value).replace(/'/g, "&#39;") + '\'>' +
+                                value.label +
+                            "</a>" +
+                        "</li>"
+                    );
                 }
-                $.each(data, function (index, value) {
-                    // are we working with objects or strings?
-                    if ($.isPlainObject(value)) {
-                        var hrefValue = settings.link.replace("%s", value.label);
-                        str.push('<li ' + vclass + ' data-icon=' + settings.icon + '><a href="javascript:void(0)" onclick="' + hrefValue + '" data-transition="' + settings.transition + '" data-autocomplete=\'' + JSON.stringify(value).replace(/'/g, "&#39;") + '\'>' + settings.labelHTML(value.label) + '</a></li>');
-                    }
-                });
-            }
+            });
         }
-        if ($.isArray(str)) {
-            str = str.join('');
-        }
-        $(settings.target).html(str).listview("refresh");
 
-        // is there a callback?
-        if (settings.callback !== null && $.isFunction(settings.callback)) {
-            attachCallback(settings);
+        if ($.isArray(str)) {
+            str = str.join("");
         }
+
+        $(settings.target).html(str).listview("refresh");
 
         if (str.length > 0) {
             $this.trigger("targetUpdated.autocomplete");
         } else {
             $this.trigger("targetCleared.autocomplete");
         }
-    },
-    attachCallback = function (settings) {
-        $('li a', $(settings.target)).bind('click.autocomplete', function (e) {
-            e.stopPropagation();
-            e.preventDefault();
-            settings.callback(e);
-        });
     },
     clearTarget = function ($this, $target) {
         $target.html('').listview('refresh').closest("fieldset").removeClass("ui-search-active");
@@ -85,36 +55,28 @@
         var $this = $(this),
             settings = $this.jqmData("autocomplete");
 
-        // Fix For IE8 and earlier versions.
-        if (!Date.now) {
-            Date.now = function () {
-                return new Date().valueOf();
-            };
-        }
-
         if (e && (e.keyCode === 40 || e.keyCode === 13 || e.keyCode === 38)) {
             var predictionEl = $(settings.target);
-            var currentActiveEl = predictionEl.find('.ui-btn-active');
+            var currentActiveEl = predictionEl.find(".ui-btn-active");
 
             if (e.keyCode === 40) { // down
                 if (!currentActiveEl.length) {
-                    predictionEl.find('.ui-btn:first').addClass('ui-btn-active');
+                    predictionEl.find(".ui-btn:first").addClass("ui-btn-active");
                 } else {
-                    currentActiveEl.removeClass('ui-btn-active');
-                    currentActiveEl.parent().nextAll('li:eq(0)').find("a").addClass('ui-btn-active');
+                    currentActiveEl.removeClass("ui-btn-active");
+                    currentActiveEl.parent().nextAll("li:eq(0)").find("a").addClass("ui-btn-active");
                 }
             } else if (e.keyCode === 13) { // enter
                 if (currentActiveEl.length) {
                     currentActiveEl.click();
-                } else {
-                    return false;
                 }
+                return false;
             } else if (e.keyCode === 38) { // up
                 if (!currentActiveEl.length) {
-                    predictionEl.find('.ui-btn:first').addClass('ui-btn-active');
+                    predictionEl.find(".ui-btn:first").addClass("ui-btn-active");
                 } else {
-                    currentActiveEl.removeClass('ui-btn-active');
-                    currentActiveEl.parent().prevAll('li:eq(0)').find("a").addClass('ui-btn-active');
+                    currentActiveEl.removeClass("ui-btn-active");
+                    currentActiveEl.parent().prevAll("li:eq(0)").find("a").addClass("ui-btn-active");
                 }
             }
         }
@@ -169,10 +131,10 @@
                     // matching from start, or anywhere in the string?
                     if (settings.matchFromStart) {
                         // from start
-                        element_text, re = new RegExp('^' + escape(text), 'i');
+                        element_text, re = new RegExp('^' + escape(text), "i");
                     } else {
                         // anywhere
-                        element_text, re = new RegExp(escape(text), 'i');
+                        element_text, re = new RegExp(escape(text), "i");
                     }
                     if ($.isPlainObject(element)) {
                         element_text = element.label;
@@ -193,8 +155,8 @@
             return el.unbind("keydown.autocomplete")
                 .bind("keydown.autocomplete", handleInputKeyDown)
                 .bind("keyup.autocomplete", handleInputKeyUp)
-                .next('.ui-input-clear')
-                .bind('click', function () {
+                .next(".ui-input-clear")
+                .bind("click", function () {
                     clearTarget(el, $(settings.target));
                 });
         }
