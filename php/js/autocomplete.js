@@ -83,9 +83,6 @@
     },
     handleInputKeyUp = function (e) {
         var $this = $(this),
-            id = $this.attr("id"),
-            text,
-            data,
             settings = $this.jqmData("autocomplete"),
             element_text,
             re;
@@ -95,7 +92,7 @@
         }
 
         // get the current text of the input field
-        text = $this.val();
+        var text = $this.val();
 
         // check if it's the same as the last one
         if (settings._lastText === text) {
@@ -127,7 +124,8 @@
                 var escape = function (value) {
                     return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
                 };
-                data = settings.source.sort().filter(function (element) {
+
+                var data = settings.source.sort().filter(function (element) {
                     // matching from start, or anywhere in the string?
                     if (settings.matchFromStart) {
                         // from start
@@ -143,6 +141,7 @@
                     }
                     return re.test(element_text);
                 });
+
                 buildItems($this, data, settings);
             }
         }
