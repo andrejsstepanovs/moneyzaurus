@@ -9,6 +9,7 @@ use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\Json\Json;
 use Zend\Db\TableGateway\Exception\RuntimeException;
+use Application\Helper\Connection\Helper as ConnectionHelper;
 
 class ListController extends AbstractActionController
 {
@@ -20,6 +21,9 @@ class ListController extends AbstractActionController
 
     /** @var TransactionHelper */
     protected $transactionHelper;
+
+    /** @var ConnectionHelper */
+    protected $connectionHelper;
 
     /** @var TransactionForm */
     protected $searchForm;
@@ -52,6 +56,19 @@ class ListController extends AbstractActionController
         }
 
         return $this->transactionHelper;
+    }
+
+    /**
+     * @return ConnectionHelper
+     */
+    protected function getConnectionHelper()
+    {
+        if (null === $this->connectionHelper) {
+            $this->connectionHelper = new ConnectionHelper();
+            $this->connectionHelper->setAbstractHelper($this->getAbstractHelper());
+        }
+
+        return $this->connectionHelper;
     }
 
     public function ajaxAction()
@@ -313,7 +330,14 @@ class ListController extends AbstractActionController
         $transaction->setTransactionId($transactionId);
         $transaction->load();
 
-        if ($transaction->getIdUser() != $this->getUserId()) {
+        $allowedUsers = array($this->getUserId());
+        $connections = $this->getConnectionHelper()->getUserConnections($this->getUserId());
+        /** @var \Application\Db\Connection $connection */
+        foreach ($connections as $connection) {
+            $allowedUsers[] = $connection->getIdUserParent();
+        }
+
+        if (!in_array($transaction->getIdUser(), $allowedUsers)) {
             throw new RuntimeException('It is not allowed to edit other user transactions.');
         }
 
