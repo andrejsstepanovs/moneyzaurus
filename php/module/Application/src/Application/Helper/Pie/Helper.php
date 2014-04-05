@@ -218,9 +218,10 @@ class Helper extends AbstractHelper
 
         if (!empty($priceDataTmp)) {
             for ($iterator = 0; $iterator < $this->otherGroupCount; $iterator++) {
-                //if (array_key_exists($i, ))
-                $priceData[]  = $priceDataTmp[$iterator];
-                $categories[] = $groupsTmp[$iterator];
+                if (array_key_exists($iterator, $groupsTmp)) {
+                    $priceData[]  = $priceDataTmp[$iterator];
+                    $categories[] = $groupsTmp[$iterator];
+                }
             }
 
             // limit rest items as groups
