@@ -134,9 +134,9 @@ return array(
             'chart' => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/chart',
+                    'route'    => '/chart[/:action]',
                     'defaults' => array(
-                        'controller' => 'Application\Controller\Index',
+                        'controller' => 'Application\Controller\Chart',
                         'action'     => 'index',
                     ),
                 ),

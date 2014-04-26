@@ -1,17 +1,20 @@
 CACHE MANIFEST
 
-Version: 0.0.8
+Version: 0.0.9
 
 
 CACHE:
 
+/flash/open-flash-chart.swf
 /img/dinosaur.jpg
 /css/site.css
 /img/favicon.ico
 /img/dinosaur.jpg
 /css/site.css
+/js/swfobject.js
 /js/transactionsList.js
 /js/transaction.js
+/js/chart.js
 /js/pieChart.js
 /js/pieChartData.js
 /js/pieChartRender.js
@@ -38,6 +41,8 @@ NETWORK:
 /resend-password
 /login
 /pie/ajax
+/chart/ajax
+/chart/group
 /list/ajax
 /list/save
 /list/delete

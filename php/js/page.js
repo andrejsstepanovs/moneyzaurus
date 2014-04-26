@@ -1,6 +1,7 @@
 function Page()
 {
     this.transactionList = null;
+    this.chart;
 }
 
 Page.prototype.mobileinit = function()
@@ -247,12 +248,21 @@ Page.prototype.initPie = function(formElement)
     }
 }
 
+Page.prototype.initChart = function(formElement)
+{
+    if (formElement.length) {
+        this.chart = new Chart()
+        this.chart.setFormElement(formElement).setMonthValue().request();
+    }
+}
+
 Page.prototype.pageshow = function()
 {
     if (!this.isOnline()) {
         $("#offline-mode-message").show();
     }
     this.initPie($("form.pie"));
+    this.initChart($("form.chart"));
     this.initLogin($("form[name=login-form]"));
     this.initList($("form[name=list]"));
     this.initTransaction($("#transactionForm"));

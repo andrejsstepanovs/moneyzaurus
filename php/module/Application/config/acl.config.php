@@ -15,6 +15,7 @@ return array(
             'Application\Controller\Transaction',
             'Application\Controller\List',
             'Application\Controller\Pie',
+            'Application\Controller\Chart',
         ),
         'admin' => array(
             'admin'

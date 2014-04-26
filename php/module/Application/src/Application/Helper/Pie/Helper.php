@@ -7,6 +7,7 @@ use Zend\Db\Sql\Select;
 use Zend\Http\PhpEnvironment\Request;
 use HighchartsPHP\Highcharts as HighchartsPHPHighcharts;
 use Application\Helper\Pie\Highchart as PieHighchart;
+use Zend\Db\Sql\Expression;
 
 /**
  * Class Helper
@@ -63,6 +64,32 @@ class Helper extends AbstractHelper
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
                ->join(array('c' => 'currency'), 't.id_currency = c.currency_id', array('currency_html' => 'html'))
                ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email'));
+
+        return $select;
+    }
+
+    public function getSumByGroupSelect()
+    {
+        $transactionTable = array('t' => 'transaction');
+
+        $select = new Select();
+        $select->from($transactionTable)
+               ->columns(array('price' => new Expression('SUM(t.price)')))
+               ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name', 'group_id'))
+               ->join(array('u' => 'user'), 't.id_user = u.user_id', array());
+
+        return $select;
+    }
+
+    public function getPaymentsByGroupSelect()
+    {
+        $transactionTable = array('t' => 'transaction');
+
+        $select = new Select();
+        $select->from($transactionTable)
+               ->columns(array('price', 'date'))
+               ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item_name' => 'name'))
+               ->order('price DESC');
 
         return $select;
     }

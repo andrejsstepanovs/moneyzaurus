@@ -29,6 +29,7 @@ $basePath = $this->basePath();
              ->prependFile('http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js')
              ->prependFile($basePath . '/js/transactionsList.js')
              ->prependFile($basePath . '/js/transaction.js')
+             ->prependFile($basePath . '/js/chart.js')
              ->prependFile($basePath . '/js/pieChart.js')
              ->prependFile($basePath . '/js/pieChartData.js')
              ->prependFile($basePath . '/js/pieChartRender.js')
@@ -36,6 +37,7 @@ $basePath = $this->basePath();
              ->prependFile($basePath . '/js/login.js')
              ->prependFile($basePath . '/js/online.js') // manifest will load offline if not possible to get online
              ->prependFile($basePath . '/js/page.js')
+             ->prependFile($basePath . '/js/swfobject.js')
              ->prependFile('http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js');
 
         ?>
