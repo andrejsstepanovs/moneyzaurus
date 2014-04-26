@@ -101,7 +101,7 @@ class ChartController extends AbstractActionController
         $select->where(array($this->getWhere()->like('date', $month . '%')));
 
         $select->order('price ' . Select::ORDER_DESCENDING);
-        $select->group('name');
+        $select->group('id_group');
         $select->order(new Expression('SUM(t.price) DESC'));
 
         //\DEBUG::dump(@$select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
@@ -151,7 +151,6 @@ class ChartController extends AbstractActionController
         $select->where(array($this->getWhere()->like('date', $month . '%')));
 
         $select->order('price ' . Select::ORDER_DESCENDING);
-        $select->group('name');
         $select->order(new Expression('SUM(t.price) DESC'));
 
         $data = $this->fetchTransactions($select);
