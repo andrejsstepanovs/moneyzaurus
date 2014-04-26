@@ -225,13 +225,13 @@ class Helper extends AbstractHelper
                ->join(array('i' => 'item'), 't.id_item = i.item_id', array())
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array())
                ->group('g.name')
-               ->having(new Expression('COUNT(*) > 1'))
+               ->having(new Expression('COUNT(*) > 3'))
                ->order(new Expression('COUNT(*) ' . Select::ORDER_DESCENDING))
                ->order('t.date_created ' . Select::ORDER_DESCENDING)
-               ->limit(3);
+               ->limit(2);
 
         $where = $this->getWhereFilter();
-        $where[] = $this->getWhere()->greaterThan('t.date', date('Y-m-d H:i:s', strtotime('-1 year')));
+        $where[] = $this->getWhere()->greaterThan('t.date', date('Y-m-d H:i:s', strtotime('-3 months')));
         $select->where($where);
 
         $select = $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
@@ -262,7 +262,7 @@ class Helper extends AbstractHelper
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
                ->group('g.name')
                ->order(new Expression('COUNT(*) ' . Select::ORDER_DESCENDING))
-               ->limit(5);
+               ->limit(3);
 
         $where = $this->getWhereFilter();
         $select->where($where);
