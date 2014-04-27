@@ -5,6 +5,7 @@ use Application\Helper\Chart\Helper as PieHelper;
 use Application\Helper\Month\Helper as MonthHelper;
 use Zend\Db\Sql\Select as Select;
 use Zend\Db\Sql\Where;
+use Zend\Json\Json;
 use Zend\Db\Sql\Expression;
 
 require_once  __DIR__ . '/../../../../../library/php-ofc-library/open-flash-chart.php';
@@ -152,6 +153,54 @@ class ChartController extends AbstractActionController
         $content = $this->getPieHelper()->getSecondaryChartString($data, $groupName, $month);
 
         return $this->getResponse()->setContent($content);
+    }
+
+    public function ajaxGroupHistoryAction()
+    {
+        $params = explode('|', $this->getParam('data'));
+        $groupId = $params[0];
+        $month   = $this->getMonthDate($params[1]);
+
+        $data = $this->getSumByGroupData($month);
+        $groupName = null;
+        foreach ($data as $i => $row) {
+            if ($i == $groupId) {
+                $groupName = $row['group_name'];
+                $groupId   = $row['group_id'];
+                break;
+            }
+        }
+
+        $select = $this->getPieHelper()->getSumByGroupSelect();
+        $select->columns(
+            array(
+                'price' => new Expression('SUM(t.price)'),
+                'month' => new Expression('CONCAT(YEAR(date), "-",  MONTH(date))')
+            )
+        );
+        $select = $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
+        $select->where(array($this->getWhere()->equalTo('id_group', $groupId)));
+        $select->group(new Expression('CONCAT(YEAR(date), "-",  MONTH(date))'));
+        $select->order('date DESC');
+        $select->limit(5);
+
+        $data = $this->fetchTransactions($select);
+        //\DEBUG::dump(@$select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
+
+        $array = array();
+        foreach ($data as $row) {
+            $array[] = $row->getData();
+        }
+
+        $responseData = array(
+            'success' => true,
+            'data'    => $array
+        );
+
+        $response = $this->getResponse();
+        $response->setContent(Json::encode($responseData));
+
+        return $response;
     }
 
     /**
