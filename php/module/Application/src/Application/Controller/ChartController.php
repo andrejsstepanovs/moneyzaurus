@@ -91,10 +91,13 @@ class ChartController extends AbstractActionController
         );
     }
 
-    public function ajaxAction()
+    /**
+     * @param string $month
+     *
+     * @return \Zend\Db\ResultSet\HydratingResultSet
+     */
+    private function getSumByGroupData($month)
     {
-        $month = $this->getMonthDate();
-
         $select = $this->getPieHelper()->getSumByGroupSelect();
         $select = $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
 
@@ -106,7 +109,14 @@ class ChartController extends AbstractActionController
 
         //\DEBUG::dump(@$select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
-        $data = $this->fetchTransactions($select);
+        return $this->fetchTransactions($select);
+    }
+
+    public function ajaxAction()
+    {
+        $month = $this->getMonthDate();
+
+        $data = $this->getSumByGroupData($month);
 
         $colors = $values = array();
         foreach ($data as $row) {
@@ -140,50 +150,46 @@ class ChartController extends AbstractActionController
 
     public function ajaxGroupAction()
     {
-        $data = explode('|', $this->getParam('data'));
+        $params = explode('|', $this->getParam('data'));
+        $groupId = $params[0];
+        $month   = $this->getMonthDate($params[1]);
 
-        $groupId = $data[0];
-        $month   = $this->getMonthDate($data[1]);
-
-        $select = $this->getPieHelper()->getSumByGroupSelect();
-        $select = $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
-
-        $select->where(array($this->getWhere()->like('date', $month . '%')));
-
-        $select->order('price ' . Select::ORDER_DESCENDING);
-        $select->order(new Expression('SUM(t.price) DESC'));
-
-        $data = $this->fetchTransactions($select);
-
+        $data = $this->getSumByGroupData($month);
+        $groupName = null;
         foreach ($data as $i => $row) {
             if ($i == $groupId) {
+                $groupName = $row['group_name'];
+                $groupId   = $row['group_id'];
                 break;
             }
         }
 
-        $groupName = $row['group_name'];
-
-        $where = array(
-            $this->getWhere()->like('date', $month . '%'),
-            $this->getWhere()->equalTo('id_group', $row['group_id']),
-        );
-
         $select = $this->getPieHelper()->getPaymentsByGroupSelect();
         $select = $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
-        $select->where($where);
+        $select->where(
+            array(
+                $this->getWhere()->like('date', $month . '%'),
+                $this->getWhere()->equalTo('id_group', $groupId),
+            )
+        );
 
         //\DEBUG::dump(@$select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
         $data = $this->fetchTransactions($select);
-
         $colors = $values = array();
-        foreach ($data as $row) {
-            $values[] = new \pie_value($row['price'] * 100 / 100, $row['item_name'].' ('.$row['price'].') '.date('d.M', strtotime($row['date'])));//teksts blakus riņķim
+        foreach ($data as $itemRow) {
+            $values[] = new \pie_value(
+                $itemRow['price'] * 1,
+                $itemRow['item_name'] . ' (' . $itemRow['price'] . ') ' . date('d.M', strtotime($itemRow['date']))
+            );
             $colors[] = $this->getRandomHex();
         }
 
         $pie = new \pie();
-        $pie->set_tooltip('#val# Ls of #total# ' . $this->getDefaultUserCurrency() . '<br>#percent# of 100%');
+        $pie->set_tooltip(
+            '#val# ' . $this->getDefaultUserCurrency() . ' of #total# '
+            . $this->getDefaultUserCurrency() . '<br>#percent# of 100%'
+        );
 
         $pie->alpha(0.5);
         $pie->start_angle(0);
