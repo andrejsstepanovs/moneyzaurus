@@ -1,8 +1,7 @@
 <?php
 namespace Application\Controller;
 
-use Application\Helper\Pie\Helper as PieHelper;
-use Application\Helper\Pie\Highchart as PieHighchartHelper;
+use Application\Helper\Chart\Helper as PieHelper;
 use Application\Helper\Month\Helper as MonthHelper;
 use Zend\Db\Sql\Select as Select;
 use Zend\Db\Sql\Where;
@@ -63,7 +62,7 @@ class ChartController extends AbstractActionController
     {
         if (null === $this->pieHelper) {
             $this->pieHelper = new PieHelper();
-            $this->pieHelper->setPieHighchartHelper(new PieHighchartHelper());
+            $this->pieHelper->setDefaultUserCurrency($this->getDefaultUserCurrency());
         }
 
         return $this->pieHelper;
@@ -114,38 +113,11 @@ class ChartController extends AbstractActionController
 
     public function ajaxAction()
     {
-        $month = $this->getMonthDate();
+        $month   = $this->getMonthDate();
+        $data    = $this->getSumByGroupData($month);
+        $content = $this->getPieHelper()->getChartString($month, $data);
 
-        $data = $this->getSumByGroupData($month);
-
-        $colors = $values = array();
-        foreach ($data as $row) {
-            $values[] = new \pie_value($row['price'] * 100 / 100, $row['group_name'].' ('.sprintf('%0.2f', $row['price']).')');//teksts blakus riņķim
-            $colors[] = $this->getRandomHex();
-        }
-
-        $pie = new \pie();
-        $pie->set_tooltip('#val# Ls of #total# ' . $this->getDefaultUserCurrency() . '<br>#percent# of 100%');
-
-        $pie->add_animation(new \pie_bounce(20));
-        $pie->start_angle(0);
-
-        $pie->set_colours($colors);
-        $pie->set_values($values);
-        $pie->on_click('site.chart.getSubPie');
-
-        $chart = new \open_flash_chart();
-
-        $title = new \title('Groups: ' . $month);
-        $title->set_style("{font-size:20px;font-family:Times New Roman;font-weight:bold;color:#A2ACBA;text-align:center;}");
-
-        $chart->set_title($title);
-        $chart->add_element($pie);
-        $chart->set_bg_colour('#ffffff');
-
-        $chart->x_axis = null;
-
-        return $this->getResponse()->setContent($chart->toPrettyString());
+        return $this->getResponse()->setContent($content);
     }
 
     public function ajaxGroupAction()
@@ -176,40 +148,10 @@ class ChartController extends AbstractActionController
         //\DEBUG::dump(@$select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
         $data = $this->fetchTransactions($select);
-        $colors = $values = array();
-        foreach ($data as $itemRow) {
-            $values[] = new \pie_value(
-                $itemRow['price'] * 1,
-                $itemRow['item_name'] . ' (' . $itemRow['price'] . ') ' . date('d.M', strtotime($itemRow['date']))
-            );
-            $colors[] = $this->getRandomHex();
-        }
 
-        $pie = new \pie();
-        $pie->set_tooltip(
-            '#val# ' . $this->getDefaultUserCurrency() . ' of #total# '
-            . $this->getDefaultUserCurrency() . '<br>#percent# of 100%'
-        );
+        $content = $this->getPieHelper()->getSecondaryChartString($data, $groupName, $month);
 
-        $pie->alpha(0.5);
-        $pie->start_angle(0);
-
-        $pie->set_colours($colors);
-        $pie->set_values($values);
-
-        $chart = new \open_flash_chart();
-
-        $title = new \title(ucfirst($groupName) . ': ' . $month);
-
-        $title->set_style("{font-size:20px;font-family:Times New Roman;font-weight:bold;color:#A2ACBA;text-align:center;}");
-
-        $chart->set_title($title);
-        $chart->add_element($pie);
-        $chart->set_bg_colour('#ffffff');
-
-        $chart->x_axis = null;
-
-        return $this->getResponse()->setContent($chart->toPrettyString());
+        return $this->getResponse()->setContent($content);
     }
 
     /**
@@ -227,11 +169,6 @@ class ChartController extends AbstractActionController
             ->fetch($select);
 
         return $transactionsResults;
-    }
-
-    private function getRandomHex()
-    {
-        return sprintf("%02X%02X%02X", mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255));
     }
 
     /**
