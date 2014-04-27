@@ -44,6 +44,7 @@ class Helper extends AbstractHelper
         $select->from($transactionTable)
                ->columns(array('price', 'date'))
                ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item_name' => 'name'))
+               ->join(array('g' => 'group'), 't.id_group = g.group_id', array())
                ->order('price DESC');
 
         return $select;

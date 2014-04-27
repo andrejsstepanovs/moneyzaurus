@@ -104,10 +104,8 @@ class ChartController extends AbstractActionController
         $select->where(array($this->getWhere()->like('date', $month . '%')));
 
         $select->order('price ' . Select::ORDER_DESCENDING);
-        $select->group('id_group');
+        $select->group('group_name');
         $select->order(new Expression('SUM(t.price) DESC'));
-
-        //\DEBUG::dump(@$select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
         return $this->fetchTransactions($select);
     }
@@ -132,7 +130,6 @@ class ChartController extends AbstractActionController
         foreach ($data as $i => $row) {
             if ($i == $groupId) {
                 $groupName = $row['group_name'];
-                $groupId   = $row['group_id'];
                 break;
             }
         }
@@ -142,7 +139,7 @@ class ChartController extends AbstractActionController
         $select->where(
             array(
                 $this->getWhere()->like('date', $month . '%'),
-                $this->getWhere()->equalTo('id_group', $groupId),
+                $this->getWhere()->equalTo('g.name', $groupName),
             )
         );
 
@@ -166,7 +163,6 @@ class ChartController extends AbstractActionController
         foreach ($data as $i => $row) {
             if ($i == $groupId) {
                 $groupName = $row['group_name'];
-                $groupId   = $row['group_id'];
                 break;
             }
         }
@@ -179,7 +175,7 @@ class ChartController extends AbstractActionController
             )
         );
         $select = $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
-        $select->where(array($this->getWhere()->equalTo('id_group', $groupId)));
+        $select->where(array($this->getWhere()->equalTo('g.name', $groupName)));
         $select->group(new Expression('CONCAT(YEAR(date), "-",  MONTH(date))'));
         $select->order('date DESC');
         $select->limit(5);
