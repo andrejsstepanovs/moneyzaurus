@@ -151,6 +151,7 @@ class ListController extends AbstractActionController
 
         $select = new Select();
         $select->from($transactionTable)
+               ->columns(array('price' => new Expression('ROUND(price / 100, 2)'), 'transaction_id', 'id_user', 'id_group', 'id_item', 'id_currency', 'date', 'date_created'))
                ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item_name' => 'name'))
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
                ->join(array('c' => 'currency'), 't.id_currency = c.currency_id', array('currency_html' => 'html'))
@@ -164,6 +165,8 @@ class ListController extends AbstractActionController
             $select->where($where);
         }
         $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
+
+        //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
         /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
         $transactionsResults = $this
@@ -199,7 +202,7 @@ class ListController extends AbstractActionController
             }
 
             if (!empty($price)) {
-                $where[] = $this->getWhere()->like('t.price', $price . '%');
+                $where[] = $this->getWhere()->like('t.price', $price * 100 . '%');
             }
 
             if (!empty($date)) {

@@ -158,7 +158,7 @@ class Helper extends AbstractHelper
 
         return $transaction
             ->setTransactionId($transactionId)
-            ->setPrice($price)
+            ->setPrice($price * 100)
             ->setDate($date)
             ->setIdUser($userId)
             ->setIdItem($item->getId())
@@ -182,6 +182,7 @@ class Helper extends AbstractHelper
 
         $select = new Select();
         $select->from($transactionTable)
+               ->columns(array('price' => new Expression('price / 100'), '*'))
                ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item_name' => 'name'))
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
                ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email' => 'email'));
@@ -221,7 +222,7 @@ class Helper extends AbstractHelper
 
         $select = new Select();
         $select->from($transactionTable)
-               ->columns(array('price', 'times_used' => new Expression('COUNT(*)')))
+               ->columns(array('price' => new Expression('price / 100'), 'times_used' => new Expression('COUNT(*)')))
                ->join(array('i' => 'item'), 't.id_item = i.item_id', array())
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array())
                ->group('g.name')

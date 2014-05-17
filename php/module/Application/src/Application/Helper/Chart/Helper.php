@@ -26,7 +26,7 @@ class Helper extends AbstractHelper
 
         $select = new Select();
         $select->from($transactionTable)
-               ->columns(array('price' => new Expression('SUM(t.price)')))
+               ->columns(array('price' => new Expression('ROUND(SUM(t.price / 100), 2)')))
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name', 'group_id'))
                ->join(array('u' => 'user'), 't.id_user = u.user_id', array());
 
@@ -42,7 +42,7 @@ class Helper extends AbstractHelper
 
         $select = new Select();
         $select->from($transactionTable)
-               ->columns(array('price', 'date'))
+               ->columns(array('price' => new Expression('ROUND(t.price / 100, 2)'), 'date'))
                ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item_name' => 'name'))
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array())
                ->order('price DESC');
