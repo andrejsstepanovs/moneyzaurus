@@ -170,7 +170,7 @@ class ChartController extends AbstractActionController
         $select = $this->getPieHelper()->getSumByGroupSelect();
         $select->columns(
             array(
-                'price' => new Expression('SUM(t.price)'),
+                'price' => new Expression('SUM(t.price / 100)'),
                 'month' => new Expression('CONCAT(YEAR(date), "-",  MONTH(date))')
             )
         );
