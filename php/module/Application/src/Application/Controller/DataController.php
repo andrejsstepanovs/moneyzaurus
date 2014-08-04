@@ -81,10 +81,7 @@ class DataController extends AbstractActionController
                ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email'))
                ->order('t.date ' . Select::ORDER_DESCENDING);
 
-        $where = array(
-            $this->getWhere()->equalTo('t.id_user', $this->getUserId())
-        );
-        $select->where($where);
+        $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
 
         $transactions = $this->getAbstractHelper()->getTable('transactions');
         $table = $transactions->getTable();
