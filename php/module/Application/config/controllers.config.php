@@ -14,6 +14,7 @@ return array(
             'Application\Controller\Data'           => 'Application\Controller\DataController',
             'Application\Controller\List'           => 'Application\Controller\ListController',
             'Application\Controller\Pie'            => 'Application\Controller\PieController',
+            'Application\Controller\Chart'          => 'Application\Controller\ChartController',
         )
     )
 );

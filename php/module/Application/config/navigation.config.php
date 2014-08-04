@@ -13,21 +13,12 @@ return array(
              ),
              array(
                  'label' => 'Pie',
-                 'route' => 'pie',
+                 'route' => 'chart',
                  'a_params' => array(
                     'data-transition' => 'slide',
                     'data-icon'       => 'eye',
                  )
              ),
-//             array(
-//                 'label' => 'Chart',
-//                 'route' => 'chart',
-//                 'data-transition' => 'slide',
-//                 'a_params' => array(
-//                    'data-transition' => 'slide',
-//                    'data-icon'       => 'arrow-u',
-//                 )
-//             ),
              array(
                  'label' => 'List',
                  'route' => 'list',

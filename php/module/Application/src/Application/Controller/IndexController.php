@@ -3,6 +3,7 @@ namespace Application\Controller;
 
 use Application\Form\Form\Login as LoginForm;
 use Application\Form\Form\Register as RegisterForm;
+use Zend\Json\Json;
 
 /**
  * Class IndexController
@@ -41,6 +42,23 @@ class IndexController extends AbstractActionController
         }
 
         return $this->registerForm;
+    }
+
+    public function authenticatedAction()
+    {
+        $responseData = array(
+            'success'       => true,
+            'url'           => null,
+            'authenticated' => $this->getAuthService()->hasIdentity()
+        );
+        if (!$responseData['authenticated']) {
+            $responseData['url'] = $this->url()->fromRoute('moneyzaurus');
+        }
+
+        $response = $this->getResponse();
+        $response->setContent(Json::encode($responseData));
+
+        return $response;
     }
 
     public function indexAction()

@@ -1,0 +1,60 @@
+<?php
+/**
+ * @var $form Application\Form\Form\Month
+ * @var $this \Zend\View\Renderer\PhpRenderer
+ */
+$form = $this->form;
+$js = $this->js;
+
+
+
+$form->setAttributes(
+    array(
+         'action' => $this->url('chart', array('action' => 'index')),
+         'class'  => 'chart'
+    )
+);
+$form->prepare();
+
+?>
+
+<div id="sub_group">
+    <div id="sub_group_pie" style="float:left;"></div>
+    <div id="sub_group_pie_close" style="float:left;margin:50px;"></div>
+    <div id="sub_group_pie_history" style="float:left;margin-top:50px;"></div>
+</div>
+<div id="group_pie"></div>
+
+
+<?php echo $this->form()->openTag($form); ?>
+<div data-theme="a" data-role="footer" data-position="fixed" >
+    <div data-role="navbar">
+        <ul>
+            <li></li>
+                <?php
+                $i = 0;
+                foreach ($form as $element) {
+                    $formElementErrors = $this->formElementErrors($element);
+                    ?>
+                    <li class="ui-btn-active" <?php if($this->formElementErrors($element)) { echo 'class="error"'; } ?> >
+                        <?php
+                        echo $this->formElement($element);
+
+                        if ($formElementErrors) {
+                            ?>
+                            <span class="help-inline">
+                                <?php echo $formElementErrors; ?>
+                            </span>
+                        <?php
+                        }
+                        ?>
+                    </li>
+                    <?php
+                }
+            ?>
+            <li></li>
+        </ul>
+    </div>
+</div>
+
+<?php echo $this->form()->closeTag(); ?>

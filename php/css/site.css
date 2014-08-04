@@ -74,3 +74,9 @@ input[type='text'],input[type='number'],textarea {
     float:left;width:14em;
 }
 
+#offline-mode-message
+{
+    display:none;
+    width:15em;
+    cursor: pointer;
+}

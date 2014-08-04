@@ -12,7 +12,9 @@ use Zend\Session\Container as SessionContainer;
 use Zend\Authentication\Storage\Session as AuthenticationSessionStorage;
 use Zend\Session\SessionManager;
 use Zend\Session\Config\StandardConfig as SessionConfig;
-use Zend\Session\Storage\SessionArrayStorage as SessionStorage;
+use Application\Exception\AclResourceNotAllowedException;
+use Zend\Cache\StorageFactory as CacheStorageFactory;
+use Application\Cache\Manager as CacheManager;
 
 /**
  * Class Module
@@ -39,7 +41,7 @@ class Module
         $serviceManager = $application->getServiceManager();
 
         Feature\GlobalAdapterFeature::setStaticAdapter(
-            $serviceManager->get('Zend\Db\Adapter\Adapter')
+            $serviceManager->get('DbAdapter')
         );
 
         /** @var \Zend\Session\SessionManager $sessionManager */
@@ -50,6 +52,7 @@ class Module
         /** @var $acl \Application\Acl\Acl */
         $acl = $serviceManager->get('Application\Acl\Acl');
 
+        /** @var \Zend\EventManager\EventManager $eventManager */
         $eventManager = $application->getEventManager();
         $eventManager->attach(
             MvcEvent::EVENT_ROUTE,
@@ -59,9 +62,17 @@ class Module
 
         $eventManager->attach(
             MvcEvent::EVENT_DISPATCH_ERROR,
-            function(MvcEvent $mvcEvent) use ($serviceManager) {
-                if ($mvcEvent->getParam('exception')) {
+            function (MvcEvent $mvcEvent) use ($serviceManager) {
+                $exception = $mvcEvent->getParam('exception');
+                if ($exception) {
                     $serviceManager->get('Zend\Log\Logger')->crit($mvcEvent->getParam('exception'));
+                    if ($exception instanceof AclResourceNotAllowedException) {
+                        /** @var \Zend\Http\PhpEnvironment\Response $response */
+                        $url = $mvcEvent->getRouter()->assemble(array(), array('name' => 'moneyzaurus'));
+                        $response = $mvcEvent->getResponse();
+                        $response->getHeaders()->addHeaderLine('Location', $url);
+                        $response->setStatusCode(302)->sendHeaders();
+                    }
                 }
             },
             -999
@@ -94,6 +105,7 @@ class Module
     {
         if (null === $this->config) {
             $this->config = array_merge(
+                include __DIR__ . '/config/cache.config.php',
                 include __DIR__ . '/config/session.config.php',
                 include __DIR__ . '/config/router.config.php',
                 include __DIR__ . '/config/navigation.config.php',
@@ -122,7 +134,7 @@ class Module
             'factories' => array(
                 'AuthService' => function (ServiceManager $serviceManager) {
                     /** @var \Zend\Db\Adapter\Adapter $dbAdapter */
-                    $dbAdapter = $serviceManager->get('Zend\Db\Adapter\Adapter');
+                    $dbAdapter = $serviceManager->get('DbAdapter');
                     $tableName           = 'user';
                     $identityColumn      = 'email';
                     $credentialColumn    = 'password';
@@ -158,6 +170,7 @@ class Module
                         null,
                         $serviceManager->get('SessionManager')
                     );
+
                     return $session;
                 },
                 'SessionManager' => function (ServiceManager $serviceManager) {
@@ -180,6 +193,25 @@ class Module
                     }
 
                     return $sessionManager;
+                },
+                'CacheStorageAdapter' => function (ServiceManager $serviceManager) {
+                    $config = $serviceManager->get('Config');
+                    $dataCache = $config['data_cache'];
+
+                    /** @var \Zend\Cache\Storage\Adapter\Filesystem $cache */
+                    $cache = CacheStorageFactory::factory($dataCache);
+
+                    return $cache;
+                },
+                'CacheManager' => function (ServiceManager $serviceManager) {
+
+                    /** @var \Zend\Cache\Storage\Adapter\Filesystem $cacheStorage */
+                    $cacheStorage = $serviceManager->get('CacheStorageAdapter');
+
+                    $cacheManager = new CacheManager();
+                    $cacheManager->setCacheStorage($cacheStorage)->setLifetime(600);
+
+                    return $cacheManager;
                 },
             )
         );

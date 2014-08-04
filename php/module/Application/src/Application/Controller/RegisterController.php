@@ -91,7 +91,7 @@ class RegisterController extends AbstractActionController
         $request = $this->getRequest();
 
         /** @var \Application\Db\User $user */
-        $user = $this->getAbstractHelper()->getTable('user');
+        $user = $this->getAbstractHelper()->getModel('user');
         $user->setEmail($request->getPost('email'));
 
         try {

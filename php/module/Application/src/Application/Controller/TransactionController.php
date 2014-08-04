@@ -6,7 +6,6 @@ use Application\Form\Form\Transaction as TransactionForm;
 use Application\Helper\Transaction\Predict\Price as PredictPrice;
 use Application\Helper\Transaction\Helper as TransactionHelper;
 use Zend\Json\Json;
-use Zend\Http\PhpEnvironment\Request;
 
 /**
  * Class TransactionController
@@ -61,12 +60,6 @@ class TransactionController extends AbstractActionController
             $this->form->remove('id_user');
             $this->form->remove('currency');
             $this->form->setAttribute('id', 'transactionForm');
-
-            $formElements = $this->form->getElements();
-
-            /** @var \Zend\Form\Element $dateElement */
-            $dateElement = $formElements['date'];
-            $dateElement->setValue(date('Y-m-d'));
         }
 
         return $this->form;
@@ -89,8 +82,14 @@ class TransactionController extends AbstractActionController
      */
     public function getDataList()
     {
-        if (null === $this->dataList) {
-            $this->dataList = array();
+        $cacheManager = $this->getAbstractHelper()->getCacheManager();
+
+        $cacheNamespaces = array('item', 'group');
+        $cacheKey = 'transaction_list';
+
+        $dataList = $cacheManager->data($cacheNamespaces, $cacheKey);
+        if (!$dataList) {
+            $dataList = array();
             $dataListElements = array('item', 'group');
             $elements = $this->getForm()->getElements();
             foreach (array_keys($elements) as $name) {
@@ -101,11 +100,13 @@ class TransactionController extends AbstractActionController
                     ->getTransactionHelper()
                     ->getDistinctTransactionValues($name);
 
-                $this->dataList[$name] = $dataValues;
+                $dataList[$name] = $dataValues;
             }
+
+            $cacheManager->data($cacheNamespaces, $cacheKey, $dataList);
         }
 
-        return $this->dataList;
+        return $dataList;
     }
 
     /**
@@ -127,9 +128,21 @@ class TransactionController extends AbstractActionController
     public function indexAction()
     {
         return array(
-            'form'     => $this->getForm(),
-            'datalist' => $this->getDataList(),
+            'form' => $this->getForm()
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function dataAction()
+    {
+        $responseData = $this->getDataList();
+
+        $response = $this->getResponse();
+        $response->setContent(Json::encode($responseData));
+
+        return $response;
     }
 
     public function existAction()
@@ -191,6 +204,16 @@ class TransactionController extends AbstractActionController
         try {
             $transaction = $this->saveTransaction($this->getForm());
             $data['id']      = $transaction->getTransactionId();
+
+            $helper = $this->getAbstractHelper();
+            $data['transaction'] = $transaction->getData();
+            $appendData = array(
+                'item_name'     => $this->getTransactionHelper()->getItem(),
+                'group_name'    => $this->getTransactionHelper()->getGroup(),
+                'currency_html' => $helper->getModel('currency')->load($transaction->getIdCurrency())->getHtml(),
+                'email'         => $helper->getModel('user')->load($this->getUserId())->getEmail(),
+            );
+            $data['transaction'] = array_merge($data['transaction'], $appendData);
             $data['success'] = true;
 
             /** @var \Zend\I18n\Translator\Translator $translator */
@@ -272,6 +295,7 @@ class TransactionController extends AbstractActionController
         if ($transaction->getId()) {
             $this->showMessage('Saved');
             $this->unsetFormData();
+
             return $transaction;
         } else {
             throw new \RuntimeException('Failed to save');

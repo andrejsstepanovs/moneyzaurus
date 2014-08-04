@@ -85,7 +85,7 @@ class Transaction extends Form
                 'attributes' => array(
                     'type'        => 'Zend\Form\Element\Date',
                     'id'          => 'date',
-                    'placeholder' => date('Y-m-d'),
+                    'placeholder' => 'YYYY-MM-DD',
                 ),
                 'options'    => array(
                     'label' => 'Date',

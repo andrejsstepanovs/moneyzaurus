@@ -9,6 +9,7 @@ use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Zend\Json\Json;
 use Zend\Db\TableGateway\Exception\RuntimeException;
+use Application\Helper\Connection\Helper as ConnectionHelper;
 
 class ListController extends AbstractActionController
 {
@@ -20,6 +21,9 @@ class ListController extends AbstractActionController
 
     /** @var TransactionHelper */
     protected $transactionHelper;
+
+    /** @var ConnectionHelper */
+    protected $connectionHelper;
 
     /** @var TransactionForm */
     protected $searchForm;
@@ -48,9 +52,23 @@ class ListController extends AbstractActionController
         if (null === $this->transactionHelper) {
             $this->transactionHelper = new TransactionHelper();
             $this->transactionHelper->setAbstractHelper($this->getAbstractHelper());
+            $this->transactionHelper->setParams($this->getParams());
         }
 
         return $this->transactionHelper;
+    }
+
+    /**
+     * @return ConnectionHelper
+     */
+    protected function getConnectionHelper()
+    {
+        if (null === $this->connectionHelper) {
+            $this->connectionHelper = new ConnectionHelper();
+            $this->connectionHelper->setAbstractHelper($this->getAbstractHelper());
+        }
+
+        return $this->connectionHelper;
     }
 
     public function ajaxAction()
@@ -133,6 +151,7 @@ class ListController extends AbstractActionController
 
         $select = new Select();
         $select->from($transactionTable)
+               ->columns(array('price' => new Expression('ROUND(price / 100, 2)'), 'transaction_id', 'id_user', 'id_group', 'id_item', 'id_currency', 'date', 'date_created'))
                ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item_name' => 'name'))
                ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
                ->join(array('c' => 'currency'), 't.id_currency = c.currency_id', array('currency_html' => 'html'))
@@ -147,12 +166,16 @@ class ListController extends AbstractActionController
         }
         $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
 
-        $transactions = $this->getAbstractHelper()->getTable('transactions');
-        $table = $transactions->getTable();
-        $table->setTable($transactionTable);
+        //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
         /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
-        $transactionsResults = $table->fetch($select)->buffer();
+        $transactionsResults = $this
+            ->getAbstractHelper()
+            ->getModel('transaction')
+            ->getTable()
+            ->setTable($transactionTable)
+            ->fetch($select)
+            ->buffer();
 
         return $transactionsResults;
     }
@@ -179,7 +202,7 @@ class ListController extends AbstractActionController
             }
 
             if (!empty($price)) {
-                $where[] = $this->getWhere()->like('t.price', $price . '%');
+                $where[] = $this->getWhere()->like('t.price', $price * 100 . '%');
             }
 
             if (!empty($date)) {
@@ -220,7 +243,7 @@ class ListController extends AbstractActionController
             array('total' => new Expression('FOUND_ROWS()'))
         );
 
-        $sql = $this->getAbstractHelper()->getTable('transactions')->getTable()->getSql();
+        $sql = $this->getAbstractHelper()->getModel('transaction')->getTable()->getSql();
         $statement = $sql->prepareStatementForSqlObject($selectTotal);
 
         $result2 = $statement->execute();
@@ -254,9 +277,19 @@ class ListController extends AbstractActionController
         );
 
         $data = array(
-            'success' => $transaction->getTransactionId(),
-            'error'   => ''
+            'success'     => $transaction->getTransactionId(),
+            'error'       => '',
+            'transaction' => $transaction->getData()
         );
+
+        $helper = $this->getAbstractHelper();
+        $appendData = array(
+            'item_name'     => $this->getListerHelper()->getItem(),
+            'group_name'    => $this->getListerHelper()->getGroup(),
+            'currency_html' => $helper->getModel('currency')->load($transaction->getIdCurrency())->getHtml(),
+            'email'         => $helper->getModel('user')->load($this->getUserId())->getEmail(),
+        );
+        $data['transaction'] = array_merge($data['transaction'], $appendData);
 
         $response = $this->getResponse();
         $response->setContent(Json::encode($data));
@@ -296,11 +329,18 @@ class ListController extends AbstractActionController
     protected function deleteTransaction($transactionId)
     {
         /** @var \Application\Db\Transaction $transaction */
-        $transaction = $this->getAbstractHelper()->getTable('transaction');
+        $transaction = $this->getAbstractHelper()->getModel('transaction');
         $transaction->setTransactionId($transactionId);
         $transaction->load();
 
-        if ($transaction->getIdUser() != $this->getUserId()) {
+        $allowedUsers = array($this->getUserId());
+        $connections = $this->getConnectionHelper()->getUserConnections($this->getUserId());
+        /** @var \Application\Db\Connection $connection */
+        foreach ($connections as $connection) {
+            $allowedUsers[] = $connection->getIdUserParent();
+        }
+
+        if (!in_array($transaction->getIdUser(), $allowedUsers)) {
             throw new RuntimeException('It is not allowed to edit other user transactions.');
         }
 

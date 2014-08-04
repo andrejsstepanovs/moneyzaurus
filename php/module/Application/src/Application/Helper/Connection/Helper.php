@@ -40,12 +40,14 @@ class Helper extends AbstractHelper
 
         //\DEBUG::dump($select->getSqlString(new \Zend\Db\Adapter\Platform\Mysql()));
 
-        $connectionsTable = $this->getAbstractHelper()->getTable('connection');
-        $table = $connectionsTable->getTable();
-        $table->setTable($connectionTable);
-
         /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
-        $transactionsResults = $table->fetch($select)->buffer();
+        $transactionsResults = $this
+            ->getAbstractHelper()
+            ->getModel('connection')
+            ->getTable()
+            ->setTable($connectionTable)
+            ->fetch($select)
+            ->buffer();
 
         return $transactionsResults;
     }

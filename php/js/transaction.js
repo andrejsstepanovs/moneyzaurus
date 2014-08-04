@@ -1,16 +1,18 @@
 function Transaction(formElement)
 {
     this.formElement = formElement;
-    this.data = {};
-    this.formData = {};
+
+    this.data       = {};
+    this.formData   = {};
     this.parameters = {};
 
-    this.itemElement   = null;
-    this.groupElement  = null;
-    this.priceElement  = null;
-    this.dateElement   = null;
-    this.submitElement = null;
-    this.minInputLength = 3;
+    this.itemElement      = null;
+    this.groupElement     = null;
+    this.priceElement     = null;
+    this.dateElement      = null;
+    this.submitElement    = null;
+    this.minInputLength   = 3;
+    this.ajaxExist        = null;
 }
 
 Transaction.prototype.setData = function(key, value)
@@ -113,6 +115,7 @@ Transaction.prototype.getPredictionElement = function(key)
 Transaction.prototype.start = function()
 {
     this.getItemElement().focus();
+    this.getDateElement().val(site.getFormattedDate());
 
     this.bindSubmit();
 
@@ -139,18 +142,23 @@ Transaction.prototype.start = function()
         }
     });
 
-    this.getPriceElement().bind("input keyup change", function() {
+    this.getPriceElement().bind("input keyup change focus", function() {
         self.transactionExist();
     });
-    this.getDateElement().bind("input keyup change", function() {
+    this.getDateElement().bind("input keyup change focus", function() {
         self.transactionExist();
     });
+
+    this.autocompleteStart();
 }
 
 Transaction.prototype.bindSubmit = function()
 {
     var self = this;
     this.getFormElement().bind('submit', function() {
+        if ($.active) {
+            self.ajaxExist.abort();
+        }
         self.save();
         return false;
     });
@@ -181,74 +189,232 @@ Transaction.prototype.resetFormData = function()
     this.getItemElement().val("");
     this.getGroupElement().val("");
     this.getPriceElement().val("");
+
+    $("#" + this.getPredictionId("item")).remove();
+    $("#" + this.getPredictionId("group")).remove();
+    $("#" + this.getPredictionId("price")).remove();
     return this;
 }
 
 Transaction.prototype.save = function()
 {
     this.formData = null;
-    this.disableFormElements();
-    var self = this;
-    $.getJSON("/transaction/save", this.getFormData())
-    .done (function(json) {
-        if (json.success) {
-            self.resetFormData();
-            popupMessage(json.message, 2000);
-        } else {
-            alert("Failed to save. " + json.message);
-        }
-        self.enableFormElements();
-        self.getItemElement().focus();
+    var formData = this.getFormData();
+    if (site.isOnline()) {
+        this.saveRequest(formData, this.addTransactionToStorage, true);
+    } else {
+        this.addTransactionToStorage(formData, true);
+    }
+}
 
-        var focus = setTimeout(
-            function() {
-                self.getItemElement().focus();
-            }, 2100
+Transaction.prototype.addTransactionToStorage = function(transactionData, notSaved)
+{
+    var self = this;
+    this.disableFormElements();
+    site.loadingOpen("Saving locally...");
+
+    var transactionsList = new TransactionsList();
+    listData = transactionsList.loadListDataFromStorage();
+    if (notSaved) {
+        transactionData.not_saved     = notSaved;
+        transactionData.item_name     = transactionData.item;
+        transactionData.group_name    = transactionData.group;
+        transactionData.currency_html = "";
+    }
+    site.array_unshift(listData.data.rows, transactionData)
+
+    transactionsList.listDataSaveToStorage(listData.data);
+
+    var enableForm = setTimeout(
+        function() {
+            self.enableFormElements();
+            self.resetFormData();
+            site.loadingClose();
+            self.getItemElement().focus();
+        }, 1500
+    );
+}
+
+Transaction.prototype.saveRequest = function(transactionData, callback)
+{
+    this.formData = null;
+    this.disableFormElements();
+    site.loadingOpen("Saving...");
+    var self = this;
+
+    $.post(
+        "/transaction/save",
+        transactionData,
+        function(json, textStatus) {
+            site.loadingClose();
+            self.enableFormElements();
+
+            if (textStatus == "success") {
+                if (json.success) {
+                    self.resetFormData();
+                    if (typeof(callback) == "function") {
+                        callback(json.transaction, false);
+                    }
+                    site.popupMessage(json.message, 2000);
+                } else {
+                    site.popupMessage("Failed to save. " + json.message, 5000);
+                }
+
+            }
+        },
+        "json"
+    );
+}
+
+Transaction.prototype.makeSaveRequest = function(transactionData, rowId)
+{
+    localStorage.setItem("saving", 1);
+    var self = this;
+    $.post(
+        "/transaction/save",
+        transactionData,
+        function(json, textStatus) {
+            if (textStatus == "success" && json.success) {
+                self.updateListData(json.transaction, rowId);
+            }
+            localStorage.removeItem("saving");
+        },
+        "json"
+    );
+}
+
+Transaction.prototype.updateListData = function(rowData, rowId)
+{
+    var transactionsList = new TransactionsList();
+    var listData = transactionsList.loadListDataFromStorage();
+    if (listData && listData.data && listData.data.rows && listData.data.rows.length) {
+        listData.data.rows[rowId] = rowData;
+        transactionsList.listDataSaveToStorage(listData.data);
+    }
+}
+
+Transaction.prototype.autocompleteFetchData = function()
+{
+    var self = this;
+    $.post(
+        "/transaction/data",
+        this.getFormData(),
+        function(json, textStatus) {
+            if (textStatus == "success") {
+                self.autocompleteSaveData(json.item, json.group)
+                    .autocompleteStart();
+            }
+        },
+        "json"
+    );
+}
+
+Transaction.prototype.autocompleteStart = function()
+{
+    var data = this.autocompleteLoadStorageData();
+    if (site.isOnline()) {
+        if (!data || !data.timestamp || 60 < site.getTimestamp() - data.timestamp) {
+            this.autocompleteFetchData();
+        }
+    }
+
+    if (data) {
+        this.autocompleteInput(
+            $("#item"),
+            $('#suggestions-item'),
+            data.item,
+            $('#group')
         );
-    })
-    .fail (function(jqxhr, textStatus, error) {
-        self.enableFormElements();
-        var err = textStatus + ", " + error;
-        console.log("Request Failed: " + err);
-    });
+
+        this.autocompleteInput(
+            $("#group"),
+            $('#suggestions-group'),
+            data.group,
+            $('#price')
+        );
+    }
+
+    return this;
+}
+
+Transaction.prototype.autocompleteSaveData = function(item, group)
+{
+    var data = {
+        "timestamp": site.getTimestamp(),
+        "item"     : item,
+        "group"    : group
+    };
+    localStorage.setItem('autocomplete_data', JSON.stringify(data));
+    return this;
+}
+
+Transaction.prototype.autocompleteLoadStorageData = function()
+{
+    var data = false;
+    var dataString = localStorage.getItem('autocomplete_data');
+    if (dataString) {
+        data = $.parseJSON(dataString);
+    }
+    return data;
 }
 
 Transaction.prototype.transactionExist = function()
 {
-    this.formData = null;
-    console.log(this.getFormData());
-    $.getJSON("/transaction/exist", this.getFormData())
-    .done (function(json) {
-        if (json.success && json.exist) {
-            var message = "<h3>" + json.message + "</h3>";
-            message += "<ul>";
-            for (i in json.transactions) {
-                var transaction = json.transactions[i];
-                message += "<li>";
-                message += transaction.date_created + "  --  " + transaction.email;
-                message += "</li>";
-            }
-            message += "</ul>";
+    if (!site.isOnline()
+        || !this.getPriceElement().val()
+        || !this.getDateElement().val()
+        || !this.getGroupElement().val()
+    ) {
+        return;
+    }
 
-            popupMessage(message);
-        }
-    })
-    .fail (function(jqxhr, textStatus, error) {
-        var err = textStatus + ", " + error;
-        console.log("Request Failed: " + err);
-    });
+    this.formData = null;
+
+    if (this.ajaxExist) {
+        this.ajaxExist.abort();
+    }
+
+    this.ajaxExist = $.post(
+        "/transaction/exist",
+        this.getFormData(),
+        function(json, textStatus) {
+            if (textStatus == "success" && json.success && json.exist) {
+                var message = "<h3>" + json.message + "</h3>";
+                message += "<ul>";
+                for (i in json.transactions) {
+                    var transaction = json.transactions[i];
+                    message += "<li>";
+                    message += transaction.date_created + "  --  " + transaction.email;
+                    message += "</li>";
+                }
+                message += "</ul>";
+
+                site.popupMessage(message, 3000);
+            }
+        },
+        "json"
+    );
 }
 
 Transaction.prototype.fetchPrediction = function(element, key)
 {
+    if (!site.isOnline()) {
+        return;
+    }
+
     var self = this;
     this.setData("predict", key);
-    $.getJSON("/transaction/predict", this.getData())
-        .done (function(json) {
-            if (json.success) {
+
+    $.post(
+        "/transaction/predict",
+        this.getData(),
+        function(json, textStatus) {
+            if (textStatus == "success" && json.success) {
                 self.buildPredictedButtons(json.data, element, key);
             }
-        });
+        },
+        "json"
+    );
 }
 
 Transaction.prototype.buildPredictedButtons = function(data, element, key)
@@ -297,4 +463,19 @@ Transaction.prototype.buildPredictedButtons = function(data, element, key)
     });
 
     $("#" + predictId).show();
+}
+
+Transaction.prototype.autocompleteInput = function(element, target, data, nextElement)
+{
+    var elementId = element.attr('id');
+    var targetId  = target.attr('id');
+    var nextElementId = nextElement.attr('id');
+    element.autocomplete({
+        target: target,
+        source: data,
+        link: '$(\'#' + elementId + '\').val(\'%s\');'
+            + '$(\'#' + elementId + '\').trigger(\'input\');'
+            + '$(\'#' + targetId + '\')[0].innerHTML=\'\';'
+            + '$(\'#' + nextElementId + '\').focus();'
+    });
 }

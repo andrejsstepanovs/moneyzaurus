@@ -13,10 +13,23 @@ return array(
                     ),
                 ),
             ),
+            'authenticated' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/authenticated',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action'     => 'authenticated',
+                    ),
+                ),
+            ),
             'login' => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/login',
+                    'route'    => '/login[/:action]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Login',
                         'action'     => 'index',
@@ -121,9 +134,9 @@ return array(
             'chart' => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/chart',
+                    'route'    => '/chart[/:action]',
                     'defaults' => array(
-                        'controller' => 'Application\Controller\Index',
+                        'controller' => 'Application\Controller\Chart',
                         'action'     => 'index',
                     ),
                 ),

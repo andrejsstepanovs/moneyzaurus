@@ -80,28 +80,14 @@ class AbstractActionController extends ZendAbstractActionController
             foreach ($messages as $message) {
                 $this->getViewHelperPlugin('inlineScript')->appendScript(
                     '$(document).ready(function () {
-                        var message = "'.str_replace('"', "'", $message).'";
-                        popupMessage(message);
-                        $.mobile.showPageLoadingMsg("b", message, true);
-                        setTimeout(function () {
-                            $.mobile.hidePageLoadingMsg();
-                        }, 1500);
+                        $(document).on("pageshow", function () {
+                            var message = "'.str_replace('"', "'", $message).'";
+                            site.popupMessage(message, 3000);
+                        });
                     });'
                 );
             }
         }
-
-        return $this;
-    }
-
-    /**
-     * @param AbstractHelper $helper
-     *
-     * @return $this
-     */
-    protected function setHelper(AbstractHelper $helper)
-    {
-        $this->helper = $helper;
 
         return $this;
     }
@@ -113,6 +99,11 @@ class AbstractActionController extends ZendAbstractActionController
     {
         if (null === $this->helper) {
             $this->helper = new AbstractHelper();
+            $this->helper->setServiceLocator($this->getServiceLocator());
+
+            if ($this->getAuthService()->hasIdentity()) {
+                $this->helper->setUserId($this->getUserId());
+            }
         }
 
         return $this->helper;
@@ -147,13 +138,22 @@ class AbstractActionController extends ZendAbstractActionController
      */
     public function getCurrencyValueOptions()
     {
-        $currency = $this->getAbstractHelper()->getTable('currency');
-        $currencies = $currency->getTable()->fetchAll();
+        $cacheManager = $this->getAbstractHelper()->getCacheManager();
 
-        $valueOptions = array();
-        /** @var \Application\Db\Currency $currency */
-        foreach ($currencies as $currency) {
-            $valueOptions[$currency->getId()] = $currency->getName();
+        $cacheNamespaces = array('currency');
+        $cacheKey = 'currency_value_options';
+        $valueOptions = $cacheManager->data($cacheNamespaces, $cacheKey);
+        if (!$valueOptions) {
+            $currency = $this->getAbstractHelper()->getModel('currency');
+            $currencies = $currency->getTable()->fetchAll();
+
+            $valueOptions = array();
+            /** @var \Application\Db\Currency $currency */
+            foreach ($currencies as $currency) {
+                $valueOptions[$currency->getId()] = $currency->getName();
+            }
+
+            $cacheManager->data($cacheNamespaces, $cacheKey, $valueOptions);
         }
 
         return $valueOptions;

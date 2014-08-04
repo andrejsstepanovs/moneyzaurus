@@ -78,6 +78,7 @@ class PieController extends AbstractActionController
     protected function getPieChartElement($key)
     {
         $pieChartElements = $this->getPieChartElements();
+
         return $pieChartElements[$key];
     }
 
@@ -147,7 +148,8 @@ class PieController extends AbstractActionController
     {
         if (null === $this->transactionsData) {
             /** @var Select $select */
-            $select = $this->getTransactionsSelect();
+            $select = $this->getPieHelper()->getTransactionsSelect();
+            $select = $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
             $select = $this->applyTransactionSelectFilters($select);
             $select->order('price ' . Select::ORDER_DESCENDING);
 
@@ -163,25 +165,6 @@ class PieController extends AbstractActionController
         }
 
         return $this->transactionsData;
-    }
-
-    /**
-     * @return \Zend\Db\Sql\Select
-     */
-    private function getTransactionsSelect()
-    {
-        $transactionTable = array('t' => 'transaction');
-
-        $select = new Select();
-        $select->from($transactionTable)
-            ->join(array('i' => 'item'), 't.id_item = i.item_id', array('item_name' => 'name'))
-            ->join(array('g' => 'group'), 't.id_group = g.group_id', array('group_name' => 'name'))
-            ->join(array('c' => 'currency'), 't.id_currency = c.currency_id', array('currency_html' => 'html'))
-            ->join(array('u' => 'user'), 't.id_user = u.user_id', array('email'));
-
-        $select = $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
-
-        return $select;
     }
 
     /**
@@ -271,12 +254,13 @@ class PieController extends AbstractActionController
      */
     private function fetchTransactions(Select $select)
     {
-        $transactions = $this->getAbstractHelper()->getTable('transactions');
-        $table = $transactions->getTable();
-        $table->setTable(array('t' => 'transaction'));
-
         /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
-        $transactionsResults = $table->fetch($select);
+        $transactionsResults = $this
+            ->getAbstractHelper()
+            ->getModel('transaction')
+            ->getTable()
+            ->setTable(array('t' => 'transaction'))
+            ->fetch($select);
 
         return $transactionsResults;
     }

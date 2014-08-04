@@ -23,7 +23,7 @@ class Month extends Form
                 'type'       => 'Zend\Form\Element\Month',
                 'attributes' => array(
                     'id'  => 'month',
-                    'max' => date('Y-m'),
+                    //'max' => date('Y-m'),
                 ),
                 'options'    => array(
                     'label' => 'Month',

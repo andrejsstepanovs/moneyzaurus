@@ -5,6 +5,9 @@ echo "install-scripts update"
 
 cd app-root/runtime/repo/php
 
-/usr/bin/php index.php install-scripts update
+#/usr/bin/php index.php install-scripts update
+/opt/rh/php54/root/usr/bin/php index.php install-scripts update
 
 rm -rf data/cache/config/*
+rm -rf data/cache/data/*
+rm -rf data/cache/output/*

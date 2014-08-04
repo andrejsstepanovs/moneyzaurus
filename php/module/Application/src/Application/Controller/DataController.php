@@ -83,12 +83,14 @@ class DataController extends AbstractActionController
 
         $this->getAbstractHelper()->addTransactionUserFilter($select, $this->getUserId());
 
-        $transactions = $this->getAbstractHelper()->getTable('transactions');
-        $table = $transactions->getTable();
-        $table->setTable($transactionTable);
-
         /** @var $transactionsResults \Zend\Db\ResultSet\HydratingResultSet */
-        $transactionsResults = $table->fetch($select)->buffer();
+        $transactionsResults = $this
+            ->getAbstractHelper()
+            ->getModel('transaction')
+            ->getTable()
+            ->setTable($transactionTable)
+            ->fetch($select)
+            ->buffer();
 
         return $transactionsResults;
     }

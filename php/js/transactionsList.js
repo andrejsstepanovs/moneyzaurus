@@ -2,6 +2,7 @@ function TransactionsList(parameters)
 {
     this.parameters = parameters ? parameters : {};
     this.formElement = null;
+    this.ajax        = null;
     this.i = 0;
     this.resetData();
     this.rowClass = "transaction-row";
@@ -45,7 +46,12 @@ TransactionsList.prototype.getData = function()
 
 TransactionsList.prototype.getRowHtml = function(row, columns)
 {
-    var dataId = "data-id=\"" + row["transaction_id"] + "\"";
+    if (!row) {
+        return "";
+    }
+
+    var transactionId = row.hasOwnProperty("transaction_id") ? row["transaction_id"] : 0;
+    var dataId = "data-id=\"" + transactionId + "\"";
     var html = "<tr class=\"" + this.rowClass + "\" " + dataId + ">";
     for (var i in columns) {
         if (columns.hasOwnProperty(i)) {
@@ -69,8 +75,8 @@ TransactionsList.prototype.buildTable = function(data)
     var target = this.getTargetElement();
 
     var el = $("#" + target);
-
     var html = "";
+    el.html(html);
 
     var rows = data.rows;
     for (var i in rows) {
@@ -84,26 +90,85 @@ TransactionsList.prototype.buildTable = function(data)
     this.bindRowClick(rows);
 }
 
-TransactionsList.prototype.request = function()
+TransactionsList.prototype.listDataSaveToStorage = function(listData)
+{
+    var data = {
+        "timestamp" : site.getTimestamp(),
+        "data"      : listData
+    };
+    localStorage.setItem('list_data', JSON.stringify(data));
+    return this;
+}
+
+TransactionsList.prototype.loadListDataFromStorage = function()
+{
+    var listData = false;
+    var dataString = localStorage.getItem('list_data');
+    if (dataString) {
+        listData = $.parseJSON(dataString);
+    }
+    return listData;
+}
+
+TransactionsList.prototype.request = function(force)
+{
+    var dataList = this.loadListDataFromStorage();
+    if (dataList && dataList.data) {
+        this.buildTable(dataList.data);
+    }
+
+    var self = this;
+    if (site.isOnline()) {
+        if (force
+            || !dataList
+            || !dataList.timestamp
+            || 60 < site.getTimestamp() - dataList.timestamp
+        ) {
+            this.makeRequest(self.listDataSaveToStorage);
+        }
+    }
+}
+
+TransactionsList.prototype.makeRequest = function(callback)
 {
     var self = this;
-    $.getJSON("/list/ajax", this.getData())
-    .done (function(json) {
-        if (json.success) {
-            if (json.script) {
-                jQuery.globalEval(json.script);
+
+    if (this.ajax) {
+        this.ajax.abort();
+    }
+
+    site.loadingOpen("Loading...");
+    $.post(
+        "/list/ajax",
+        this.getData(),
+        function(json, textStatus) {
+            if (textStatus != "success") {
+                site.popupMessage("Request Failed: " + textStatus + ", " + error);
+                site.loadingClose();
+                return false;
             }
-            self.buildTable(json.data);
-        }
-    })
-    .fail (function(jqxhr, textStatus, error) {
-        var err = textStatus + ", " + error;
-        console.log("Request Failed: " + err);
-    });
+            if (json.success) {
+                if (json.script) {
+                    jQuery.globalEval(json.script);
+                }
+
+                self.buildTable(json.data);
+                if (typeof(callback) == "function") {
+                    callback(json.data);
+                }
+            }
+            site.loadingClose();
+        },
+        "json"
+    );
 }
 
 TransactionsList.prototype.bindRowClick = function(rows)
 {
+    if (!site.isOnline()) {
+        return this;
+    }
+
     $("tr." + this.rowClass).each(function(){
         $(this).click(function(){
             var transactionId = $(this).attr("data-id");
